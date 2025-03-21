@@ -1,0 +1,57 @@
+<div class="register-container">
+  <div class="register-box">
+      <img src="assets/logo.png" alt="Banka Logosu" class="logo">
+      <h2>Online Başvuru</h2>
+
+      <!-- Adımlar (Stepper) -->
+      <div class="stepper">
+          <div class="step" [class.active]="step === 1">1 KİŞİSEL BİLGİLER</div>
+          <div class="step" [class.active]="step === 2">2 SMS ŞİFRE</div>
+          <div class="step" [class.active]="step === 3">3 KART BİLGİLERİ</div>
+      </div>
+
+      <!-- Form Alanları -->
+      <div *ngIf="step === 1">
+          <label for="tc">T.C. / Yabancı Kimlik Numaranız</label>
+          <input type="text" id="tc" placeholder="Kimlik Numaranız">
+
+          <label for="countryCode">Ülke Kodunuz</label>
+          <select id="countryCode">
+              <option>90 - TR</option>
+              <option>1 - US</option>
+              <option>44 - UK</option>
+          </select>
+
+          <label for="phone">Cep Telefonunuz</label>
+          <input type="text" id="phone" placeholder="5 _ _ _ _ _ _ _">
+
+          <div class="switch-container">
+              <label for="phoneBanking">Telefon Bankacılığı İstiyorum</label>
+              <label class="switch">
+                  <input type="checkbox" id="phoneBanking">
+                  <span class="slider"></span>
+              </label>
+          </div>
+
+          <div class="checkbox-container">
+              <input type="checkbox" id="acceptTerms">
+              <label for="acceptTerms">Bu başvuru ile İnternet Bankacılığı’na tanımlı olan hesap ve ürünlerimin Telefon Bankacılığı’na tanımlanacağını kabul ediyorum.</label>
+          </div>
+
+          <label for="captcha">Güvenlik Kodu</label>
+          <input type="text" id="captcha" placeholder="Kodu Giriniz">
+      </div>
+
+      <div *ngIf="step === 2">
+          <label for="smsCode">Telefonunuza Gelen SMS Kodunu Giriniz</label>
+          <input type="text" id="smsCode" placeholder="******">
+      </div>
+
+      <div *ngIf="step === 3">
+          <label for="cardNumber">Kart Numaranız</label>
+          <input type="text" id="cardNumber" placeholder="**** **** **** ****">
+      </div>
+
+      <button class="btn" (click)="nextStep()">DEVAM</button>
+  </div>
+</div>

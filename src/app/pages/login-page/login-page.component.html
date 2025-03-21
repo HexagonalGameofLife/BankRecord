@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giriş Yap - Banka</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <img src="/assets/images/logo.jpg" alt="Banka Logosu" class="logo">
+            <h2>İnternet Şubemize Hoş Geldiniz</h2>
+
+            <!-- Sekmeler -->
+            <div class="tab-container">
+                <button class="tab active">BİREYSEL</button>
+                <button class="tab" (click)="goToCorporate()">KURUMSAL</button>
+            </div>
+
+            <!-- Giriş Formu -->
+            <form>
+                <input type="text" placeholder="T.C. Kimlik / Müşteri Numaranız" required>
+                <input type="password" placeholder="Şifre" required>
+
+                <!-- Seçenekler -->
+                <div class="options">
+                    <div class="switch-container">
+                        <label for="rememberMe">Beni Hatırla</label>
+                        <label class="switch">
+                            <input type="checkbox" id="rememberMe">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="switch-container">
+                        <label for="mobileSign">Mobil İmza ile Giriş</label>
+                        <label class="switch">
+                            <input type="checkbox" id="mobileSign">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn">DEVAM</button>
+                <a href="#" class="forgot-password">Şifremi Unuttum</a>
+            </form>
+
+            <!-- Kayıt Olma -->
+            <div class="register">
+                <p>Dijital Bankacılık müşterimiz olmak için</p>
+                <button class="btn secondary">HEMEN BAŞVUR</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

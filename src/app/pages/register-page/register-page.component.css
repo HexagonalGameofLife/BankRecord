@@ -1,0 +1,149 @@
+/* Genel Sayfa Stili */
+.register-container {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #e0e0e0, #f5f5f5);
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Kutu */
+.register-box {
+  background: white;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  width: 500px;
+  text-align: center;
+}
+
+/* Logo */
+.logo {
+  width: 150px;
+  margin-bottom: 20px;
+}
+
+/* Başlık */
+h2 {
+  color: #333;
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+
+/* Adımlar */
+.stepper {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.step {
+  width: 30%;
+  padding: 10px;
+  background: #ccc;
+  color: black;
+  font-weight: bold;
+  border-radius: 5px;
+}
+
+.step.active {
+  background: red;
+  color: white;
+}
+
+/* Input ve Select */
+input, select {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+/* Toggle Switch */
+.switch-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #b30000;
+  padding: 10px 15px;
+  border-radius: 20px;
+  color: white;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #660000;
+  transition: .4s;
+  border-radius: 20px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 4px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #e60000;
+}
+
+input:checked + .slider:before {
+  transform: translateX(18px);
+}
+
+/* Checkbox */
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  text-align: left;
+  margin: 10px 0;
+}
+
+.checkbox-container input {
+  margin-right: 10px;
+}
+
+/* Buton */
+.btn {
+  background: red;
+  color: white;
+  border: none;
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.btn:hover {
+  background: darkred;
+}
