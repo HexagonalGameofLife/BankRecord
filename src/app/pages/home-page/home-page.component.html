@@ -1,0 +1,47 @@
+<div class="home-container">
+  <header class="home-header">
+    <div class="greeting">Günaydın <span class="highlight">Zeynep Tanrıvermiş</span></div>
+    <input type="text" placeholder="Ziraat Mobil'de Ara" class="search-bar" />
+  </header>
+
+  <section class="quick-tips">
+    <p>İpuçlarına hemen göz at!</p>
+  </section>
+
+  <div class="tab-bar">
+    <button class="tab active" (click)="goToMyAccounts()">Hesaplarım</button>
+    <button class="tab" (click)="goToMyCreditCards()">Kredi Kartlarım</button>
+  </div>
+
+  <section class="account-box">
+    <h4 class="branch">GÜRSU/ANTALYA ŞUBESİ</h4>
+    <div class="account-type">Vadesiz TL</div>
+    <div class="account-number">2403-102869320-5006</div>
+    <div class="iban">TR28 0001 0090 1028 6932 0050 06</div>
+    <div class="balance-label">Bakiye</div>
+    <div class="balance">0,00 TL</div>
+
+    <div class="account-buttons">
+      <button class="btn">Tüm Hesaplarım</button>
+      <button class="btn">Hesap Hareketleri</button>
+    </div>
+  </section>
+
+  <section class="shortcuts">
+    <h4>Kısayollarım <span class="all-shortcuts">Tüm Kısayollarım →</span></h4>
+    <div class="shortcut-list">
+      <div class="shortcut">📊 Varlıklarım</div>
+      <div class="shortcut">📋 Son İşlemler</div>
+      <div class="shortcut">📱 QR ile Para</div>
+      <div class="shortcut">💸 Para Transferi</div>
+    </div>
+  </section>
+
+  <footer class="bottom-nav">
+    <button class="nav-btn active">Ana Sayfa</button>
+    <button class="nav-btn">Ürünler</button>
+    <button class="nav-btn">İşlemler</button>
+    <button class="nav-btn">Başvurular</button>
+    <button class="nav-btn">Tüm Menü</button>
+  </footer>
+</div>
