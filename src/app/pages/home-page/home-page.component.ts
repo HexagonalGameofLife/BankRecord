@@ -7,5 +7,11 @@ import { Component } from '@angular/core';
   styleUrl: './home-page.component.css'
 })
 export class HomePageComponent {
+goToMyCreditCards() {
+throw new Error('Method not implemented.');
+}
+goToMyAccounts() {
+throw new Error('Method not implemented.');
+}
 
 }
