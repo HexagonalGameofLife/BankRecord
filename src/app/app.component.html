@@ -1,14 +1,20 @@
-<div>
-  <h2>
-    Bank Records
-  </h2>
-</div>
+<header>
+  <img src="assets/logo.png" alt="Banka Logosu" class="logo">
 
+  <!-- Menü -->
+  <nav>
+      <button routerLink="/login" routerLinkActive="active">Bireysel Giriş</button>
+      <button routerLink="/corporate-login" routerLinkActive="active">Kurumsal Giriş</button>
+      <button routerLink="/register" routerLinkActive="active">Başvuru Yap</button>
+  </nav>
+</header>
 
-<ul>
-  <li>A</li>
-  <li>B</li>
-  <li>C</li>
-</ul>
+<!-- Buraya Sayfa İçeriği Gelecek -->
+<main>
+  <router-outlet></router-outlet>
+</main>
 
-<h1>My First Angular App</h1>
+<!-- Footer -->
+<footer>
+  <p>&copy; 2025 Banka. Tüm hakları saklıdır.</p>
+</footer>
