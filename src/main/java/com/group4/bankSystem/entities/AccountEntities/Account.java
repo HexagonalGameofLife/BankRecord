@@ -2,6 +2,9 @@ package com.group4.bankSystem.entities.AccountEntities;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
+
+import com.group4.bankSystem.entities.CustomerEntities.UserList;
 
 @Entity
 @Table(name = "Account")
@@ -29,6 +32,11 @@ public class Account {
 
     @Column(name = "overdraft_Enabled", nullable = false)
     private Boolean overdraftEnabled;
+
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    private List<UserList> userList;
+
+
 
     // --- Constructors ---
 
@@ -99,5 +107,11 @@ public class Account {
 
     public void setOverdraftEnabled(Boolean overdraftEnabled) {
         this.overdraftEnabled = overdraftEnabled;
+    }
+    public List<UserList> getUserList() {
+        return userList;
+    }
+    public void setUserList(List<UserList> userList) {
+        this.userList = userList;
     }
 }
