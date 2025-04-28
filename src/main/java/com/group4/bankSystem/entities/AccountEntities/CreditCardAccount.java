@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@Table(name = "CreditAccount")
 public class CreditCardAccount extends Account {
 
     @Column(name = "credit_Card_Limit", nullable = false)

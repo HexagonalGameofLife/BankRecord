@@ -42,8 +42,8 @@ public class AccountService {
     }
 
     // Belirli bir müşteriye ait hesapları getir
-    public List<Account> getAccountsByCustomerId(Integer customerId) {
-        return accountRepository.findByCustomer_CustomerId(customerId);
+    public List<Integer> getAccountsByCustomerId(Integer customerId) {
+      return accountRepository.findAccountIdsByCustomerId(customerId);
     }
 
     // Tek bir hesabı ID'siyle getir

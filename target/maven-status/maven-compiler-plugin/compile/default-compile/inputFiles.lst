@@ -2,7 +2,9 @@ C:\Users\tanri\Desktop\BankRecord-Project\BankRecord\src\main\java\com\group4\ba
 C:\Users\tanri\Desktop\BankRecord-Project\BankRecord\src\main\java\com\group4\bankSystem\controller\AccountController\AccountController.java
 C:\Users\tanri\Desktop\BankRecord-Project\BankRecord\src\main\java\com\group4\bankSystem\controller\CustomerController\CustomerController.java
 C:\Users\tanri\Desktop\BankRecord-Project\BankRecord\src\main\java\com\group4\bankSystem\controller\LoginController.java
+C:\Users\tanri\Desktop\BankRecord-Project\BankRecord\src\main\java\com\group4\bankSystem\controller\PageController.java
 C:\Users\tanri\Desktop\BankRecord-Project\BankRecord\src\main\java\com\group4\bankSystem\controller\RegisterController.java
+C:\Users\tanri\Desktop\BankRecord-Project\BankRecord\src\main\java\com\group4\bankSystem\controller\SessionController.java
 C:\Users\tanri\Desktop\BankRecord-Project\BankRecord\src\main\java\com\group4\bankSystem\controller\TransactionController\TransactionController.java
 C:\Users\tanri\Desktop\BankRecord-Project\BankRecord\src\main\java\com\group4\bankSystem\entities\AccountEntities\Account.java
 C:\Users\tanri\Desktop\BankRecord-Project\BankRecord\src\main\java\com\group4\bankSystem\entities\AccountEntities\Card.java

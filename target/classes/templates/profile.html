@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>BankRecord - Profilim</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="profile-body">
+    <div class="profile-container">
+        <h2>Profilim</h2>
+        <form id="profileForm">
+
+            <!-- Sadece yazı olarak gösterilecek alanlar -->
+            <p><strong>Ad:</strong> <span id="customerName"></span></p>
+            <p><strong>Soyad:</strong> <span id="customerSurname"></span></p>
+            <p><strong>T.C. Kimlik No:</strong> <span id="customerTc"></span></p>
+            <p><strong>E-posta:</strong> <span id="customerEmail"></span></p>
+            <p><strong>Hesap Oluşturulma Tarihi:</strong> <span id="customerRegistrationDate"></span></p>
+
+            <!-- Değiştirilebilir alanlar -->
+            <label for="customerPhoneNumber">Telefon:</label>
+            <input type="text" id="customerPhoneNumber" required>
+
+            <label for="customerGender">Cinsiyet:</label>
+            <select id="customerGender" required>
+                <option value="">Seçiniz</option>
+                <option value="male">Erkek</option>
+                <option value="female">Kadın</option>
+                <option value="other">Diğer</option>
+            </select>
+
+            <label for="customerAddress">Adres:</label>
+            <textarea id="customerAddress" placeholder="Adresinizi giriniz" required></textarea>
+
+            <label for="loginPasswordHash">Şifre:</label>
+            <input type="password" id="loginPasswordHash" placeholder="Yeni Şifre (İsteğe Bağlı)">
+
+            <button type="submit">Bilgileri Güncelle</button>
+        </form>
+
+        <p id="error-message" style="color: white;"></p>
+    </div>
+
+<script>
+// Kullanıcı bilgilerini çek
+async function fetchCustomerProfile() {
+    try {
+        const response = await fetch('/api/me', { credentials: 'include' });
+        if (!response.ok) {
+            window.location.href = '/login';
+            return;
+        }
+
+        const customer = await response.json();
+
+        // Sadece yazı gösterilen alanlar
+        document.getElementById('customerName').innerText = customer.customerName || '';
+        document.getElementById('customerSurname').innerText = customer.customerSurname || '';
+        document.getElementById('customerTc').innerText = customer.customerTc || '';
+        document.getElementById('customerEmail').innerText = customer.customerEmail || '';
+        document.getElementById('customerRegistrationDate').innerText = customer.customerRegistrationDate || '';
+
+        // Input alanlarını doldur
+        document.getElementById('customerPhoneNumber').value = customer.customerPhoneNumber || '';
+        document.getElementById('customerGender').value = customer.customerGender || '';
+        document.getElementById('customerAddress').value = customer.customerAddress || '';
+
+    } catch (error) {
+        console.error('Profil bilgileri alınamadı:', error);
+        window.location.href = '/login';
+    }
+}
+
+// Bilgileri güncelle
+document.getElementById('profileForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const updatedCustomer = {
+        customerPhoneNumber: document.getElementById('customerPhoneNumber').value,
+        customerGender: document.getElementById('customerGender').value,
+        customerAddress: document.getElementById('customerAddress').value,
+        loginPasswordHash: document.getElementById('loginPasswordHash').value
+    };
+
+    try {
+        const response = await fetch('/api/me', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify(updatedCustomer)
+        });
+
+        if (response.ok) {
+            alert('Bilgiler başarıyla güncellendi!');
+            window.location.reload(); // Başarı sonrası sayfayı yenile
+        } else {
+            const errorText = await response.text();
+            document.getElementById('error-message').innerText = errorText;
+        }
+    } catch (error) {
+        console.error('Bilgiler güncellenirken hata oluştu:', error);
+        document.getElementById('error-message').innerText = 'Bilgiler güncellenirken hata oluştu.';
+    }
+});
+
+// Sayfa yüklenince bilgileri çek
+fetchCustomerProfile();
+</script>
+</body>
+</html>

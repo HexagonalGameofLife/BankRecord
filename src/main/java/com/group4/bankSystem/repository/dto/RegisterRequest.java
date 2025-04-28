@@ -1,12 +1,15 @@
 package com.group4.bankSystem.repository.dto;
 
+import java.time.LocalDate;
+
 public class RegisterRequest {
 
     private String customerTc;
     private String customerName;
     private String customerSurname;
-    private String customerEmail;
     private String customerPhoneNumber;
+    private LocalDate customerBirthdate;
+    private String customerEmail;
     private String password;
 
     // Getter ve Setter'lar
@@ -32,6 +35,14 @@ public class RegisterRequest {
 
     public void setCustomerSurname(String customerSurname) {
         this.customerSurname = customerSurname;
+    }
+
+    public LocalDate getCustomerBirthdate() {
+        return customerBirthdate;
+    }
+
+    public void setCustomerBirthdate(LocalDate customerBirthdate) {
+        this.customerBirthdate = customerBirthdate;
     }
 
     public String getCustomerEmail() {

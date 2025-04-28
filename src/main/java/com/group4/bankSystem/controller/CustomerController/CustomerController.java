@@ -1,71 +1,69 @@
 package com.group4.bankSystem.controller.CustomerController;
 
 import com.group4.bankSystem.entities.CustomerEntities.Customer;
-import com.group4.bankSystem.services.CustomerServices.CustomerService;
+import com.group4.bankSystem.repository.CustomerRepository.CustomerRepository;
+import jakarta.servlet.http.HttpSession;
+
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
-
 @RestController
-@RequestMapping("/api/customers")
+@RequestMapping("/api")
 public class CustomerController {
 
     @Autowired
-    private CustomerService customerService;
+    private CustomerRepository customerRepository;
 
-    // Tüm müşterileri getir
-    @GetMapping
-    public List<Customer> getAllCustomers() {
-        return customerService.getAllCustomers();
-    }
-
-    // Belirli bir müşteriyi getir
-    @GetMapping("/{id}")
-    public ResponseEntity<Customer> getCustomerById(@PathVariable Integer id) {
-        Optional<Customer> customer = customerService.getCustomerById(id);
-        return customer.map(ResponseEntity::ok)
-                       .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    // Yeni müşteri ekle
-    @PostMapping
-    public Customer createCustomer(@RequestBody Customer customer) {
-        return customerService.saveCustomer(customer);
-    }
-
-    // Müşteri güncelle
-    @PutMapping("/{id}")
-    public ResponseEntity<Customer> updateCustomer(@PathVariable Integer id, @RequestBody Customer customerDetails) {
-        Optional<Customer> optionalCustomer = customerService.getCustomerById(id);
-        if (optionalCustomer.isPresent()) {
-            Customer customer = optionalCustomer.get();
-            customer.setCustomerName(customerDetails.getCustomerName());
-            customer.setCustomerSurname(customerDetails.getCustomerSurname());
-            customer.setCustomerEmail(customerDetails.getCustomerEmail());
-            customer.setCustomerPhoneNumber(customerDetails.getCustomerPhoneNumber());
-            customer.setCustomerAddress(customerDetails.getCustomerAddress());
-            // Diğer gerekli alanlar burada güncellenebilir.
-
-            Customer updatedCustomer = customerService.saveCustomer(customer);
-            return ResponseEntity.ok(updatedCustomer);
-        } else {
-            return ResponseEntity.notFound().build();
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentCustomer(HttpSession session) {
+        Integer customerId = (Integer) session.getAttribute("customerId");
+        if (customerId == null) {
+            return ResponseEntity.status(401).body("Giriş yapılmamış.");
         }
+
+        Customer customer = customerRepository.findById(customerId).orElse(null);
+        if (customer == null) {
+            return ResponseEntity.status(404).body("Müşteri bulunamadı.");
+        }
+
+        return ResponseEntity.ok(customer);
     }
 
-    // Müşteri sil
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCustomer(@PathVariable Integer id) {
-        Optional<Customer> customer = customerService.getCustomerById(id);
-        if (customer.isPresent()) {
-            customerService.deleteCustomer(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
+    @PutMapping("/me")
+    public ResponseEntity<?> updateCurrentCustomer(@RequestBody Map<String, String> updatedFields, HttpSession session) {
+      Integer customerId = (Integer) session.getAttribute("customerId");
+      if (customerId == null) {
+          return ResponseEntity.status(401).body("Login olunmamış.");
+      }
+
+      Customer customer = customerRepository.findById(customerId).orElse(null);
+      if (customer == null) {
+          return ResponseEntity.status(404).body("Müşteri bulunamadı.");
+      }
+
+      // JSON map olduğu için alanları böyle okuyacağız:
+      if (updatedFields.containsKey("customerPhoneNumber")) {
+          customer.setCustomerPhoneNumber(updatedFields.get("customerPhoneNumber"));
+      }
+      if (updatedFields.containsKey("customerGender")) {
+          customer.setCustomerGender(updatedFields.get("customerGender"));
+      }
+      if (updatedFields.containsKey("customerAddress")) {
+          customer.setCustomerAddress(updatedFields.get("customerAddress"));
+      }
+      if (updatedFields.containsKey("loginPasswordHash")) {
+          String newPassword = updatedFields.get("loginPasswordHash");
+          if (newPassword != null && !newPassword.isEmpty()) {
+              customer.setLoginPasswordHash(newPassword);
+          }
+      }
+
+      customerRepository.save(customer);
+
+      return ResponseEntity.ok("Profil güncellendi.");
+  }
+
 }
-

@@ -11,6 +11,7 @@ com\group4\bankSystem\services\CustomerServices\CustomerService.class
 com\group4\bankSystem\controller\RegisterController.class
 com\group4\bankSystem\repository\TransactionRepository\ExchangeRateRepository.class
 com\group4\bankSystem\repository\TransactionRepository\TransactionRepository.class
+com\group4\bankSystem\controller\PageController.class
 com\group4\bankSystem\repository\dto\LoginRequest.class
 com\group4\bankSystem\entities\AccountEntities\Currency.class
 com\group4\bankSystem\repository\TransactionRepository\RecurringTransactionRepository.class
@@ -30,7 +31,7 @@ com\group4\bankSystem\controller\LoginController.class
 com\group4\bankSystem\repository\CustomerRepository\CustomerRepository.class
 com\group4\bankSystem\entities\AccountEntities\CheckingAccount.class
 com\group4\bankSystem\entities\CustomerEntities\Customer.class
-com\group4\bankSystem\controller\CustomerController\CustomerController.class
+com\group4\bankSystem\controller\SessionController.class
 com\group4\bankSystem\entities\CustomerEntities\UserList.class
 com\group4\bankSystem\repository\dto\RegisterRequest.class
 com\group4\bankSystem\controller\TransactionController\TransactionController.class

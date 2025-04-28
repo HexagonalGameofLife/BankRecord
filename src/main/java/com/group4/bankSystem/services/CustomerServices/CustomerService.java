@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.group4.bankSystem.entities.CustomerEntities.Customer;
+import com.group4.bankSystem.entities.TransactionEntities.Transaction;
 import com.group4.bankSystem.repository.AccountRepository.AccountRepository;
 import com.group4.bankSystem.repository.CustomerRepository.CustomerRepository;
 import com.group4.bankSystem.repository.CustomerRepository.UserListRepository;
@@ -92,7 +93,8 @@ public class CustomerService {
         List<Integer> accountIds = userListRepository.findAccountIdsByCustomerId(customerId);
 
         if (!accountIds.isEmpty()) {
-            transactionRepository.deleteByAccountIdIn(accountIds);
+          List<Transaction> transactions = transactionRepository.findByAccountIdsInBothFromAndTo(accountIds);
+          transactionRepository.deleteAll(transactions);
         }
 
         userListRepository.deleteByCustomer_CustomerId(customerId);

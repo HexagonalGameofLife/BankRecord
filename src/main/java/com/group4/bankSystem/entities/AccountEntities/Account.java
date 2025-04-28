@@ -7,6 +7,7 @@ import java.util.List;
 import com.group4.bankSystem.entities.CustomerEntities.UserList;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "Account")
 public class Account {
 

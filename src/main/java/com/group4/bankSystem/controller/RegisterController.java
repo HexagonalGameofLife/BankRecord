@@ -4,6 +4,8 @@ import com.group4.bankSystem.entities.CustomerEntities.Customer;
 import com.group4.bankSystem.repository.CustomerRepository.CustomerRepository;
 import com.group4.bankSystem.repository.dto.RegisterRequest;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +20,7 @@ public class RegisterController {
     @PostMapping("/register")
     public ResponseEntity<?> registerCustomer(@RequestBody RegisterRequest registerRequest) {
 
-        if (customerRepository.findByCustomerTc(registerRequest.getCustomerTc()) != null) {
+        if (customerRepository.findByCustomerTC(registerRequest.getCustomerTc()) != null) {
             return ResponseEntity.badRequest().body("Bu TC numarası ile zaten bir kayıt var.");
         }
 
@@ -26,9 +28,12 @@ public class RegisterController {
         customer.setCustomerTC(registerRequest.getCustomerTc());
         customer.setCustomerName(registerRequest.getCustomerName());
         customer.setCustomerSurname(registerRequest.getCustomerSurname());
-        customer.setCustomerEmail(registerRequest.getCustomerEmail());
+        customer.setCustomerBirthdate(registerRequest.getCustomerBirthdate());
         customer.setCustomerPhoneNumber(registerRequest.getCustomerPhoneNumber());
+        customer.setCustomerEmail(registerRequest.getCustomerEmail());
         customer.setLoginPasswordHash(registerRequest.getPassword());
+        customer.setCustomerRegistrationDate(LocalDate.now());
+
 
         customerRepository.save(customer);
 

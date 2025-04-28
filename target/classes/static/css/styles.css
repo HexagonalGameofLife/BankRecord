@@ -263,3 +263,70 @@ body, html {
   background-color: #b71c1c;
 }
 
+/* Profil sayfası için özel stil */
+.profile-body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #c62828; /* Arka plan kırmızı yapıldı */
+}
+
+.profile-container {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  width: 500px; /* Daha geniş kart */
+  margin: 50px auto;
+}
+
+.profile-container h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #c62828; /* Başlık kırmızı tonunda */
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+textarea {
+  height: 120px;
+}
+
+button {
+  width: 100%;
+  padding: 14px;
+  background-color: #b71c1c; /* Buton rengi daha koyu kırmızı */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #7f0000; /* Hover olduğunda daha koyu */
+}
+
+#error-message {
+  color: black;
+  background-color: #ffdddd;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+}
+

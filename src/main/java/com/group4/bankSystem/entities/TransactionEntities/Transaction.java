@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import com.group4.bankSystem.entities.AccountEntities.Account;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "Transaction")
 public class Transaction {
 
@@ -21,7 +22,7 @@ public class Transaction {
     @ManyToOne
     @JoinColumn(name = "to_Account_ID", referencedColumnName = "account_ID", nullable = false)
     private Account toAccount;
-    
+
     @Column(name = "transaction_Type", nullable = false)
     private Integer transactionType;
 

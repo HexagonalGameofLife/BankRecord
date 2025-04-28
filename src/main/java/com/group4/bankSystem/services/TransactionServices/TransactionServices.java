@@ -27,8 +27,8 @@ public class TransactionServices {
         List<Integer> accountIds = accountRepository.findAccountIdsByCustomerId(customerId);
 
         // Sonra o accountlara ait transactionları bulacağız
-        return transactionRepository.findByAccountIdIn(accountIds);
-    }
+        return transactionRepository.findByAccountIdsInBothFromAndTo(accountIds);
+      }
 
     // 2. Yeni bir işlem ekle
     public Transaction addTransaction(Transaction transaction) {

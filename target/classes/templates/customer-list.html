@@ -21,14 +21,8 @@
                     <th>Telefon</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr th:each="customer : ${customers}">
-                    <td th:text="${customer.customerTc}">12345678901</td>
-                    <td th:text="${customer.customerName}">Adı</td>
-                    <td th:text="${customer.customerSurname}">Soyadı</td>
-                    <td th:text="${customer.customerEmail}">email@example.com</td>
-                    <td th:text="${customer.customerPhoneNumber}">05XXXXXXXXX</td>
-                </tr>
+            <tbody id="customerTableBody">
+                <!-- API'den doldurulacak -->
             </tbody>
         </table>
     </main>
@@ -36,5 +30,46 @@
     <footer class="customer-footer">
         <a href="/index" class="button">Ana Sayfa</a>
     </footer>
+
+<script>
+  async function checkSession() {
+    try {
+        const response = await fetch('/api/session');
+        if (!response.ok) {
+            window.location.href = '/login';
+        }
+    } catch (error) {
+        window.location.href = '/login';
+    }
+}
+checkSession();
+
+async function fetchCustomers() {
+    try {
+        const response = await fetch('/api/customers');
+        const customers = await response.json();
+
+        const tableBody = document.getElementById('customerTableBody');
+        tableBody.innerHTML = '';
+
+        customers.forEach(customer => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${customer.customerTc}</td>
+                <td>${customer.customerName}</td>
+                <td>${customer.customerSurname}</td>
+                <td>${customer.customerEmail}</td>
+                <td>${customer.customerPhoneNumber}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+
+    } catch (error) {
+        console.error('Müşteri listesi alınamadı.');
+    }
+}
+
+fetchCustomers();
+</script>
 </body>
 </html>

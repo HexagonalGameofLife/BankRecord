@@ -20,13 +20,8 @@
                     <th>Başlangıç Tarihi</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr th:each="account : ${accounts}">
-                    <td th:text="${account.iban}">TR00 0000 0000 0000 0000 0000 00</td>
-                    <td th:text="${account.accountType}">Vadesiz</td>
-                    <td th:text="${account.balance}">0,00 TL</td>
-                    <td th:text="${#temporals.format(account.accountStartDate, 'dd/MM/yyyy')}">01/01/2025</td>
-                </tr>
+            <tbody id="accountTableBody">
+                <!-- API'den doldurulacak -->
             </tbody>
         </table>
     </main>
@@ -34,5 +29,46 @@
     <footer class="account-footer">
         <a href="/index" class="button">Ana Sayfa</a>
     </footer>
+
+<script>
+  async function checkSession() {
+    try {
+        const response = await fetch('/api/session');
+        if (!response.ok) {
+            window.location.href = '/login';
+        }
+    } catch (error) {
+        window.location.href = '/login';
+    }
+}
+checkSession();
+
+async function fetchAccounts() {
+    try {
+        const response = await fetch('/api/accounts');
+        const accounts = await response.json();
+
+        const tableBody = document.getElementById('accountTableBody');
+        tableBody.innerHTML = '';
+
+        accounts.forEach(account => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${account.iban}</td>
+                <td>${account.accountType}</td>
+                <td>${account.balance.toFixed(2)} TL</td>
+                <td>${new Date(account.accountStartDate).toLocaleDateString('tr-TR')}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+
+    } catch (error) {
+        console.error('Hesaplar alınamadı.');
+    }
+}
+
+fetchAccounts();
+
+</script>
 </body>
 </html>

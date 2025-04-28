@@ -16,13 +16,23 @@ public class LoginController {
     @Autowired
     private CustomerRepository customerRepository;
 
+    @GetMapping("/api/session")
+    public ResponseEntity<?> checkSession(HttpSession session) {
+      Object loggedInCustomer = session.getAttribute("loggedInCustomer");
+      if (loggedInCustomer != null) {
+          return ResponseEntity.ok("Session active");
+      } else {
+          return ResponseEntity.status(401).body("Not logged in");
+      }
+  }
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest, HttpSession session) {
-        Customer customer = customerRepository.findByCustomerTc(loginRequest.getCustomerTc());
+        Customer customer = customerRepository.findByCustomerTC(loginRequest.getCustomerTc());
 
         if (customer != null && customer.getLoginPasswordHash().equals(loginRequest.getPassword())) {
-            session.setAttribute("loggedInCustomer", customer);
-            return ResponseEntity.ok("Login successful!");
+          session.setAttribute("customerId", customer.getCustomerId());
+          return ResponseEntity.ok("Login successful!");
         } else {
             return ResponseEntity.status(401).body("T.C. Kimlik veya Şifre yanlış!");
         }

@@ -8,15 +8,50 @@
 <body class="register-body">
     <div class="register-container">
         <h2>Yeni Müşteri Kaydı</h2>
-        <form action="/register" method="post">
-            <input type="text" name="customerTc" placeholder="T.C. Kimlik Numaranız" required>
-            <input type="text" name="customerName" placeholder="Adınız" required>
-            <input type="text" name="customerSurname" placeholder="Soyadınız" required>
-            <input type="email" name="customerEmail" placeholder="E-posta Adresiniz" required>
-            <input type="text" name="customerPhoneNumber" placeholder="Telefon Numaranız" required>
-            <input type="password" name="password" placeholder="Şifreniz" required>
+        <form id="registerForm">
+            <input type="text" id="customerTc" placeholder="T.C. Kimlik Numaranız" required>
+            <input type="text" id="customerName" placeholder="Adınız" required>
+            <input type="text" id="customerSurname" placeholder="Soyadınız" required>
+            <input type="date" id="customerBirthdate" placeholder="Doğum Tarihiniz" required>
+            <input type="text" id="customerPhoneNumber" placeholder="Telefon Numaranız" required>
+            <input type="email" id="customerEmail" placeholder="E-posta Adresiniz" required>
+            <input type="password" id="password" placeholder="Şifreniz" required>
             <button type="submit">Kayıt Ol</button>
         </form>
+        <p id="error-message" style="color: red;"></p>
     </div>
+
+<script>
+    document.getElementById('registerForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const registerData = {
+            customerTc: document.getElementById('customerTc').value,
+            customerName: document.getElementById('customerName').value,
+            customerSurname: document.getElementById('customerSurname').value,
+            customerBirthdate: document.getElementById('customerBirthdate').value,
+            customerPhoneNumber: document.getElementById('customerPhoneNumber').value,
+            customerEmail: document.getElementById('customerEmail').value,
+            password: document.getElementById('password').value
+        };
+
+        try {
+            const response = await fetch('/api/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(registerData)
+            });
+
+            if (response.ok) {
+                window.location.href = '/login';
+            } else {
+                const errorText = await response.text();
+                document.getElementById('error-message').innerText = errorText;
+            }
+        } catch (error) {
+            document.getElementById('error-message').innerText = 'Sunucu bağlantı hatası.';
+        }
+    });
+</script>
 </body>
 </html>

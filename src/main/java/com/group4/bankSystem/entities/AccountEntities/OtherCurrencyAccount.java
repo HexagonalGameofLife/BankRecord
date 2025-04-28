@@ -3,6 +3,7 @@ package com.group4.bankSystem.entities.AccountEntities;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "OtherCurrencyAccount")
 public class OtherCurrencyAccount extends Account {
 
     @Column(name = "currency_Type", nullable = false)

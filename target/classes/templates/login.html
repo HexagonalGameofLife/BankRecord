@@ -8,14 +8,42 @@
 <body class="login-body">
     <div class="login-container">
         <h2>BankRecord Sistemine Giriş</h2>
-        <form action="/login" method="post">
-            <input type="text" name="customerTc" placeholder="T.C. Kimlik / Müşteri Numaranız" required>
-            <input type="password" name="password" placeholder="Şifre" required>
+        <form id="loginForm">
+            <input type="text" id="customerTc" placeholder="T.C. Kimlik / Müşteri Numaranız" required>
+            <input type="password" id="password" placeholder="Şifre" required>
             <button type="submit">Giriş Yap</button>
             <div class="forgot-password">
                 <a href="#">Şifremi Unuttum</a>
             </div>
         </form>
+        <p id="error-message" style="color: red;"></p>
     </div>
+
+<script>
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const customerTc = document.getElementById('customerTc').value;
+        const password = document.getElementById('password').value;
+
+        try {
+            const response = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ customerTc, password }),
+                credentials: 'include',
+            });
+
+            if (response.ok) {
+                window.location.href = '/index';
+            } else {
+                const errorText = await response.text();
+                document.getElementById('error-message').innerText = errorText;
+            }
+        } catch (error) {
+            document.getElementById('error-message').innerText = 'Sunucu bağlantı hatası.';
+        }
+    });
+</script>
 </body>
 </html>
