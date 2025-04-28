@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>BankRecord - Ana Sayfa</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="index-body">
+    <header class="index-header">
+        <h1>BankRecord'a Hoş Geldiniz!</h1>
+        <h2 th:text="'Hoş Geldiniz, ' + ${customer.customerName} + ' ' + ${customer.customerSurname}"></h2>
+    </header>
+
+    <main class="index-main">
+        <div class="card">
+            <h3>Toplam Bakiye</h3>
+            <p th:text="'₺ ' + ${totalBalance}">₺ 0,00</p>
+        </div>
+
+        <div class="card">
+            <h3>Hesaplarım</h3>
+            <a href="/accounts" class="button">Tüm Hesaplarım</a>
+        </div>
+
+        <div class="card">
+            <h3>İşlemlerim</h3>
+            <a href="/transactions" class="button">İşlemlerim</a>
+        </div>
+
+        <div class="card">
+            <h3>Müşteri Bilgilerim</h3>
+            <a href="/customers" class="button">Müşteri Bilgilerim</a>
+        </div>
+    </main>
+
+    <footer class="index-footer">
+        <a href="/logout" class="logout-button">Çıkış Yap</a>
+    </footer>
+</body>
+</html>

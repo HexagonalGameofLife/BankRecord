@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "TimeDepositAccount")
-@PrimaryKeyJoinColumn(name = "account_ID")
 public class TimeDepositAccount extends Account {
 
     @Column(name = "maturity_Date", nullable = false)

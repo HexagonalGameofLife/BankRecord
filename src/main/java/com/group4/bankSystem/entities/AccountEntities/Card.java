@@ -1,8 +1,6 @@
 package com.group4.bankSystem.entities.AccountEntities;
 
 import java.sql.Date;
-import java.util.Set;
-
 import com.group4.bankSystem.entities.CustomerEntities.Customer;
 
 import jakarta.persistence.*;
@@ -11,17 +9,17 @@ import jakarta.persistence.*;
 
 @Entity
 public class Card {
-    
+
     @Id
     @Column(name = "card_ID", unique = true, length = 11, nullable = false)
     private long cardNumber;
 
-    @ManyToOne //baska entityden gelen alanlarin iliskisi yazilir. 
-    @Column(name = "customer_ID", unique = true, length = 11, nullable = false)
+    @ManyToOne // başka entityden gelen alanların ilişkisi yazılır
+    @JoinColumn(name = "customer_ID", nullable = false) // Doğru kullanım: @JoinColumn
     private Customer customerId;
 
-    @ManyToOne //bu da oyle
-    @Column(name = "account_ID", unique = true, length = 11, nullable = false)
+    @ManyToOne // başka entityden gelen alanların ilişkisi yazılır
+    @JoinColumn(name = "account_id", nullable = false) // Doğru kullanım: @JoinColumn
     private Account accountId;
 
     @Column(name = "Card_Status_Type", nullable = false)
@@ -35,7 +33,7 @@ public class Card {
 
     @Column(name = "customer_TC", unique = true, length = 11, nullable = false)
     private String cardPinHash;
-    
+
     public Account getAccountId() {
         return accountId;
     }
@@ -75,5 +73,5 @@ public class Card {
     public void setExpireDate(Date expireDate) {
         this.expireDate = expireDate;
     }
-    
+
 }

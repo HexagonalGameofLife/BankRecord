@@ -30,7 +30,7 @@ public class AccountService {
     //bir hesabın tum kullanicilari
     public List<Customer> getAllUsersOfAccount(Integer accountId) {
         List<UserList> userLists = userListRepository.findByAccount_AccountId(accountId);
-    
+
         return userLists.stream()
                 .map(userList -> userList.getCustomer())
                 .toList();

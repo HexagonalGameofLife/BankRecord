@@ -18,7 +18,7 @@ public class ExchangeRate {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "target_Currency", nullable = false, length = 12)
-    private Currency targetCurrency; // ENUM yapmazsak String tutacağız (USD, EUR vs.)
+    private CurrencyEnum targetCurrency; // ENUM yapmazsak String tutacağız (USD, EUR vs.)
 
     @Column(name = "rate_to_Try", nullable = false)
     private Float rateToTry;
@@ -45,12 +45,12 @@ public class ExchangeRate {
         this.baseCurrency = baseCurrency;
     }
 
-    public Currency getTargetCurrency() {
+    public CurrencyEnum  getTargetCurrency() {
         return targetCurrency;
     }
 
     public void setTargetCurrency(Currency targetCurrency) {
-        this.targetCurrency = targetCurrency;
+      this.targetCurrency = CurrencyEnum.valueOf(targetCurrency.getCurrencyCode());
     }
 
     public Float getRateToTry() {

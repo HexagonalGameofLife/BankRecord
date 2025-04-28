@@ -3,8 +3,6 @@ package com.group4.bankSystem.entities.AccountEntities;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "OtherCurrencyAccount")
-@PrimaryKeyJoinColumn(name = "account_ID") // Hem PK hem FK
 public class OtherCurrencyAccount extends Account {
 
     @Column(name = "currency_Type", nullable = false)

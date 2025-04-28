@@ -1,6 +1,7 @@
 package com.group4.bankSystem.services.CustomerServices;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,10 +16,10 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class CustomerService {
-    
+
     @Autowired
     private CustomerRepository customerRepository;
-    
+
     @Autowired
     private AccountRepository accountRepository;
 
@@ -35,7 +36,7 @@ public class CustomerService {
     public void changeCustomerName(Integer customerId, String newName) {
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
-    
+
         customer.setCustomerName(newName); // burada setName metodunun olması lazım Customer içinde!
         customerRepository.save(customer);
     }
@@ -43,7 +44,7 @@ public class CustomerService {
     public void changeCustomerSurname(Integer customerId, String newSurname) {
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
-    
+
         customer.setCustomerSurname(newSurname);
         customerRepository.save(customer);
     }
@@ -102,6 +103,18 @@ public class CustomerService {
 
 
         customerRepository.deleteById(customerId);
+    }
+
+    public Customer saveCustomer(Customer customer) {
+      return customerRepository.save(customer);
+    }
+
+    public void deleteCustomer(Integer customerId) {
+      customerRepository.deleteById(customerId);
+    }
+
+    public Optional<Customer> getCustomerById(Integer id) {
+      return customerRepository.findById(id);
     }
 
 }

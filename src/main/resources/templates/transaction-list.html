@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>BankRecord - İşlemlerim</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="transaction-body">
+    <header class="transaction-header">
+        <h1>İşlem Geçmişim</h1>
+    </header>
+
+    <main class="transaction-main">
+        <table class="transaction-table">
+            <thead>
+                <tr>
+                    <th>Gönderen Hesap</th>
+                    <th>Alıcı Hesap</th>
+                    <th>Tutar</th>
+                    <th>İşlem Tarihi</th>
+                    <th>Açıklama</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="transaction : ${transactions}">
+                    <td th:text="${transaction.fromAccount.iban}">Gönderen</td>
+                    <td th:text="${transaction.toAccount.iban}">Alıcı</td>
+                    <td th:text="${transaction.transactionAmount}">0.00 TL</td>
+                    <td th:text="${#temporals.format(transaction.transactionDate, 'dd/MM/yyyy')}">01/01/2025</td>
+                    <td th:text="${transaction.description}">Açıklama</td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+
+    <footer class="transaction-footer">
+        <a href="/index" class="button">Ana Sayfa</a>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>BankRecord - Kayıt Ol</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="register-body">
+    <div class="register-container">
+        <h2>Yeni Müşteri Kaydı</h2>
+        <form action="/register" method="post">
+            <input type="text" name="customerTc" placeholder="T.C. Kimlik Numaranız" required>
+            <input type="text" name="customerName" placeholder="Adınız" required>
+            <input type="text" name="customerSurname" placeholder="Soyadınız" required>
+            <input type="email" name="customerEmail" placeholder="E-posta Adresiniz" required>
+            <input type="text" name="customerPhoneNumber" placeholder="Telefon Numaranız" required>
+            <input type="password" name="password" placeholder="Şifreniz" required>
+            <button type="submit">Kayıt Ol</button>
+        </form>
+    </div>
+</body>
+</html>

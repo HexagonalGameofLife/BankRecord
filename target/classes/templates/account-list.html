@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>BankRecord - Hesaplarım</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="account-body">
+    <header class="account-header">
+        <h1>Hesaplarım</h1>
+    </header>
+
+    <main class="account-main">
+        <table class="account-table">
+            <thead>
+                <tr>
+                    <th>IBAN</th>
+                    <th>Hesap Türü</th>
+                    <th>Bakiye</th>
+                    <th>Başlangıç Tarihi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="account : ${accounts}">
+                    <td th:text="${account.iban}">TR00 0000 0000 0000 0000 0000 00</td>
+                    <td th:text="${account.accountType}">Vadesiz</td>
+                    <td th:text="${account.balance}">0,00 TL</td>
+                    <td th:text="${#temporals.format(account.accountStartDate, 'dd/MM/yyyy')}">01/01/2025</td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+
+    <footer class="account-footer">
+        <a href="/index" class="button">Ana Sayfa</a>
+    </footer>
+</body>
+</html>

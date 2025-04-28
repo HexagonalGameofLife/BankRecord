@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>BankRecord - Müşteriler</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="customer-body">
+    <header class="customer-header">
+        <h1>Tüm Müşteriler</h1>
+    </header>
+
+    <main class="customer-main">
+        <table class="customer-table">
+            <thead>
+                <tr>
+                    <th>TC Kimlik No</th>
+                    <th>Ad</th>
+                    <th>Soyad</th>
+                    <th>Email</th>
+                    <th>Telefon</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="customer : ${customers}">
+                    <td th:text="${customer.customerTc}">12345678901</td>
+                    <td th:text="${customer.customerName}">Adı</td>
+                    <td th:text="${customer.customerSurname}">Soyadı</td>
+                    <td th:text="${customer.customerEmail}">email@example.com</td>
+                    <td th:text="${customer.customerPhoneNumber}">05XXXXXXXXX</td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+
+    <footer class="customer-footer">
+        <a href="/index" class="button">Ana Sayfa</a>
+    </footer>
+</body>
+</html>

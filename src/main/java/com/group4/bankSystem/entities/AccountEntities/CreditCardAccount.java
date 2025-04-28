@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "CreditCardAccount")
-@PrimaryKeyJoinColumn(name = "account_ID") // Hem PK hem FK
 public class CreditCardAccount extends Account {
 
     @Column(name = "credit_Card_Limit", nullable = false)
