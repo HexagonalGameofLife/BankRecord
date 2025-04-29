@@ -1,57 +1,260 @@
 <!DOCTYPE html>
 <html lang="tr">
+
 <head>
     <meta charset="UTF-8">
     <title>BankRecord - Kayıt Ol</title>
     <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        body.register-body {
+            background-color: #d32f2f;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+
+        .register-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            width: 320px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .register-container h2 {
+            text-align: center;
+            color: #b71c1c;
+            margin-bottom: 20px;
+        }
+
+        .register-container input {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        .register-container button[type="submit"] {
+            background-color: #c62828;
+            color: #fff;
+            border: none;
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .register-container button[type="submit"]:hover {
+            background-color: #b71c1c;
+        }
+
+        .password-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .password-container input {
+            width: 100%;
+            padding: 10px 40px 10px 10px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        .password-container .toggle-visibility {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+            color: #555;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        #error-message {
+            margin-top: 10px;
+            color: red;
+            font-size: 14px;
+            text-align: center;
+        }
+    </style>
 </head>
+
 <body class="register-body">
     <div class="register-container">
         <h2>Yeni Müşteri Kaydı</h2>
         <form id="registerForm">
-            <input type="text" id="customerTc" placeholder="T.C. Kimlik Numaranız" required>
+            <input type="text" minlength="11" maxlength="11" id="customerTc" placeholder="T.C. Kimlik Numaranız"
+                required>
             <input type="text" id="customerName" placeholder="Adınız" required>
             <input type="text" id="customerSurname" placeholder="Soyadınız" required>
-            <input type="date" id="customerBirthdate" placeholder="Doğum Tarihiniz" required>
-            <input type="text" id="customerPhoneNumber" placeholder="Telefon Numaranız" required>
+            <input type="date" id="customerBirthdate" placeholder="Doğum Tarihiniz" oninput="validateBirthdate(this)"
+                required>
+            <small id="birthdateWarning" style="color: red; display: none;">
+                Doğum tarihiniz 13 yaşından büyük ve 100 yaşından küçük olmalıdır.
+            </small>
+            <input type="text" maxlength="11" id="customerPhoneNumber" placeholder="Telefon Numaranız (0XXXXXXXXXX)"
+                oninput="validatePhoneNumber(this)" required>
+            <small id="phoneWarning" style="color: red; display: none;">
+                Telefon numarası 11 haneli olmalıdır ve 0 ile başlamalıdır.
+            </small>
             <input type="email" id="customerEmail" placeholder="E-posta Adresiniz" required>
-            <input type="password" id="password" placeholder="Şifreniz" required>
+
+            <div class="password-container">
+                <input type="password" maxlength="6" id="password" placeholder="6 haneli şifre"
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
+                <span class="toggle-visibility" onclick="togglePassword()">👁️</span>
+            </div>
+
             <button type="submit">Kayıt Ol</button>
         </form>
-        <p id="error-message" style="color: red;"></p>
+        <p id="error-message"></p>
     </div>
 
-<script>
-    document.getElementById('registerForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
+    <script>
+        function validateBirthdate(input) {
+            const warning = document.getElementById("birthdateWarning");
+            const birthdate = new Date(input.value);
+            const today = new Date();
 
-        const registerData = {
-            customerTc: document.getElementById('customerTc').value,
-            customerName: document.getElementById('customerName').value,
-            customerSurname: document.getElementById('customerSurname').value,
-            customerBirthdate: document.getElementById('customerBirthdate').value,
-            customerPhoneNumber: document.getElementById('customerPhoneNumber').value,
-            customerEmail: document.getElementById('customerEmail').value,
-            password: document.getElementById('password').value
-        };
-
-        try {
-            const response = await fetch('/api/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(registerData)
-            });
-
-            if (response.ok) {
-                window.location.href = '/login';
-            } else {
-                const errorText = await response.text();
-                document.getElementById('error-message').innerText = errorText;
+            if (!input.value) {
+                warning.style.display = "none";
+                return;
             }
-        } catch (error) {
-            document.getElementById('error-message').innerText = 'Sunucu bağlantı hatası.';
+
+            // Gelecek tarih girişi engelle
+            if (birthdate > today) {
+                warning.style.display = "block";
+                return;
+            }
+
+            // Yaş hesaplama
+            let age = today.getFullYear() - birthdate.getFullYear();
+            const monthDiff = today.getMonth() - birthdate.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthdate.getDate())) {
+                age--;
+            }
+
+            // Yaş aralığı kontrolü
+            if (age < 13 || age > 100) {
+                warning.style.display = "block";
+            } else {
+                warning.style.display = "none";
+            }
         }
-    });
-</script>
+
+
+        function togglePassword() {
+            const passwordInput = document.getElementById("password");
+            const toggleIcon = document.querySelector(".toggle-visibility");
+
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                toggleIcon.textContent = "🙈";
+            } else {
+                passwordInput.type = "password";
+                toggleIcon.textContent = "👁️";
+            }
+        }
+
+        function validatePhoneNumber(input) {
+            // Sadece rakamları kabul et
+            input.value = input.value.replace(/[^0-9]/g, '');
+
+            const warning = document.getElementById("phoneWarning");
+
+            // Şart: 11 hane ve 05 ile başlama
+            if (input.value.length === 0) {
+                warning.style.display = "none"; // boşsa uyarı gizli
+            } else if (input.value.length !== 11 || !input.value.startsWith("0")) {
+                warning.style.display = "block";
+            } else {
+                warning.style.display = "none";
+            }
+        }
+
+        function isBirthdateValid(birthdateStr) {
+            const birthdate = new Date(birthdateStr);
+            const today = new Date();
+
+            if (birthdate > today) return false;
+
+            let age = today.getFullYear() - birthdate.getFullYear();
+            const monthDiff = today.getMonth() - birthdate.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthdate.getDate())) {
+                age--;
+            }
+
+            return age >= 13 && age <= 100;
+        }
+
+        document.getElementById('registerForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const customerTc = document.getElementById('customerTc').value;
+            const customerPhoneNumber = document.getElementById('customerPhoneNumber').value;
+            const customerBirthdate = document.getElementById('customerBirthdate').value;
+            const password = document.getElementById('password').value;
+
+            // VALIDASYONLAR
+            if (customerTc.length !== 11 || !/^\d{11}$/.test(customerTc)) {
+                document.getElementById('error-message').innerText = 'TC Kimlik Numarası 11 haneli olmalıdır.';
+                return;
+            }
+
+            if (customerPhoneNumber.length !== 11 || !customerPhoneNumber.startsWith("0")) {
+                document.getElementById('error-message').innerText = 'Telefon numarası 0 ile başlamalı ve 11 haneli olmalıdır.';
+                return;
+            }
+
+            if (!isBirthdateValid(customerBirthdate)) {
+                document.getElementById('error-message').innerText = 'Doğum tarihi geçersiz. (13 yaşından büyük, 100 yaşından küçük olmalı)';
+                return;
+            }
+
+            if (!/^\d{6}$/.test(password)) {
+                document.getElementById('error-message').innerText = 'Şifre sadece 6 rakamdan oluşmalıdır.';
+                return;
+            }
+
+            document.getElementById('error-message').innerText = ''; // varsa eski hata temizle
+
+            // Her şey validse gönder
+            const registerData = {
+                customerTc,
+                customerName: document.getElementById('customerName').value,
+                customerSurname: document.getElementById('customerSurname').value,
+                customerBirthdate,
+                customerPhoneNumber,
+                customerEmail: document.getElementById('customerEmail').value,
+                password
+            };
+
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(registerData)
+                });
+
+                if (response.ok) {
+                    window.location.href = '/login';
+                } else {
+                    const errorText = await response.text();
+                    document.getElementById('error-message').innerText = errorText;
+                }
+            } catch (error) {
+                document.getElementById('error-message').innerText = 'Sunucu bağlantı hatası.';
+            }
+        });
+
+    </script>
 </body>
+
 </html>

@@ -1,49 +1,110 @@
 <!DOCTYPE html>
 <html lang="tr">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>BankRecord - Giriş Yap</title>
-    <link rel="stylesheet" href="/css/styles.css">
-</head>
-<body class="login-body">
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body class="login-body">
     <div class="login-container">
-        <h2>BankRecord Sistemine Giriş</h2>
-        <form id="loginForm">
-            <input type="text" id="customerTc" placeholder="T.C. Kimlik / Müşteri Numaranız" required>
-            <input type="password" id="password" placeholder="Şifre" required>
-            <button type="submit">Giriş Yap</button>
-            <div class="forgot-password">
-                <a href="#">Şifremi Unuttum</a>
-            </div>
-        </form>
-        <p id="error-message" style="color: red;"></p>
+      <h2>BankRecord Sistemine Giriş</h2>
+      <form id="loginForm">
+        <input
+          type="text"
+          id="customerTc"
+          placeholder="T.C. Kimlik / Müşteri Numaranız"
+          maxlength="11"
+          inputmode="numeric"
+          required
+        />
+
+        <input
+          type="password"
+          id="password"
+          placeholder="Şifre"
+          maxlength="6"
+          inputmode="numeric"
+          required
+        />
+
+        <button type="submit">Giriş Yap</button>
+
+        <div class="forgot-password">
+          <a href="#">Şifremi Unuttum</a>
+        </div>
+        <p id="error-message" class="form-error-message"></p>
+
+        <div class="register-link">
+          <a href="/register">Kayıt Ol</a>
+        </div>
+      </form>
+      <p id="error-message" style="color: red"></p>
     </div>
 
-<script>
-    document.getElementById('loginForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
+    <script>
+      // Uyarı mesajını ekrana yazdıran yardımcı fonksiyon
+      function showErrorMessage(message) {
+        const msgEl = document.getElementById("error-message");
+        msgEl.innerText = message;
+        msgEl.style.display = "block";
+      }
 
-        const customerTc = document.getElementById('customerTc').value;
-        const password = document.getElementById('password').value;
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault();
 
-        try {
-            const response = await fetch('/api/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ customerTc, password }),
-                credentials: 'include',
+          const customerTc = document.getElementById("customerTc").value.trim();
+          const password = document.getElementById("password").value.trim();
+
+          const tcValid = /^\d{11}$/.test(customerTc);
+          const passValid = /^\d{6}$/.test(password);
+
+          if (!tcValid) {
+            showErrorMessage(
+              "T.C. Kimlik numarası 11 haneli ve sadece sayılardan oluşmalıdır."
+            );
+            return;
+          }
+
+          if (!passValid) {
+            showErrorMessage(
+              "Şifre 6 haneli ve sadece sayılardan oluşmalıdır."
+            );
+            return;
+          }
+
+          try {
+            const response = await fetch("/api/login", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ customerTc, password }),
+              credentials: "include",
             });
 
             if (response.ok) {
-                window.location.href = '/index';
+              window.location.href = "/index";
             } else {
-                const errorText = await response.text();
-                document.getElementById('error-message').innerText = errorText;
+              const errorText = await response.text();
+              showErrorMessage(errorText);
             }
-        } catch (error) {
-            document.getElementById('error-message').innerText = 'Sunucu bağlantı hatası.';
-        }
-    });
-</script>
-</body>
+          } catch (error) {
+            showErrorMessage("Sunucu bağlantı hatası.");
+          }
+        });
+
+      // Sadece sayı girişi için input'u anlık olarak filtrele
+      function allowOnlyNumbers(inputElement, maxLength) {
+        inputElement.addEventListener("input", function () {
+          this.value = this.value.replace(/\D/g, "").slice(0, maxLength);
+        });
+      }
+
+      // Uygula
+      const tcInput = document.getElementById("customerTc");
+      const passwordInput = document.getElementById("password");
+      allowOnlyNumbers(tcInput, 11);
+      allowOnlyNumbers(passwordInput, 6);
+    </script>
+  </body>
 </html>
