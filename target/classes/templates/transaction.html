@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>İşlem Yap</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        header {
+            background-color: #d32f2f;
+            color: white;
+            padding: 20px;
+        }
+
+        .container {
+            margin: 30px auto;
+            width: 90%;
+            max-width: 600px;
+            background-color: white;
+            padding: 30px;
+            box-shadow: 0 0 10px #bbb;
+            border-radius: 10px;
+        }
+
+        select, input, button, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 12px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #d32f2f;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #b71c1c;
+        }
+
+        .form-section {
+            display: none;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        .back-button {
+            margin-top: 20px;
+            display: inline-block;
+            background-color: #555;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+
+        .back-button:hover {
+            background-color: #333;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>İşlem Yap</h1>
+</header>
+
+<div class="container">
+    <label for="transactionType">İşlem Türü Seçin:</label>
+    <select id="transactionType">
+        <option value="">-- Seçiniz --</option>
+        <option value="transfer">Para Transferi</option>
+        <option value="odeme">Fatura Ödeme</option>
+        <option value="havale">Havale</option>
+    </select>
+
+    <div id="transferForm" class="form-section">
+        <h3>Para Transferi</h3>
+        <label>Gönderen IBAN:</label>
+        <input type="text" placeholder="TR..." />
+        <label>Alıcı IBAN:</label>
+        <input type="text" placeholder="TR..." />
+        <label>Tutar:</label>
+        <input type="number" placeholder="₺ Tutar" />
+        <label>Açıklama:</label>
+        <textarea placeholder="Açıklama girin..."></textarea>
+        <button>Gönder</button>
+        <a href="/index" class="back-button">Ana Menüye Dön</a>
+    </div>
+
+    <div id="odemeForm" class="form-section">
+        <h3>Fatura Ödeme</h3>
+        <label>Abone No:</label>
+        <input type="text" />
+        <label>Kurum:</label>
+        <input type="text" placeholder="Elektrik, Su vb." />
+        <label>Tutar:</label>
+        <input type="number" />
+        <button>Öde</button>
+        <a href="/index" class="back-button">Ana Menüye Dön</a>
+    </div>
+
+    <div id="havaleForm" class="form-section">
+        <h3>Havale</h3>
+        <label>Alıcı IBAN:</label>
+        <input type="text" />
+        <label>Tutar:</label>
+        <input type="number" />
+        <label>Açıklama:</label>
+        <textarea></textarea>
+        <button>Havale Yap</button>
+        <a href="/index" class="back-button">Ana Menüye Dön</a>
+    </div>
+</div>
+
+<script>
+    const typeSelector = document.getElementById("transactionType");
+    const sections = {
+        transfer: document.getElementById("transferForm"),
+        odeme: document.getElementById("odemeForm"),
+        havale: document.getElementById("havaleForm")
+    };
+
+    typeSelector.addEventListener("change", () => {
+        Object.values(sections).forEach(sec => sec.style.display = "none");
+        const selected = typeSelector.value;
+        if (sections[selected]) {
+            sections[selected].style.display = "block";
+        }
+    });
+</script>
+
+</body>
+</html>

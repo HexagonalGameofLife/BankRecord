@@ -42,4 +42,11 @@ public class PageController {
     public String profilePage() {
         return "profile"; // src/main/resources/templates/profile.html
     }
-}
+
+    // İşlem yapma sayfasına yönlendirme
+    @GetMapping("/transaction")
+    public String showTransactionPage() {
+        return "transaction";   // src/main/resources/templates/transaction.html
+
+    }
+  }

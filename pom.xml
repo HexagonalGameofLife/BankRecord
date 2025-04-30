@@ -20,6 +20,12 @@
 	</properties>
 
 	<dependencies>
+
+	  <dependency>
+	    <groupId>org.springframework.boot</groupId>
+	    <artifactId>spring-boot-starter-actuator</artifactId>
+	  </dependency>
+
 		<!-- Spring Boot Ana Bağımlılık -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -48,14 +54,13 @@
 		<dependency>
 			<groupId>jakarta.validation</groupId>
 			<artifactId>jakarta.validation-api</artifactId>
-			<version>3.0.2</version>
+
 		</dependency>
 
 		<!-- SQL Server JDBC Bağlantısı -->
 		<dependency>
 			<groupId>com.microsoft.sqlserver</groupId>
 			<artifactId>mssql-jdbc</artifactId>
-			<version>12.4.2.jre11</version>
 		</dependency>
 
 		<!-- Testler için -->
