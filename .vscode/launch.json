@@ -3,6 +3,13 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "java",
+      "name": "BankSystemApplication",
+      "request": "launch",
+      "mainClass": "com.group4.bankSystem.BankSystemApplication",
+      "projectName": "bankSystem"
+    },
+    {
       "name": "ng serve",
       "type": "chrome",
       "request": "launch",

@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 @Entity
 @Table(name= "UserList")
 public class UserList {
-    
+
     @EmbeddedId
     private UserListId id;
 
@@ -21,7 +21,7 @@ public class UserList {
     @ManyToOne
     @MapsId("accountId")
     @JoinColumn(name= "account_ID")
-    private Account account;  
+    private Account account;
 
     @Column(name= "is_Primary_User", nullable = false)
     private boolean isPrimaryUser;
