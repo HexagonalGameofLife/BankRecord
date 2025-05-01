@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>BankRecord - Profilim</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <style>
+      .profile-section {
+        margin-bottom: 30px;
+        padding: 20px;
+        background-color: #fafafa;
+        border-radius: 8px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+      }
+
+      .profile-section h3 {
+        margin-top: 0;
+        margin-bottom: 15px;
+        color: #b71c1c;
+        font-size: 1.1rem;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 5px;
+      }
+
+      .info-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 6px 0;
+        border-bottom: 1px solid #eee;
+        font-size: 0.95rem;
+      }
+
+      .password-section input {
+        margin-bottom: 15px;
+      }
+
+      textarea {
+        resize: vertical;
+        overflow-y: auto;
+        max-height: 200px;
+      }
+
+      #error-message,
+      #success-message {
+        padding: 10px;
+        border-radius: 5px;
+        text-align: center;
+        margin-top: 15px;
+        display: none;
+      }
+
+      #error-message {
+        background-color: #ffdddd;
+        color: #c62828;
+      }
+
+      #success-message {
+        background-color: #4caf50;
+        color: white;
+      }
+
+      .back-button {
+        display: block;
+        width: 100%;
+        text-align: center;
+        margin-top: 15px;
+        padding: 14px;
+        background-color: #b71c1c;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-weight: bold;
+        font-size: 16px;
+        text-decoration: none;
+        box-sizing: border-box;
+        transition: background-color 0.3s;
+      }
+
+      .back-button:hover {
+        background-color: #7f0000;
+      }
+    </style>
+  </head>
+  <body class="profile-body">
+    <div class="profile-container">
+      <h2>Profilim</h2>
+      <form id="profileForm">
+        <!-- Kişisel Bilgiler -->
+        <div class="profile-section">
+          <h3>Kişisel Bilgiler</h3>
+          <div class="info-row">
+            <strong>Ad:</strong> <span id="customerName"></span>
+          </div>
+          <div class="info-row">
+            <strong>Soyad:</strong> <span id="customerSurname"></span>
+          </div>
+          <div class="info-row">
+            <strong>T.C. Kimlik No:</strong> <span id="customerTc"></span>
+          </div>
+          <div class="info-row">
+            <strong>E-posta:</strong> <span id="customerEmail"></span>
+          </div>
+          <div class="info-row">
+            <strong>Hesap Oluşturulma Tarihi:</strong>
+            <span id="customerRegistrationDate"></span>
+          </div>
+        </div>
+
+        <!-- Güncellenebilir Bilgiler -->
+        <div class="profile-section">
+          <h3>İletişim ve Diğer Bilgiler</h3>
+          <label for="customerPhoneNumber">Telefon:</label>
+          <input type="text" id="customerPhoneNumber" required />
+
+          <label for="customerGender">Cinsiyet:</label>
+          <select id="customerGender" required>
+            <option value="">Seçiniz</option>
+            <option value="male">Erkek</option>
+            <option value="female">Kadın</option>
+            <option value="other">Diğer</option>
+          </select>
+
+          <label for="customerAddress">Adres:</label>
+          <textarea
+            id="customerAddress"
+            placeholder="Adresinizi giriniz"
+            required
+          ></textarea>
+        </div>
+
+        <!-- Şifre Güncelleme -->
+        <div class="profile-section password-section">
+          <h3>Şifre Güncelle</h3>
+          <label for="newPassword">Yeni Şifre:</label>
+          <input
+            type="password"
+            id="newPassword"
+            placeholder="Yeni Şifre"
+            maxlength="6"
+            inputmode="numeric"
+          />
+
+          <label for="confirmPassword">Yeni Şifre (Tekrar):</label>
+          <input
+            type="password"
+            id="confirmPassword"
+            placeholder="Şifreyi tekrar girin"
+            maxlength="6"
+            inputmode="numeric"
+          />
+        </div>
+
+        <button type="submit">Bilgileri Güncelle</button>
+        <a href="/index" class="back-button">Anasayfaya Dön</a>
+      </form>
+
+      <p id="error-message"></p>
+      <p id="success-message">Bilgiler başarıyla güncellendi!</p>
+    </div>
+
+    <script>
+      async function fetchCustomerProfile() {
+        try {
+          const response = await fetch("/api/me", { credentials: "include" });
+          if (!response.ok) {
+            window.location.href = "/login";
+            return;
+          }
+
+          const customer = await response.json();
+          document.getElementById("customerName").innerText =
+            customer.customerName || "";
+          document.getElementById("customerSurname").innerText =
+            customer.customerSurname || "";
+          document.getElementById("customerTc").innerText =
+            customer.customerTc || "";
+          document.getElementById("customerEmail").innerText =
+            customer.customerEmail || "";
+          document.getElementById("customerRegistrationDate").innerText =
+            customer.customerRegistrationDate || "";
+
+          document.getElementById("customerPhoneNumber").value =
+            customer.customerPhoneNumber || "";
+          document.getElementById("customerGender").value =
+            customer.customerGender || "";
+          document.getElementById("customerAddress").value =
+            customer.customerAddress || "";
+        } catch (error) {
+          console.error("Profil bilgileri alınamadı:", error);
+          window.location.href = "/login";
+        }
+      }
+
+      document
+        .getElementById("profileForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const newPassword = document.getElementById("newPassword").value;
+          const confirmPassword =
+            document.getElementById("confirmPassword").value;
+
+          if (newPassword || confirmPassword) {
+            if (newPassword !== confirmPassword) {
+              document.getElementById("error-message").innerText =
+                "Şifreler uyuşmuyor!";
+              document.getElementById("error-message").style.display = "block";
+              return;
+            }
+          }
+
+          const updatedCustomer = {
+            customerPhoneNumber: document.getElementById("customerPhoneNumber")
+              .value,
+            customerGender: document.getElementById("customerGender").value,
+            customerAddress: document.getElementById("customerAddress").value,
+          };
+
+          if (newPassword) {
+            updatedCustomer.loginPasswordHash = newPassword;
+          }
+
+          try {
+            const response = await fetch("/api/me", {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              credentials: "include",
+              body: JSON.stringify(updatedCustomer),
+            });
+
+            if (response.ok) {
+              document.getElementById("success-message").style.display =
+                "block";
+              document.getElementById("error-message").style.display = "none";
+              setTimeout(() => window.location.reload(), 1500);
+            } else {
+              const errorText = await response.text();
+              document.getElementById("error-message").innerText = errorText;
+              document.getElementById("error-message").style.display = "block";
+            }
+          } catch (error) {
+            document.getElementById("error-message").innerText =
+              "Bilgiler güncellenirken hata oluştu.";
+            document.getElementById("error-message").style.display = "block";
+          }
+        });
+
+      fetchCustomerProfile();
+
+      function allowOnlyNumbers(inputElement, maxLength) {
+        inputElement.addEventListener("input", function () {
+          this.value = this.value.replace(/\D/g, "").slice(0, maxLength);
+        });
+      }
+
+      // Şifre alanlarına uygula
+      allowOnlyNumbers(document.getElementById("newPassword"), 6);
+      allowOnlyNumbers(document.getElementById("confirmPassword"), 6);
+    </script>
+  </body>
+</html>

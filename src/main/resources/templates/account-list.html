@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>BankRecord - Hesaplarım</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="account-body">
+    <header class="account-header">
+        <h1>Hesaplarım</h1>
+    </header>
+
+    <main class="account-main">
+        <table class="account-table">
+            <thead>
+                <tr>
+                    <th>IBAN</th>
+                    <th>Hesap Türü</th>
+                    <th>Bakiye</th>
+                    <th>Başlangıç Tarihi</th>
+                </tr>
+            </thead>
+            <tbody id="accountTableBody">
+                <!-- API'den doldurulacak -->
+            </tbody>
+        </table>
+    </main>
+
+    <footer class="account-footer">
+        <a href="/index" class="button">Ana Sayfa</a>
+    </footer>
+
+<script>
+  async function checkSession() {
+    try {
+        const response = await fetch('/api/session');
+        if (!response.ok) {
+            window.location.href = '/login';
+        }
+    } catch (error) {
+        window.location.href = '/login';
+    }
+}
+checkSession();
+
+async function fetchAccounts() {
+    try {
+        const response = await fetch('/api/accounts');
+        const accounts = await response.json();
+
+        const tableBody = document.getElementById('accountTableBody');
+        tableBody.innerHTML = '';
+
+        accounts.forEach(account => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${account.iban}</td>
+                <td>${account.accountType}</td>
+                <td>${account.balance.toFixed(2)} TL</td>
+                <td>${new Date(account.accountStartDate).toLocaleDateString('tr-TR')}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+
+    } catch (error) {
+        console.error('Hesaplar alınamadı.');
+    }
+}
+
+fetchAccounts();
+
+</script>
+</body>
+</html>

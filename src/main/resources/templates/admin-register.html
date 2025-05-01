@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Yeni Admin Kaydı</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .register-container {
+            background-color: white;
+            max-width: 400px;
+            margin: 60px auto;
+            padding: 40px;
+            border-radius: 16px;
+            border-top: 10px solid #d32f2f;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #d32f2f;
+            margin-bottom: 25px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            margin: 12px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: #d32f2f;
+            color: white;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #b71c1c;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 10px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .success-message {
+            color: green;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="register-container">
+    <h2>Yeni Admin Kaydı</h2>
+    <input type="text" id="username" placeholder="Kullanıcı Adınız" required />
+    <input type="password" id="password" placeholder="Şifreniz" required />
+    <button onclick="registerAdmin()">Kayıt Ol</button>
+    <div id="message"></div>
+</div>
+
+<script>
+    function registerAdmin() {
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value.trim();
+        const messageBox = document.getElementById('message');
+        messageBox.innerText = '';
+
+        fetch('/api/admins/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+          username: username,
+          password: password,
+          confirmPassword: password  // Şifre tekrarını frontend'de kullanıyorsan
+          })
+        })
+        .then(response => {
+            if (response.ok) {
+                messageBox.innerHTML = '<p class="success-message">Kayıt başarılı! Giriş sayfasına yönlendiriliyorsunuz...</p>';
+                setTimeout(() => window.location.href = '/admin/login', 2000);
+            } else {
+                return response.text().then(text => {
+                    messageBox.innerHTML = `<p class="error-message">${text}</p>`;
+                });
+            }
+        })
+        .catch(() => {
+            messageBox.innerHTML = '<p class="error-message">Sunucu hatası, tekrar deneyin.</p>';
+        });
+    }
+</script>
+</body>
+</html>

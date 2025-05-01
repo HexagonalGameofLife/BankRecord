@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>BankRecord - Müşteriler</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="customer-body">
+    <header class="customer-header">
+        <h1>Tüm Müşteriler</h1>
+    </header>
+
+    <main class="customer-main">
+        <table class="customer-table">
+            <thead>
+                <tr>
+                    <th>TC Kimlik No</th>
+                    <th>Ad</th>
+                    <th>Soyad</th>
+                    <th>Email</th>
+                    <th>Telefon</th>
+                </tr>
+            </thead>
+            <tbody id="customerTableBody">
+                <!-- API'den doldurulacak -->
+            </tbody>
+        </table>
+    </main>
+
+    <footer class="customer-footer">
+        <a href="/index" class="button">Ana Sayfa</a>
+    </footer>
+
+<script>
+  async function checkSession() {
+    try {
+        const response = await fetch('/api/session');
+        if (!response.ok) {
+            window.location.href = '/login';
+        }
+    } catch (error) {
+        window.location.href = '/login';
+    }
+}
+checkSession();
+
+async function fetchCustomers() {
+    try {
+        const response = await fetch('/api/customers');
+        const customers = await response.json();
+
+        const tableBody = document.getElementById('customerTableBody');
+        tableBody.innerHTML = '';
+
+        customers.forEach(customer => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${customer.customerTc}</td>
+                <td>${customer.customerName}</td>
+                <td>${customer.customerSurname}</td>
+                <td>${customer.customerEmail}</td>
+                <td>${customer.customerPhoneNumber}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+
+    } catch (error) {
+        console.error('Müşteri listesi alınamadı.');
+    }
+}
+
+fetchCustomers();
+</script>
+</body>
+</html>

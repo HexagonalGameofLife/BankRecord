@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>BankRecord - İşlemlerim</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="transaction-body">
+    <header class="transaction-header">
+        <h1>İşlem Geçmişim</h1>
+    </header>
+
+    <main class="transaction-main">
+        <table class="transaction-table">
+            <thead>
+                <tr>
+                    <th>Gönderen Hesap</th>
+                    <th>Alıcı Hesap</th>
+                    <th>Tutar</th>
+                    <th>İşlem Tarihi</th>
+                    <th>Açıklama</th>
+                </tr>
+            </thead>
+            <tbody id="transactionTableBody">
+                <!-- API'den doldurulacak -->
+            </tbody>
+        </table>
+    </main>
+
+    <footer class="transaction-footer">
+        <a href="/index" class="button">Ana Sayfa</a>
+    </footer>
+
+<script>
+
+  async function checkSession() {
+    try {
+        const response = await fetch('/api/session');
+        if (!response.ok) {
+            window.location.href = '/login';
+        }
+    } catch (error) {
+        window.location.href = '/login';
+    }
+}
+checkSession();
+
+async function fetchTransactions() {
+    try {
+        const response = await fetch('/api/transactions');
+        const transactions = await response.json();
+
+        const tableBody = document.getElementById('transactionTableBody');
+        tableBody.innerHTML = '';
+
+        transactions.forEach(transaction => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${transaction.fromAccount?.iban || '-'}</td>
+                <td>${transaction.toAccount?.iban || '-'}</td>
+                <td>${transaction.transactionAmount.toFixed(2)} TL</td>
+                <td>${new Date(transaction.transactionDate).toLocaleDateString('tr-TR')}</td>
+                <td>${transaction.description}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+
+    } catch (error) {
+        console.error('İşlem geçmişi alınamadı.');
+    }
+}
+
+fetchTransactions();
+</script>
+</body>
+</html>

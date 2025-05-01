@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>BankRecord - Ana Sayfa</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="index-body">
+    <header class="index-header">
+        <h1>BankRecord'a Hoş Geldiniz!</h1>
+        <h2 id="welcomeMessage"></h2>
+    </header>
+
+    <main class="index-main">
+        <div class="card">
+            <h3>Toplam Bakiye</h3>
+            <p id="totalBalance">₺ 0,00</p>
+        </div>
+
+        <div class="card">
+            <h3>Hesaplarım</h3>
+            <a href="/accounts" class="button">Tüm Hesaplarım</a>
+        </div>
+
+        <div class="card">
+            <h3>İşlemlerim</h3>
+            <a href="/transactions" class="button">İşlemlerim</a>
+        </div>
+
+        <div class="card">
+            <h3>Müşteri Bilgilerim</h3>
+            <a href="/customers" class="button">Müşteri Bilgilerim</a>
+        </div>
+
+        <div class="card">
+            <h3>Profilim</h3>
+            <a href="/profile" class="button">Profilime Git</a>
+        </div>
+
+        <div class="card">
+          <h3>İşlem Yap</h3>
+          <a href="/transaction" class="button">İşlem Yap</a>
+      </div>
+
+
+    </main>
+
+    <footer class="index-footer">
+        <button id="logoutButton" class="logout-button">Çıkış Yap</button>
+    </footer>
+
+<script>
+// Session Kontrolü
+async function checkSession() {
+    try {
+        const response = await fetch('/api/session', {
+            credentials: 'include'
+        });
+        if (!response.ok) {
+            window.location.href = '/login';
+        }
+    } catch (error) {
+        window.location.href = '/login';
+    }
+}
+
+// Login olan kullanıcının bilgilerini çek
+async function fetchCustomerInfo() {
+    try {
+        const response = await fetch('/api/me', {
+            credentials: 'include'
+        });
+
+        if (response.ok) {
+            const customer = await response.json();
+            document.getElementById('welcomeMessage').innerText = 'Hoş Geldiniz, ' + customer.customerName + ' ' + customer.customerSurname;
+        } else {
+            window.location.href = '/login';
+        }
+    } catch (error) {
+        console.error('Kullanıcı bilgisi alınamadı.');
+        window.location.href = '/login';
+    }
+}
+
+// Toplam Bakiye Bilgisi
+async function fetchTotalBalance() {
+    try {
+        const response = await fetch('/api/accounts', {
+            credentials: 'include'
+        });
+
+        const accounts = await response.json();
+
+        let total = accounts.reduce((sum, account) => sum + (account.balance || 0), 0);
+        document.getElementById('totalBalance').innerText = '₺ ' + total.toFixed(2);
+    } catch (error) {
+        console.error('Toplam bakiye alınamadı.');
+    }
+}
+
+// Logout işlemi
+document.getElementById('logoutButton').addEventListener('click', async () => {
+    try {
+        await fetch('/api/logout', {
+            method: 'POST',
+            credentials: 'include'
+        });
+        window.location.href = '/login';
+    } catch (error) {
+        console.error('Çıkış yapılırken hata.');
+    }
+});
+
+// Sayfa yüklenince kontrolleri yap
+checkSession();
+fetchCustomerInfo();
+fetchTotalBalance();
+</script>
+</body>
+</html>
