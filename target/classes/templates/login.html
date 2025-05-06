@@ -1,110 +1,245 @@
 <!DOCTYPE html>
-<html lang="tr">
-  <head>
-    <meta charset="UTF-8" />
-    <title>BankRecord - Giriş Yap</title>
-    <link rel="stylesheet" href="/css/styles.css" />
-  </head>
-  <body class="login-body">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BankRecord - Login</title>
+    <style>
+        body.login-body {
+            background-color: #F1F6F9; /* Very light gray background */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px; /* Add some padding for smaller screens */
+        }
+
+        .login-container {
+            background-color: #212A3E; /* Dark gray container */
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: #F1F6F9; /* Light gray heading */
+            margin-bottom: 30px;
+            font-weight: 500;
+            font-size: 24px;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+            position: relative;
+            text-align: left; /* Align label and input text to the left */
+        }
+
+        .input-group input {
+            width: calc(100% - 20px);
+            padding: 15px;
+            border: 1px solid #394867; /* Dark blue-gray border */
+            border-radius: 8px;
+            font-size: 16px;
+            color: #F1F6F9; /* Light gray text */
+            background-color: transparent;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #9BA4B5; /* Medium gray focus border */
+            box-shadow: 0 0 8px rgba(155, 164, 181, 0.5);
+        }
+
+        .input-group label {
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            padding: 0 8px;
+            background-color: #212A3E; /* Dark gray label background */
+            color: #9BA4B5; /* Medium gray label text */
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .input-group input:focus + label,
+        .input-group input:not(:placeholder-shown) + label {
+            top: -10px;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 16px;
+            background-color: #394867; /* Dark blue-gray button */
+            color: #F1F6F9; /* Light gray button text */
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-top: 20px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #9BA4B5; /* Medium gray hover */
+            transform: scale(1.02);
+        }
+
+        .forgot-password {
+            margin-top: 15px;
+        }
+
+        .forgot-password a {
+            color: #9BA4B5; /* Medium gray link */
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-password a:hover {
+            color: #F1F6F9; /* Light gray hover */
+        }
+
+        p#error-message {
+            color: #FF6B6B; /* Red error message */
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .register-link {
+            margin-top: 20px;
+        }
+
+        .register-link a {
+            color: #9BA4B5; /* Medium gray link */
+            text-decoration: none;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+
+        .register-link a:hover {
+            color: #F1F6F9; /* Light gray hover */
+        }
+    </style>
+</head>
+<body class="login-body">
     <div class="login-container">
-      <h2>BankRecord Sistemine Giriş</h2>
-      <form id="loginForm">
-        <input
-          type="text"
-          id="customerTc"
-          placeholder="T.C. Kimlik / Müşteri Numaranız"
-          maxlength="11"
-          inputmode="numeric"
-          required
-        />
+        <h2>Login to BankRecord</h2>
+        <form id="loginForm">
+            <div class="input-group">
+                <input
+                    type="text"
+                    id="customerTc"
+                    placeholder="ID Number / Customer Number"
+                    maxlength="11"
+                    inputmode="numeric"
+                    required
+                />
+                <label for="customerTc">ID Number / Customer Number</label>
+            </div>
+            <div class="input-group">
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Password"
+                    maxlength="6"
+                    inputmode="numeric"
+                    required
+                />
+                <label for="password">Password</label>
+            </div>
 
-        <input
-          type="password"
-          id="password"
-          placeholder="Şifre"
-          maxlength="6"
-          inputmode="numeric"
-          required
-        />
+            <button type="submit">Login</button>
 
-        <button type="submit">Giriş Yap</button>
+            <div class="forgot-password">
+                <a href="#">Forgot Password</a>
+            </div>
+            <p id="error-message" class="form-error-message" style="display: none;"></p>
 
-        <div class="forgot-password">
-          <a href="#">Şifremi Unuttum</a>
-        </div>
-        <p id="error-message" class="form-error-message"></p>
-
-        <div class="register-link">
-          <a href="/register">Kayıt Ol</a>
-        </div>
-      </form>
-      <p id="error-message" style="color: red"></p>
+            <div class="register-link">
+                <a href="/register">Register</a>
+            </div>
+        </form>
     </div>
 
     <script>
-      // Uyarı mesajını ekrana yazdıran yardımcı fonksiyon
-      function showErrorMessage(message) {
-        const msgEl = document.getElementById("error-message");
-        msgEl.innerText = message;
-        msgEl.style.display = "block";
-      }
+        // Helper function to display error message
+        function showErrorMessage(message) {
+            const msgEl = document.getElementById("error-message");
+            msgEl.innerText = message;
+            msgEl.style.display = "block";
+        }
 
-      document
-        .getElementById("loginForm")
-        .addEventListener("submit", async function (e) {
-          e.preventDefault();
+        document
+            .getElementById("loginForm")
+            .addEventListener("submit", async function (e) {
+                e.preventDefault();
 
-          const customerTc = document.getElementById("customerTc").value.trim();
-          const password = document.getElementById("password").value.trim();
+                const customerTc = document.getElementById("customerTc").value.trim();
+                const password = document.getElementById("password").value.trim();
 
-          const tcValid = /^\d{11}$/.test(customerTc);
-          const passValid = /^\d{6}$/.test(password);
+                const tcValid = /^\d{11}$/.test(customerTc);
+                const passValid = /^\d{6}$/.test(password);
 
-          if (!tcValid) {
-            showErrorMessage(
-              "T.C. Kimlik numarası 11 haneli ve sadece sayılardan oluşmalıdır."
-            );
-            return;
-          }
+                if (!tcValid) {
+                    showErrorMessage(
+                        "ID / Customer number must be 11 digits."
+                    );
+                    return;
+                }
 
-          if (!passValid) {
-            showErrorMessage(
-              "Şifre 6 haneli ve sadece sayılardan oluşmalıdır."
-            );
-            return;
-          }
+                if (!passValid) {
+                    showErrorMessage(
+                        "Password must be 6 digits."
+                    );
+                    return;
+                }
 
-          try {
-            const response = await fetch("/api/login", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ customerTc, password }),
-              credentials: "include",
+                try {
+                    const response = await fetch("/api/login", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ customerTc, password }),
+                        credentials: "include",
+                    });
+
+                    if (response.ok) {
+                        window.location.href = "/index";
+                    } else {
+                        const errorText = await response.text();
+                        showErrorMessage(errorText);
+                    }
+                } catch (error) {
+                    showErrorMessage("Server connection error.");
+                }
             });
 
-            if (response.ok) {
-              window.location.href = "/index";
-            } else {
-              const errorText = await response.text();
-              showErrorMessage(errorText);
-            }
-          } catch (error) {
-            showErrorMessage("Sunucu bağlantı hatası.");
-          }
-        });
+        // Filter input to allow only numbers
+        function allowOnlyNumbers(inputElement, maxLength) {
+            inputElement.addEventListener("input", function () {
+                this.value = this.value.replace(/\D/g, "").slice(0, maxLength);
+            });
+        }
 
-      // Sadece sayı girişi için input'u anlık olarak filtrele
-      function allowOnlyNumbers(inputElement, maxLength) {
-        inputElement.addEventListener("input", function () {
-          this.value = this.value.replace(/\D/g, "").slice(0, maxLength);
-        });
-      }
-
-      // Uygula
-      const tcInput = document.getElementById("customerTc");
-      const passwordInput = document.getElementById("password");
-      allowOnlyNumbers(tcInput, 11);
-      allowOnlyNumbers(passwordInput, 6);
+        // Apply input filtering
+        const tcInput = document.getElementById("customerTc");
+        const passwordInput = document.getElementById("password");
+        allowOnlyNumbers(tcInput, 11);
+        allowOnlyNumbers(passwordInput, 6);
     </script>
-  </body>
+</body>
 </html>

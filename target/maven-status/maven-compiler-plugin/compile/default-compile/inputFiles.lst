@@ -42,5 +42,6 @@ C:\Users\tanri\Desktop\Bank Project\BankRecord\src\main\java\com\group4\bankSyst
 C:\Users\tanri\Desktop\Bank Project\BankRecord\src\main\java\com\group4\bankSystem\repository\TransactionRepository\TransactionRepository.java
 C:\Users\tanri\Desktop\Bank Project\BankRecord\src\main\java\com\group4\bankSystem\services\AccountServices\AccountService.java
 C:\Users\tanri\Desktop\Bank Project\BankRecord\src\main\java\com\group4\bankSystem\services\CustomerServices\AdminService.java
+C:\Users\tanri\Desktop\Bank Project\BankRecord\src\main\java\com\group4\bankSystem\services\CustomerServices\CustomerDetailsService.java
 C:\Users\tanri\Desktop\Bank Project\BankRecord\src\main\java\com\group4\bankSystem\services\CustomerServices\CustomerService.java
 C:\Users\tanri\Desktop\Bank Project\BankRecord\src\main\java\com\group4\bankSystem\services\TransactionServices\TransactionServices.java

@@ -1,137 +1,179 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>İşlem Yap</title>
+    <title>BankRecord - Perform Transaction</title>
     <style>
+        /* Stil aynı kaldı, sadece içerik değişti */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #F1F6F9;
             margin: 0;
-            padding: 0;
-            text-align: center;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
         }
 
         header {
-            background-color: #d32f2f;
-            color: white;
-            padding: 20px;
-        }
-
-        .container {
-            margin: 30px auto;
+            background-color: #394867;
+            color: #F1F6F9;
+            padding: 30px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             width: 90%;
             max-width: 600px;
-            background-color: white;
+        }
+
+        header h1 { font-weight: 500; font-size: 28px; margin-bottom: 0; }
+
+        .container {
+            width: 90%;
+            max-width: 600px;
+            background-color: #FFFFFF;
             padding: 30px;
-            box-shadow: 0 0 10px #bbb;
-            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            text-align: left;
+            margin-bottom: 30px;
+            animation: fadeIn 0.5s ease-out;
         }
 
-        select, input, button, textarea {
-            width: 100%;
-            padding: 10px;
-            margin: 12px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(-10px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
-        button {
-            background-color: #d32f2f;
-            color: white;
-            cursor: pointer;
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #212A3E;
             font-weight: bold;
         }
 
+        select, input[type="text"], input[type="number"], textarea {
+            width: calc(100% - 22px);
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            font-size: 16px;
+            color: #333;
+            box-sizing: border-box;
+        }
+
+        select:focus, input:focus, textarea:focus {
+            outline: none;
+            border-color: #394867;
+            box-shadow: 0 0 8px rgba(57, 72, 103, 0.3);
+        }
+
+        button {
+            background-color: #394867;
+            color: #F1F6F9;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-top: 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
         button:hover {
-            background-color: #b71c1c;
+            background-color: #9BA4B5;
+            transform: scale(1.02);
         }
 
         .form-section {
             display: none;
             margin-top: 20px;
-            text-align: left;
+            padding: 20px;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            background-color: #F9F9F9;
         }
 
-        label {
-            font-weight: bold;
+        .form-section h3 {
+            color: #212A3E;
+            margin-top: 0;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #E0E0E0;
+            padding-bottom: 10px;
         }
 
         .back-button {
-            margin-top: 20px;
             display: inline-block;
-            background-color: #555;
-            color: white;
+            padding: 12px 24px;
+            background-color: #9BA4B5;
+            color: #212A3E;
             text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 5px;
+            border-radius: 8px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-top: 20px;
         }
 
         .back-button:hover {
-            background-color: #333;
+            background-color: #394867;
+            color: #F1F6F9;
+            transform: scale(1.02);
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            border-top: 2px solid #E0E0E0;
+            width: 90%;
+            max-width: 600px;
+            margin-top: 30px;
         }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>İşlem Yap</h1>
+    <h1>Perform Transaction</h1>
 </header>
 
 <div class="container">
-    <label for="transactionType">İşlem Türü Seçin:</label>
+    <label for="transactionType">Select Transaction Type:</label>
     <select id="transactionType">
-        <option value="">-- Seçiniz --</option>
-        <option value="transfer">Para Transferi</option>
-        <option value="odeme">Fatura Ödeme</option>
-        <option value="havale">Havale</option>
+        <option value="">-- Select --</option>
+        <option value="transfer">Money Transfer</option>
     </select>
 
     <div id="transferForm" class="form-section">
-        <h3>Para Transferi</h3>
-        <label>Gönderen IBAN:</label>
-        <input type="text" placeholder="TR..." />
-        <label>Alıcı IBAN:</label>
-        <input type="text" placeholder="TR..." />
-        <label>Tutar:</label>
-        <input type="number" placeholder="₺ Tutar" />
-        <label>Açıklama:</label>
-        <textarea placeholder="Açıklama girin..."></textarea>
-        <button>Gönder</button>
-        <a href="/index" class="back-button">Ana Menüye Dön</a>
-    </div>
+        <h3>Money Transfer</h3>
+        <label for="fromAccountTransfer">Sender IBAN:</label>
+        <select id="fromAccountTransfer"></select>
 
-    <div id="odemeForm" class="form-section">
-        <h3>Fatura Ödeme</h3>
-        <label>Abone No:</label>
-        <input type="text" />
-        <label>Kurum:</label>
-        <input type="text" placeholder="Elektrik, Su vb." />
-        <label>Tutar:</label>
-        <input type="number" />
-        <button>Öde</button>
-        <a href="/index" class="back-button">Ana Menüye Dön</a>
-    </div>
+        <label for="toAccountTransfer">Receiver IBAN:</label>
+        <input type="text" id="toAccountTransfer" placeholder="TR..." />
 
-    <div id="havaleForm" class="form-section">
-        <h3>Havale</h3>
-        <label>Alıcı IBAN:</label>
-        <input type="text" />
-        <label>Tutar:</label>
-        <input type="number" />
-        <label>Açıklama:</label>
-        <textarea></textarea>
-        <button>Havale Yap</button>
-        <a href="/index" class="back-button">Ana Menüye Dön</a>
+        <label for="amountTransfer">Amount:</label>
+        <input type="number" id="amountTransfer" placeholder="$ Amount" />
+
+        <label for="descriptionTransfer">Description:</label>
+        <textarea id="descriptionTransfer" placeholder="Enter description..."></textarea>
+
+        <button onclick="submitTransfer()">Send</button>
     </div>
 </div>
+
+<footer>
+    <a href="/index" class="back-button">Back to Main Menu</a>
+</footer>
 
 <script>
     const typeSelector = document.getElementById("transactionType");
     const sections = {
-        transfer: document.getElementById("transferForm"),
-        odeme: document.getElementById("odemeForm"),
-        havale: document.getElementById("havaleForm")
+        transfer: document.getElementById("transferForm")
     };
 
     typeSelector.addEventListener("change", () => {
@@ -141,6 +183,71 @@
             sections[selected].style.display = "block";
         }
     });
+
+    // IBAN listesi yükle
+    window.addEventListener("DOMContentLoaded", () => {
+    fetch('/api/accounts/my-ibans')
+        .then(res => res.json())
+        .then(accounts => {
+            if (!Array.isArray(accounts)) {
+                console.error("Gelen veri dizi değil:", accounts);
+                alert("IBAN verisi alınamadı.");
+                return;
+            }
+
+            const select = document.getElementById("fromAccountTransfer");
+            select.innerHTML = "";
+            accounts.forEach(acc => {
+                const option = new Option(acc.iban, acc.accountId);
+                select.appendChild(option);
+            });
+        })
+        .catch(err => {
+            console.error("IBAN listesi alınamadı:", err);
+            alert("IBAN listesi alınamadı.");
+        });
+      });
+
+
+
+    function submitTransfer() {
+        const fromAccountId = parseInt(document.getElementById("fromAccountTransfer").value);
+        const toIban = document.getElementById("toAccountTransfer").value.trim();
+        const amount = parseFloat(document.getElementById("amountTransfer").value);
+        const description = document.getElementById("descriptionTransfer").value;
+
+        if (!toIban || isNaN(amount) || amount <= 0) {
+            alert("Lütfen tüm alanları geçerli şekilde doldurun.");
+            return;
+        }
+
+        fetch(`/api/accounts/find-by-iban/${encodeURIComponent(toIban)}`)
+            .then(res => res.ok ? res.json() : Promise.reject("Receiver account not found"))
+            .then(toAccount => {
+                const transaction = {
+                    fromAccount: { accountId: fromAccountId },
+                    toAccount: { accountId: toAccount.accountId },
+                    transactionAmount: amount,
+                    transactionDate: new Date().toISOString().split('T')[0],
+                    transactionType: 1,
+                    description: description
+                };
+
+                return fetch("/api/transactions", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(transaction)
+                });
+            })
+            .then(res => res.ok ? res.json() : Promise.reject("Transfer failed"))
+            .then(() => {
+                alert("Transaction başarılı!");
+                window.location.reload();
+            })
+            .catch(err => {
+                alert("Hata: " + err);
+            });
+    }
 </script>
 
 </body>

@@ -1,118 +1,188 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <title>BankRecord - Kayıt Ol</title>
+    <title>BankRecord - Customer Registration</title>
     <link rel="stylesheet" href="/css/styles.css">
     <style>
         body.register-body {
-            background-color: #d32f2f;
+            background-color: #F1F6F9; /* Very light gray background */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            padding: 20px; /* Add some padding for smaller screens */
         }
 
         .register-container {
-            background-color: #fff;
-            padding: 30px;
+            background-color: #212A3E; /* Dark gray container */
+            padding: 40px;
             border-radius: 12px;
-            width: 320px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
         .register-container h2 {
             text-align: center;
-            color: #b71c1c;
+            color: #F1F6F9; /* Light gray heading */
+            margin-bottom: 30px;
+            font-weight: 500;
+            font-size: 24px;
+        }
+
+        .input-group {
             margin-bottom: 20px;
+            position: relative;
         }
 
-        .register-container input {
-            width: 100%;
-            padding: 10px;
-            margin: 8px 0;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-            font-size: 14px;
-        }
-
-        .register-container button[type="submit"] {
-            background-color: #c62828;
-            color: #fff;
-            border: none;
-            width: 100%;
-            padding: 10px;
+        .input-group input[type="text"],
+        .input-group input[type="date"],
+        .input-group input[type="email"],
+        .input-group input[type="password"] {
+            width: calc(100% - 20px);
+            padding: 15px;
+            border: 1px solid #394867; /* Dark blue-gray border */
+            border-radius: 8px;
             font-size: 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-top: 10px;
+            color: #F1F6F9; /* Light gray text */
+            background-color: transparent;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
         }
 
-        .register-container button[type="submit"]:hover {
-            background-color: #b71c1c;
+        .input-group input[type="text"]:focus,
+        .input-group input[type="date"]:focus,
+        .input-group input[type="email"]:focus,
+        .input-group input[type="password"]:focus {
+            outline: none;
+            border-color: #9BA4B5; /* Medium gray focus border */
+            box-shadow: 0 0 8px rgba(155, 164, 181, 0.5);
+        }
+
+        .input-group label {
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            padding: 0 8px;
+            background-color: #212A3E; /* Dark gray label background */
+            color: #9BA4B5; /* Medium gray label text */
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .input-group input:focus + label,
+        .input-group input:not(:placeholder-shown) + label {
+            top: -10px;
         }
 
         .password-container {
             position: relative;
-            width: 100%;
-        }
-
-        .password-container input {
-            width: 100%;
-            padding: 10px 40px 10px 10px;
-            font-size: 14px;
-            box-sizing: border-box;
         }
 
         .password-container .toggle-visibility {
             position: absolute;
-            right: 10px;
+            right: 15px;
             top: 50%;
             transform: translateY(-50%);
             font-size: 20px;
-            color: #555;
+            color: #9BA4B5; /* Medium gray eye icon */
             cursor: pointer;
             user-select: none;
         }
 
-        #error-message {
-            margin-top: 10px;
-            color: red;
+        button[type="submit"] {
+            width: 100%;
+            padding: 16px;
+            background-color: #394867; /* Dark blue-gray button */
+            color: #F1F6F9; /* Light gray button text */
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-top: 20px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #9BA4B5; /* Medium gray hover */
+            transform: scale(1.02);
+        }
+
+        #error-message,
+        #birthdateWarning,
+        #phoneWarning {
+            margin-top: 15px;
+            color: #FF6B6B; /* Red error/warning message */
             font-size: 14px;
             text-align: center;
+        }
+
+        #birthdateWarning,
+        #phoneWarning {
+            text-align: left;
+            margin-left: 10px;
         }
     </style>
 </head>
 
 <body class="register-body">
     <div class="register-container">
-        <h2>Yeni Müşteri Kaydı</h2>
+        <h2>New Customer Registration</h2>
         <form id="registerForm">
-            <input type="text" minlength="11" maxlength="11" id="customerTc" placeholder="T.C. Kimlik Numaranız"
-                required>
-            <input type="text" id="customerName" placeholder="Adınız" required>
-            <input type="text" id="customerSurname" placeholder="Soyadınız" required>
-            <input type="date" id="customerBirthdate" placeholder="Doğum Tarihiniz" oninput="validateBirthdate(this)"
-                required>
-            <small id="birthdateWarning" style="color: red; display: none;">
-                Doğum tarihiniz 13 yaşından büyük ve 100 yaşından küçük olmalıdır.
-            </small>
-            <input type="text" maxlength="11" id="customerPhoneNumber" placeholder="Telefon Numaranız (0XXXXXXXXXX)"
-                oninput="validatePhoneNumber(this)" required>
-            <small id="phoneWarning" style="color: red; display: none;">
-                Telefon numarası 11 haneli olmalıdır ve 0 ile başlamalıdır.
-            </small>
-            <input type="email" id="customerEmail" placeholder="E-posta Adresiniz" required>
+            <div class="input-group">
+                <input type="text" minlength="11" maxlength="11" id="customerTc" placeholder="Your ID Number" required>
+                <label for="customerTc">ID Number</label>
+            </div>
+            <div class="input-group">
+                <input type="text" id="customerName" placeholder="Your Name" required>
+                <label for="customerName">Name</label>
+            </div>
+            <div class="input-group">
+                <input type="text" id="customerSurname" placeholder="Your Surname" required>
+                <label for="customerSurname">Surname</label>
+            </div>
+            <div class="input-group">
+                <input type="date" id="customerBirthdate" oninput="validateBirthdate(this)" required>
+                <label for="customerBirthdate">Birth Date</label>
+                <small id="birthdateWarning" style="display: none;">
+                    Birth date must be between 13 and 100 years ago.
+                </small>
+            </div>
+            <div class="input-group">
+                <input type="text" maxlength="11" id="customerPhoneNumber" placeholder="Your Phone Number (0XXXXXXXXXX)"
+                    oninput="validatePhoneNumber(this)" required>
+                <label for="customerPhoneNumber">Phone Number</label>
+                <small id="phoneWarning" style="display: none;">
+                    Phone number must be 11 digits and start with 0.
+                </small>
+            </div>
+            <div class="input-group">
+                <input type="email" id="customerEmail" placeholder="Your Email Address" required>
+                <label for="customerEmail">Email Address</label>
+            </div>
 
-            <div class="password-container">
-                <input type="password" maxlength="6" id="password" placeholder="6 haneli şifre"
+            <div class="input-group password-container">
+                <input type="password" maxlength="6" id="password" placeholder="6-digit password"
                     oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
+                <label for="password">Password</label>
                 <span class="toggle-visibility" onclick="togglePassword()">👁️</span>
             </div>
 
-            <button type="submit">Kayıt Ol</button>
+            <button type="submit">Register</button>
         </form>
         <p id="error-message"></p>
     </div>
@@ -128,20 +198,20 @@
                 return;
             }
 
-            // Gelecek tarih girişi engelle
+            // Prevent future date entry
             if (birthdate > today) {
                 warning.style.display = "block";
                 return;
             }
 
-            // Yaş hesaplama
+            // Calculate age
             let age = today.getFullYear() - birthdate.getFullYear();
             const monthDiff = today.getMonth() - birthdate.getMonth();
             if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthdate.getDate())) {
                 age--;
             }
 
-            // Yaş aralığı kontrolü
+            // Check age range
             if (age < 13 || age > 100) {
                 warning.style.display = "block";
             } else {
@@ -164,14 +234,14 @@
         }
 
         function validatePhoneNumber(input) {
-            // Sadece rakamları kabul et
+            // Accept only numbers
             input.value = input.value.replace(/[^0-9]/g, '');
 
             const warning = document.getElementById("phoneWarning");
 
-            // Şart: 11 hane ve 05 ile başlama
+            // Condition: 11 digits and starts with 0
             if (input.value.length === 0) {
-                warning.style.display = "none"; // boşsa uyarı gizli
+                warning.style.display = "none"; // hide warning if empty
             } else if (input.value.length !== 11 || !input.value.startsWith("0")) {
                 warning.style.display = "block";
             } else {
@@ -202,30 +272,30 @@
             const customerBirthdate = document.getElementById('customerBirthdate').value;
             const password = document.getElementById('password').value;
 
-            // VALIDASYONLAR
+            // VALIDATIONS
             if (customerTc.length !== 11 || !/^\d{11}$/.test(customerTc)) {
-                document.getElementById('error-message').innerText = 'TC Kimlik Numarası 11 haneli olmalıdır.';
+                document.getElementById('error-message').innerText = 'ID Number must be 11 digits.';
                 return;
             }
 
             if (customerPhoneNumber.length !== 11 || !customerPhoneNumber.startsWith("0")) {
-                document.getElementById('error-message').innerText = 'Telefon numarası 0 ile başlamalı ve 11 haneli olmalıdır.';
+                document.getElementById('error-message').innerText = 'Phone number must start with 0 and be 11 digits.';
                 return;
             }
 
             if (!isBirthdateValid(customerBirthdate)) {
-                document.getElementById('error-message').innerText = 'Doğum tarihi geçersiz. (13 yaşından büyük, 100 yaşından küçük olmalı)';
+                document.getElementById('error-message').innerText = 'Invalid birth date. (Must be older than 13 and younger than 100 years)';
                 return;
             }
 
             if (!/^\d{6}$/.test(password)) {
-                document.getElementById('error-message').innerText = 'Şifre sadece 6 rakamdan oluşmalıdır.';
+                document.getElementById('error-message').innerText = 'Password must be exactly 6 digits.';
                 return;
             }
 
-            document.getElementById('error-message').innerText = ''; // varsa eski hata temizle
+            document.getElementById('error-message').innerText = ''; // clear previous error if any
 
-            // Her şey validse gönder
+            // Send data if everything is valid
             const registerData = {
                 customerTc,
                 customerName: document.getElementById('customerName').value,
@@ -250,7 +320,7 @@
                     document.getElementById('error-message').innerText = errorText;
                 }
             } catch (error) {
-                document.getElementById('error-message').innerText = 'Sunucu bağlantı hatası.';
+                document.getElementById('error-message').innerText = 'Server connection error.';
             }
         });
 

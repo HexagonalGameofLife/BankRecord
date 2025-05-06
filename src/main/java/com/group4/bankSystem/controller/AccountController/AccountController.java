@@ -2,13 +2,19 @@ package com.group4.bankSystem.controller.AccountController;
 
 import com.group4.bankSystem.entities.AccountEntities.Account;
 import com.group4.bankSystem.entities.CustomerEntities.Customer;
+import com.group4.bankSystem.repository.AccountRepository.AccountRepository;
+import com.group4.bankSystem.repository.CustomerRepository.UserListRepository;
 import com.group4.bankSystem.services.AccountServices.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/accounts")
@@ -16,6 +22,12 @@ public class AccountController {
 
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private UserListRepository userListRepository;
+
+    @Autowired
+    private AccountRepository accountRepository;
 
     // Tüm hesapları getir
     @GetMapping
@@ -67,4 +79,39 @@ public class AccountController {
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
     }
+
+    @GetMapping("/ibans")
+    public List<Map<String, Object>> getAllIbans() {
+        return accountRepository.findAll().stream()
+                .map(account -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("accountId", account.getAccountId());
+                    map.put("iban", account.getIban());
+                    return map;
+                })
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/find-by-iban/{iban}")
+    public ResponseEntity<Account> findByIban(@PathVariable String iban) {
+      return accountRepository.findByIban(iban)
+          .map(ResponseEntity::ok)
+          .orElse(ResponseEntity.notFound().build());
+  }
+
+  @GetMapping("/my-ibans")
+  public List<Map<String, Object>> getMyIbans(@AuthenticationPrincipal Customer customer) {
+      List<Account> accounts = userListRepository.findAccountsByCustomerId(customer.getCustomerId());
+
+      return accounts.stream()
+          .map(account -> {
+              Map<String, Object> map = new HashMap<>();
+              map.put("accountId", account.getAccountId());
+              map.put("iban", account.getIban());
+              return map;
+          })
+          .collect(Collectors.toList());
+  }
+
+
 }

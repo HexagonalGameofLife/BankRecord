@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.group4.bankSystem.entities.AccountEntities.Account;
 import com.group4.bankSystem.entities.CustomerEntities.UserList;
 import com.group4.bankSystem.entities.CustomerEntities.UserListId;
 
@@ -17,5 +18,8 @@ public interface UserListRepository extends JpaRepository<UserList, UserListId>{
     List<Integer> findAccountIdsByCustomerId(@Param("customerId") Integer customerId);
 
     void deleteByCustomer_CustomerId(Integer customerId);
+
+    @Query("SELECT a FROM UserList u JOIN u.account a WHERE u.customer.customerId = :customerId")
+    List<Account> findAccountsByCustomerId(@Param("customerId") Integer customerId);
 
 }
