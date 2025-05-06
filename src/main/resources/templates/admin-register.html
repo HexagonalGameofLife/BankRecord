@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New Admin Registration</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #F1F6F9; /* Very light gray background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px; /* Add some padding for smaller screens */
+        }
+
+        .register-container {
+            background-color: #212A3E; /* Dark gray container */
+            max-width: 400px;
+            width: 100%; /* Make it responsive */
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            text-align: center;
+            color: #F1F6F9; /* Light gray heading */
+            margin-bottom: 30px;
+            font-weight: 500;
+            font-size: 24px;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .input-group input {
+            width: calc(100% - 20px);
+            padding: 15px;
+            border: 1px solid #394867; /* Dark blue-gray border */
+            border-radius: 8px;
+            font-size: 16px;
+            color: #F1F6F9; /* Light gray text */
+            background-color: transparent;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #9BA4B5; /* Medium gray focus border */
+            box-shadow: 0 0 8px rgba(155, 164, 181, 0.5);
+        }
+
+        .input-group label {
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            padding: 0 8px;
+            background-color: #212A3E; /* Dark gray label background */
+            color: #9BA4B5; /* Medium gray label text */
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .input-group input:focus + label,
+        .input-group input:not(:placeholder-shown) + label {
+            top: -10px;
+        }
+
+        button {
+            width: 100%;
+            padding: 16px;
+            background-color: #394867; /* Dark blue-gray button */
+            color: #F1F6F9; /* Light gray button text */
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #9BA4B5; /* Medium gray hover */
+            transform: scale(1.02);
+        }
+
+        #message {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .error-message {
+            color: #FF6B6B; /* A shade of red for errors */
+        }
+
+        .success-message {
+            color: #81C784; /* A shade of green for success */
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <h2>New Admin Registration</h2>
+        <div class="input-group">
+            <input type="text" id="username" placeholder="Your Username" required>
+            <label for="username">Username</label>
+        </div>
+        <div class="input-group">
+            <input type="password" id="password" placeholder="Your Password" required>
+            <label for="password">Password</label>
+        </div>
+        <button onclick="registerAdmin()">Register</button>
+        <div id="message"></div>
+    </div>
+
+    <script>
+        function registerAdmin() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const messageBox = document.getElementById('message');
+            messageBox.innerText = '';
+            messageBox.className = ''; // Clear previous message classes
+
+            fetch('/api/admins/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: username,
+                    password: password,
+                    confirmPassword: password // Assuming password confirmation is handled on the backend
+                })
+            })
+            .then(response => {
+                if (response.ok) {
+                    messageBox.innerHTML = '<p class="success-message">Registration successful! Redirecting to login...</p>';
+                    setTimeout(() => window.location.href = '/admin/login', 2000);
+                } else {
+                    return response.text().then(text => {
+                        messageBox.innerHTML = `<p class="error-message">${text}</p>`;
+                    });
+                }
+            })
+            .catch(() => {
+                messageBox.innerHTML = '<p class="error-message">Server error, please try again.</p>';
+            });
+        }
+    </script>
+</body>
+</html>

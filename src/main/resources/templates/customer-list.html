@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BankRecord - Customers</title>
+    <style>
+        body.customer-body {
+            background-color: #F1F6F9; /* Very light gray background */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header.customer-header {
+            color: #212A3E; /* Dark gray header text */
+            text-align: center;
+            padding: 30px 0;
+            border-bottom: 2px solid #E0E0E0; /* Light gray bottom border */
+            margin-bottom: 30px;
+        }
+
+        header.customer-header h1 {
+            font-weight: 500;
+            font-size: 28px;
+            margin-bottom: 0;
+        }
+
+        main.customer-main {
+            flex-grow: 1;
+            padding: 0 20px;
+        }
+
+        table.customer-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden; /* For rounded corners */
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(-10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        table.customer-table th, table.customer-table td {
+            border-bottom: 1px solid #E0E0E0; /* Light gray bottom border */
+            padding: 15px;
+            text-align: left;
+        }
+
+        table.customer-table th {
+            background-color: #394867; /* Dark blue-gray header */
+            color: #F1F6F9; /* Light gray header text */
+            font-weight: bold;
+        }
+
+        table.customer-table tbody tr:nth-child(even) {
+            background-color: #F9F9F9; /* Slightly darker for even rows */
+        }
+
+        table.customer-table tbody tr:hover {
+            background-color: #E8F0FE; /* Light blue on hover */
+            transition: background-color 0.3s ease;
+        }
+
+        table.customer-table tbody td {
+            color: #333; /* Dark text for data */
+        }
+
+        footer.customer-footer {
+            padding: 30px 0;
+            text-align: center;
+            border-top: 2px solid #E0E0E0; /* Light gray top border */
+            margin-top: 30px;
+        }
+
+        footer.customer-footer a.button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #9BA4B5; /* Medium gray button */
+            color: #212A3E; /* Dark gray text */
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        footer.customer-footer a.button:hover {
+            background-color: #394867; /* Dark blue-gray hover */
+            color: #F1F6F9; /* Light gray hover text */
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+<body class="customer-body">
+    <header class="customer-header">
+        <h1>All Customers</h1>
+    </header>
+
+    <main class="customer-main">
+        <table class="customer-table">
+            <thead>
+                <tr>
+                    <th>ID Number</th>
+                    <th>Name</th>
+                    <th>Surname</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                </tr>
+            </thead>
+            <tbody id="customerTableBody">
+                </tbody>
+        </table>
+    </main>
+
+    <footer class="customer-footer">
+        <a href="/index" class="button">Home Page</a>
+    </footer>
+
+<script>
+    async function checkSession() {
+        try {
+            const response = await fetch('/api/session');
+            if (!response.ok) {
+                window.location.href = '/login';
+            }
+        } catch (error) {
+            window.location.href = '/login';
+        }
+    }
+    checkSession();
+
+    async function fetchCustomers() {
+        try {
+            const response = await fetch('/api/customers');
+            const customers = await response.json();
+
+            const tableBody = document.getElementById('customerTableBody');
+            tableBody.innerHTML = '';
+
+            customers.forEach(customer => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${customer.customerTc}</td>
+                    <td>${customer.customerName}</td>
+                    <td>${customer.customerSurname}</td>
+                    <td>${customer.customerEmail}</td>
+                    <td>${customer.customerPhoneNumber}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+        } catch (error) {
+            console.error('Failed to fetch customer list.');
+        }
+    }
+
+    fetchCustomers();
+</script>
+</body>
+</html>
