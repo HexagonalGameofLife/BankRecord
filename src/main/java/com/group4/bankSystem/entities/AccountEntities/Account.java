@@ -115,4 +115,20 @@ public class Account {
     public void setUserList(List<UserList> userList) {
         this.userList = userList;
     }
+<<<<<<< HEAD
+=======
+
+    //Account-List.html için oluşturuldu. geçici olarak tutuyor db'ye dokunmuyor.
+    @Transient
+    public String getAccountType() {
+        return switch (accountTypeId) {
+            case 1 -> "Savings";
+            case 2 -> "Checking";
+            case 3 -> "CreditCard";
+            case 4 -> "Investment";
+            default -> "Unknown";
+    };
+  }
+
+>>>>>>> smhavci/Semih-Son
 }

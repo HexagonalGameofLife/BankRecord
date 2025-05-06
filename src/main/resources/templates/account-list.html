@@ -325,15 +325,16 @@
     }
 
     function createAccountRow(account) {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${account.iban}</td>
-            <td><span class="account-type-emoji">${getEmojiForAccountType(account.accountType)}</span>${account.accountType}</td>
-            <td>${account.balance ? account.balance.toFixed(2) + ' TL' : 'N/A'}</td>
-            <td>${account.accountStartDate ? new Date(account.accountStartDate).toLocaleDateString('en-US') : 'N/A'}</td>
-        `;
-        return row;
-    }
+    const row = document.createElement('tr');
+    row.innerHTML = `
+        <td>${formatIban(account.iban)}</td>
+        <td><span class="account-type-emoji">${getEmojiForAccountType(account.accountType)}</span>${account.accountType}</td>
+        <td>${getBalance(account) !== null ? getBalance(account).toFixed(2) + ' TL' : 'N/A'}</td>
+        <td>${account.accountStartDate ? new Date(account.accountStartDate).toLocaleDateString('en-US') : 'N/A'}</td>
+    `;
+    return row;
+}
+
 
     function getEmojiForAccountType(accountType) {
         switch (accountType) {
@@ -390,6 +391,19 @@
     submitNewAccountButton.addEventListener('click', addNewAccount);
 
     fetchAccounts();
+
+    function getBalance(account) {
+    return account.timeDepositBalance ??
+           account.checkingBalance ??
+           account.creditCardLimit ??
+           account.otherCurrencyBalance ??
+           null;
+    }
+
+    function formatIban(iban) {
+    return iban.match(/.{1,4}/g).join(' ');
+  }
+
 
 </script>
 </body>

@@ -1,5 +1,5 @@
 package com.group4.bankSystem.controller.AccountController;
-
+import com.group4.bankSystem.dto.CreateAccountRequest;
 import com.group4.bankSystem.entities.AccountEntities.Account;
 import com.group4.bankSystem.entities.CustomerEntities.Customer;
 import com.group4.bankSystem.repository.AccountRepository.AccountRepository;
@@ -45,8 +45,8 @@ public class AccountController {
 
     // Hesap oluştur
     @PostMapping
-    public Account createAccount(@RequestBody Account account) {
-        return accountService.saveAccount(account);
+    public Account createAccount(@RequestBody CreateAccountRequest request) {
+        return accountService.createAccountFromDto(request);
     }
 
     // Hesap sil
@@ -111,7 +111,5 @@ public class AccountController {
               return map;
           })
           .collect(Collectors.toList());
-  }
-
-
+        }
 }
