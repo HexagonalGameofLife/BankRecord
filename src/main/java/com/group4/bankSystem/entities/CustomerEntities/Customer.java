@@ -1,6 +1,5 @@
 package com.group4.bankSystem.entities.CustomerEntities;
 
-<<<<<<< HEAD
 import java.time.LocalDate;
 
 import jakarta.persistence.Column;
@@ -10,11 +9,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-=======
-import jakarta.persistence.*;
-import java.time.LocalDate;
-
->>>>>>> smhavci/Semih-Son
 @Entity
 @Table(name = "Customer")
 public class Customer {

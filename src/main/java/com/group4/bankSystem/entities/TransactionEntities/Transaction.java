@@ -1,14 +1,9 @@
 package com.group4.bankSystem.entities.TransactionEntities;
 
-<<<<<<< HEAD
-=======
-import jakarta.persistence.*;
->>>>>>> smhavci/Semih-Son
 import java.time.LocalDate;
 
 import com.group4.bankSystem.entities.AccountEntities.Account;
 
-<<<<<<< HEAD
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,8 +15,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-=======
->>>>>>> smhavci/Semih-Son
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "Transaction")
@@ -113,7 +106,6 @@ public class Transaction {
     public void setDescription(String description) {
         this.description = description;
     }
-<<<<<<< HEAD
 
     public Account getFromAccount() {
       return fromAccount;
@@ -131,6 +123,4 @@ public class Transaction {
         this.toAccount = toAccount;
     }
 
-=======
->>>>>>> smhavci/Semih-Son
 }

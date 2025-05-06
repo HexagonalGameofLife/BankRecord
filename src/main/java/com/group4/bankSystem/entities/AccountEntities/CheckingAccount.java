@@ -28,13 +28,10 @@ public class CheckingAccount extends Account {
     public void setCheckingBalance(Float checkingBalance) {
         this.checkingBalance = checkingBalance;
     }
-<<<<<<< HEAD
-=======
 
     public CheckingAccount() {
       super(); // Account sınıfının parametresiz constructor'ını çağırır
   }
 
->>>>>>> smhavci/Semih-Son
 }
 

@@ -115,8 +115,6 @@ public class Account {
     public void setUserList(List<UserList> userList) {
         this.userList = userList;
     }
-<<<<<<< HEAD
-=======
 
     //Account-List.html için oluşturuldu. geçici olarak tutuyor db'ye dokunmuyor.
     @Transient
@@ -130,5 +128,4 @@ public class Account {
     };
   }
 
->>>>>>> smhavci/Semih-Son
 }

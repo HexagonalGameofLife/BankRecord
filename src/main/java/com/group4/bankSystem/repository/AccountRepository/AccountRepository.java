@@ -11,14 +11,8 @@ import com.group4.bankSystem.entities.AccountEntities.Account;
 
 public interface AccountRepository extends JpaRepository<Account, Integer>{
 
-<<<<<<< HEAD
-  @Query("SELECT a.accountId FROM Account a WHERE a.primaryUserId = :customerId")
-  List<Integer> findAccountIdsByCustomerId(@Param("customerId") Integer customerId);
-
-=======
     @Query("SELECT a.accountId FROM Account a JOIN a.userList ul WHERE ul.customer.customerId = :customerId")
     List<Integer> findAccountIdsByCustomerId(@Param("customerId") Integer customerId);
->>>>>>> smhavci/Semih-Son
 
     List<Account> findAll();
 
