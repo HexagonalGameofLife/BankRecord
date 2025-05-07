@@ -79,8 +79,8 @@ public class Transaction {
         return transactionType;
     }
 
-    public void setTransactionType(Integer transactionType) {
-        this.transactionType = transactionType;
+    public void setTransactionType(TransactionType transactionType) {
+        this.transactionType = transactionType.getCode(); // ✅ düzeltildi
     }
 
     public Float getTransactionAmount() {
@@ -108,7 +108,7 @@ public class Transaction {
     }
 
     public Account getFromAccount() {
-      return fromAccount;
+        return fromAccount;
     }
 
     public void setFromAccount(Account fromAccount) {
@@ -123,4 +123,7 @@ public class Transaction {
         this.toAccount = toAccount;
     }
 
+    public TransactionType getTransactionTypeEnum() {
+        return TransactionType.fromCode(this.transactionType);
+    }
 }

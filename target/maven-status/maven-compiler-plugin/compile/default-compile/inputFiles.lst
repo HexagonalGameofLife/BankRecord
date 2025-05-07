@@ -29,6 +29,7 @@ C:\Users\tanri\Desktop\onlar\BankRecord\src\main\java\com\group4\bankSystem\enti
 C:\Users\tanri\Desktop\onlar\BankRecord\src\main\java\com\group4\bankSystem\entities\TransactionEntities\ExchangeRate.java
 C:\Users\tanri\Desktop\onlar\BankRecord\src\main\java\com\group4\bankSystem\entities\TransactionEntities\RecurringTransaction.java
 C:\Users\tanri\Desktop\onlar\BankRecord\src\main\java\com\group4\bankSystem\entities\TransactionEntities\Transaction.java
+C:\Users\tanri\Desktop\onlar\BankRecord\src\main\java\com\group4\bankSystem\entities\TransactionEntities\TransactionType.java
 C:\Users\tanri\Desktop\onlar\BankRecord\src\main\java\com\group4\bankSystem\repository\AccountRepository\AccountRepository.java
 C:\Users\tanri\Desktop\onlar\BankRecord\src\main\java\com\group4\bankSystem\repository\AccountRepository\CardRepository.java
 C:\Users\tanri\Desktop\onlar\BankRecord\src\main\java\com\group4\bankSystem\repository\AccountRepository\CheckingAccountRepository.java

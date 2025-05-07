@@ -4,6 +4,7 @@ public class CreateAccountRequest {
     private String accountType;
     private double balance;
     private Long customerId; // 🔥 eklendi: UserList için gerekli
+    private int customerIncome;
 
     public String getAccountType() {
         return accountType;

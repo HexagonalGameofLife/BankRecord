@@ -3,8 +3,6 @@ package com.group4.bankSystem.services.AccountServices;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -74,29 +72,30 @@ public class AccountService {
         accountRepository.deleteById(accountId);
     }
 
-    //hesap 3 kisiden azsa musteri ekleme
+    // hesap 3 kisiden azsa musteri ekleme
     public void addUserToAccount(Integer accountId, Integer customerId, boolean isPrimaryUser) {
-        Account account = accountRepository.findById(accountId)
-            .orElseThrow(() -> new RuntimeException("Account not found"));
+      Account account = accountRepository.findById(accountId)
+              .orElseThrow(() -> new RuntimeException("Account not found"));
 
-        Customer customer = customerRepository.findById(customerId)
-            .orElseThrow(() -> new RuntimeException("Customer not found"));
+      Customer customer = customerRepository.findById(customerId)
+              .orElseThrow(() -> new RuntimeException("Customer not found"));
 
-        int currentUserCount = account.getUserList() != null ? account.getUserList().size() : 0;
+      int currentUserCount = account.getUserList() != null ? account.getUserList().size() : 0;
 
-        if (currentUserCount >= 3) {
-            throw new RuntimeException("This account already has 3 users. Cannot add more.");
-        }
+      if (currentUserCount >= 3) {
+          throw new RuntimeException("This account already has 3 users. Cannot add more.");
+      }
 
-        UserList userList = new UserList();
-        UserListId id = new UserListId();
-        id.setAccountId(accountId);
-        id.setCustomerId(customerId);
-        userList.setId(id);
-        userList.setPrimaryUser(isPrimaryUser);
-
-        userListRepository.save(userList);
-    }
+      UserList userList = new UserList();
+      UserListId id = new UserListId();
+      id.setAccountId(accountId);
+      id.setCustomerId(customerId);
+      userList.setId(id);
+      userList.setPrimaryUser(isPrimaryUser);
+      userList.setAccount(account);
+      userList.setCustomer(customer);
+      userListRepository.save(userList);
+  }
 
 
     public Account createAccountFromDto(CreateAccountRequest request) {
