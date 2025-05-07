@@ -1,12 +1,18 @@
 package com.group4.bankSystem.entities.CustomerEntities;
 
 import java.time.LocalDate;
+import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.group4.bankSystem.entities.AccountEntities.Card;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -57,12 +63,23 @@ public class Customer {
     @Column(name = "current_debt")
     private Double currentDebt;
 
+    @OneToMany(mappedBy = "customerId", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("customerId") // infinite loop engeli için
+    private List<Card> cards;
     // --- Constructors ---
 
     public Customer() {
     }
 
     // --- Getters and Setters ---
+
+    public List<Card> getCards() {
+        return cards;
+    }
+    
+    public void setCards(List<Card> cards) {
+        this.cards = cards;
+    }
 
     public Integer getCustomerId() {
         return customerId;

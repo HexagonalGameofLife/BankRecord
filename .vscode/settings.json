@@ -7,5 +7,6 @@
         "İsmi",
         "jdbc",
         "Uygulama"
-    ]
+    ],
+    "java.compile.nullAnalysis.mode": "automatic"
 }

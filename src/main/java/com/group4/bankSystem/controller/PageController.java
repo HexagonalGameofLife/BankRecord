@@ -49,4 +49,9 @@ public class PageController {
         return "transaction";   // src/main/resources/templates/transaction.html
 
     }
+
+    @GetMapping("/card-application")
+    public String showCartCreatePage() {
+        return "card-application";   // src/main/resources/templates/account.html
+    }
   }

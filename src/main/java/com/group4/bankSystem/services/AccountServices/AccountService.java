@@ -3,8 +3,6 @@ package com.group4.bankSystem.services.AccountServices;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +23,6 @@ import com.group4.bankSystem.repository.CustomerRepository.UserListRepository;
 @Service
 public class AccountService {
 
-
     @Autowired
     private AccountRepository accountRepository;
 
@@ -35,7 +32,7 @@ public class AccountService {
     @Autowired
     private CustomerRepository customerRepository;
 
-    //bir hesabın tum kullanicilari
+    // bir hesabın tum kullanicilari
     public List<Customer> getAllUsersOfAccount(Integer accountId) {
         List<UserList> userLists = userListRepository.findByAccount_AccountId(accountId);
 
@@ -53,10 +50,9 @@ public class AccountService {
         return accountRepository.findAllByCustomerId(customerId);
     }
 
-
     // Belirli bir müşteriye ait hesapları getir
     public List<Integer> getAccountsByCustomerId(Integer customerId) {
-      return accountRepository.findAccountIdsByCustomerId(customerId);
+        return accountRepository.findAccountIdsByCustomerId(customerId);
     }
 
     // Tek bir hesabı ID'siyle getir
@@ -74,13 +70,13 @@ public class AccountService {
         accountRepository.deleteById(accountId);
     }
 
-    //hesap 3 kisiden azsa musteri ekleme
+    // hesap 3 kisiden azsa musteri ekleme
     public void addUserToAccount(Integer accountId, Integer customerId, boolean isPrimaryUser) {
         Account account = accountRepository.findById(accountId)
-            .orElseThrow(() -> new RuntimeException("Account not found"));
+                .orElseThrow(() -> new RuntimeException("Account not found"));
 
         Customer customer = customerRepository.findById(customerId)
-            .orElseThrow(() -> new RuntimeException("Customer not found"));
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
 
         int currentUserCount = account.getUserList() != null ? account.getUserList().size() : 0;
 
@@ -94,10 +90,10 @@ public class AccountService {
         id.setCustomerId(customerId);
         userList.setId(id);
         userList.setPrimaryUser(isPrimaryUser);
-
+        userList.setAccount(account);
+        userList.setCustomer(customer);
         userListRepository.save(userList);
     }
-
 
     public Account createAccountFromDto(CreateAccountRequest request) {
         Account account;
@@ -138,7 +134,7 @@ public class AccountService {
 
         // 🔁 Account kaydedildikten SONRA UserList oluşturulmalı
         Customer customer = customerRepository.findById(request.getCustomerId().intValue())
-            .orElseThrow(() -> new RuntimeException("Customer not found"));
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
 
         UserList userList = new UserList();
         UserListId id = new UserListId();
@@ -154,7 +150,6 @@ public class AccountService {
         return account;
     }
 
-
     private void fillCommonFields(Account account, CreateAccountRequest request) {
         account.setIban(generateFakeIban());
         account.setAccountTypeId(convertAccountTypeToId(request.getAccountType()));
@@ -164,15 +159,10 @@ public class AccountService {
         account.setStatusId(1);
     }
 
-
-
-
-
     private String generateFakeIban() {
-        String number = String.format("%016d", (long)(Math.random() * 1_000_000_000_000_000L));
+        String number = String.format("%016d", (long) (Math.random() * 1_000_000_000_000_000L));
         return "TR" + number;
     }
-
 
     private int convertAccountTypeToId(String accountType) {
         return switch (accountType.toLowerCase()) {

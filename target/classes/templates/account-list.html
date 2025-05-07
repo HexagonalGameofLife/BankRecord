@@ -1,189 +1,246 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>BankRecord - My Accounts</title>
     <style>
         body.account-body {
-            background-color: #F1F6F9;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e9ecef;
+            /* Daha açık, modern bir arka plan */
+            font-family: 'Nunito', sans-serif;
+            /* Modern bir font */
             margin: 0;
-            padding: 20px;
+            padding: 30px;
+            /* Genel padding artırıldı */
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            color: #495057;
+            /* Daha okunabilir metin rengi */
         }
 
         header.account-header {
-            color: #212A3E;
+            color: #343a40;
+            /* Başlık rengi */
             text-align: center;
-            padding: 30px 0;
-            border-bottom: 2px solid #E0E0E0;
-            margin-bottom: 30px;
+            padding: 40px 0;
+            /* Başlık padding artırıldı */
+            border-bottom: 1px solid #dee2e6;
+            /* Daha hafif bir ayırıcı çizgi */
+            margin-bottom: 40px;
+            /* Başlık altı boşluk artırıldı */
         }
 
         header.account-header h1 {
-            font-weight: 500;
-            font-size: 28px;
-            margin-bottom: 0;
+            font-weight: 700;
+            /* Daha belirgin başlık */
+            font-size: 36px;
+            /* Daha büyük başlık */
+            margin-bottom: 10px;
+            /* Başlık altı boşluk */
         }
 
         .add-account-button {
-            background-color: #394867;
-            color: #F1F6F9;
-            padding: 12px 24px;
+            background-color: #007bff;
+            /* Canlı birincil renk */
+            color: #fff;
+            /* Beyaz metin */
+            padding: 14px 28px;
+            /* Daha iyi dolgu */
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
+            /* Daha yuvarlak köşeler */
             cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            margin-bottom: 20px;
+            font-size: 18px;
+            /* Daha büyük font */
+            transition: background-color 0.3s ease, transform 0.2s ease-in-out;
+            /* Daha yumuşak geçişler */
+            margin-bottom: 30px;
+            /* Buton altı boşluk */
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            /* İkon ve yazı arası boşluk */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            /* Hafif gölge */
         }
 
         .add-account-button:hover {
-            background-color: #9BA4B5;
-            transform: scale(1.02);
+            background-color: #0056b3;
+            /* Hover rengi */
+            transform: scale(1.05);
+            /* Hafif büyütme efekti */
         }
 
         .modal {
             display: none;
-            /* Hidden by default */
+            /* Başlangıçta gizli */
             position: fixed;
-            /* Stay in place */
-            z-index: 1;
-            /* Sit on top */
+            z-index: 1000;
+            /* Diğer her şeyin üzerinde */
             left: 0;
             top: 0;
             width: 100%;
-            /* Full width */
             height: 100%;
-            /* Full height */
             overflow: auto;
-            /* Enable scroll if needed */
-            background-color: rgba(0, 0, 0, 0.4);
-            /* Black w/ opacity */
-            animation: fadeInModal 0.4s ease-out;
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Daha belirgin arka plan opaklığı */
+            animation: fadeInModal 0.3s ease-out;
+            /* Daha hızlı animasyon */
         }
 
         @keyframes fadeInModal {
-            0% {
+            from {
                 opacity: 0;
             }
 
-            100% {
+            to {
                 opacity: 1;
             }
         }
 
         .modal-content {
-            background-color: #fefefe;
-            margin: 15% auto;
-            /* 15% from the top and centered */
-            padding: 20px;
-            border: 1px solid #888;
+            background-color: #fff;
+            margin: 10% auto;
+            /* Üstten daha az boşluk */
+            padding: 30px;
+            /* Daha fazla iç boşluk */
+            border: 1px solid #ced4da;
+            /* Daha hafif kenarlık */
             width: 80%;
-            /* Could be more or less, depending on screen size */
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            /* Yuvarlak köşeler */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            /* Daha belirgin gölge */
             position: relative;
-            animation: slideIn 0.4s ease-out;
+            animation: slideIn 0.3s ease-out;
+            /* Daha hızlı animasyon */
         }
 
         @keyframes slideIn {
-            0% {
-                transform: translateY(-50px);
+            from {
+                transform: translateY(-30px);
                 opacity: 0;
             }
 
-            100% {
+            to {
                 transform: translateY(0);
                 opacity: 1;
             }
         }
 
         .close-button {
-            color: #aaa;
+            color: #6c757d;
+            /* Daha hafif kapat butonu rengi */
             float: right;
-            font-size: 28px;
+            font-size: 30px;
+            /* Daha büyük kapat butonu */
             font-weight: bold;
+            transition: color 0.2s ease;
+            /* Renk geçişi */
+            cursor: pointer;
+            line-height: 1;
+            /* Dikey hizalama */
         }
 
         .close-button:hover,
         .close-button:focus {
-            color: black;
+            color: #343a40;
+            /* Hover/focus rengi */
             text-decoration: none;
-            cursor: pointer;
         }
 
         .modal-content h2 {
-            color: #212A3E;
+            color: #343a40;
+            /* Modal başlık rengi */
             margin-top: 0;
-            margin-bottom: 15px;
-            border-bottom: 1px solid #E0E0E0;
-            padding-bottom: 10px;
+            margin-bottom: 20px;
+            /* Daha fazla alt boşluk */
+            border-bottom: 1px solid #dee2e6;
+            /* Ayırıcı çizgi */
+            padding-bottom: 15px;
+            /* Alt padding */
+            font-size: 24px;
+            /* Daha büyük font */
+            font-weight: 500;
         }
 
         .modal-content label {
             display: block;
-            margin-bottom: 8px;
-            color: #333;
-            font-weight: bold;
+            margin-bottom: 10px;
+            /* Etiket altı boşluk */
+            color: #495057;
+            /* Etiket rengi */
+            font-weight: 600;
+            /* Daha belirgin etiket */
         }
 
         .modal-content select,
         .modal-content input[type="number"] {
-            width: calc(100% - 22px);
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            width: calc(100% - 24px);
+            /* Kenar boşlukları hesaba katıldı */
+            padding: 12px;
+            /* Daha iyi iç boşluk */
+            margin-bottom: 20px;
+            /* Daha fazla alt boşluk */
+            border: 1px solid #ced4da;
+            /* Kenarlık */
+            border-radius: 6px;
+            /* Yuvarlak köşeler */
             box-sizing: border-box;
             font-size: 16px;
         }
 
         .modal-content button.submit-button {
-            background-color: #394867;
-            color: #F1F6F9;
-            padding: 12px 24px;
+            background-color: #28a745;
+            /* Onay rengi */
+            color: #fff;
+            padding: 14px 28px;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 18px;
             transition: background-color 0.3s ease;
             width: 100%;
             box-sizing: border-box;
-            margin-top: 15px;
+            margin-top: 20px;
+            /* Üst boşluk */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
         .modal-content button.submit-button:hover {
-            background-color: #9BA4B5;
+            background-color: #1e7e34;
+            /* Hover rengi */
         }
 
         main.account-main {
             flex-grow: 1;
-            padding: 0 20px;
+            padding: 0 30px;
+            /* Ana içerik padding */
         }
 
         table.account-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            margin-top: 30px;
+            /* Tablo üstü boşluk */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            /* Daha belirgin tablo gölgesi */
+            border-radius: 10px;
+            /* Tablo köşe yuvarlaklığı */
             overflow: hidden;
+            /* Köşe yuvarlaklığı için gerekli */
             animation: fadeIn 0.5s ease-out;
         }
 
         @keyframes fadeIn {
-            0% {
+            from {
                 opacity: 0;
                 transform: translateY(-10px);
             }
 
-            100% {
+            to {
                 opacity: 1;
                 transform: translateY(0);
             }
@@ -191,74 +248,91 @@
 
         table.account-table th,
         table.account-table td {
-            border-bottom: 1px solid #E0E0E0;
-            padding: 15px;
+            border-bottom: 1px solid #dee2e6;
+            /* Daha hafif ayırıcılar */
+            padding: 18px 15px;
+            /* Daha iyi dolgu */
             text-align: left;
         }
 
         table.account-table th {
-            background-color: #394867;
-            color: #F1F6F9;
-            font-weight: bold;
+            background-color: #343a40;
+            /* Başlık arka plan rengi */
+            color: #fff;
+            font-weight: 600;
+            /* Kalın başlık metni */
         }
 
         table.account-table tbody tr:nth-child(even) {
-            background-color: #F9F9F9;
+            background-color: #f8f9fa;
+            /* Çift satır arka plan */
         }
 
         table.account-table tbody tr:hover {
-            background-color: #E8F0FE;
+            background-color: #e9ecef;
+            /* Hover arka plan */
             transition: background-color 0.3s ease;
         }
 
         table.account-table tbody td {
-            color: #333;
+            color: #495057;
+            /* Hücre metin rengi */
         }
 
         .account-type-emoji {
-            margin-right: 5px;
+            margin-right: 8px;
+            /* Emoji boşluğu */
+            font-size: 1.2em;
+            /* Emoji boyutu */
         }
 
         .new-row-animation {
-            animation: slideDownNewRow 0.4s ease-out;
+            animation: slideDownNewRow 0.3s ease-out;
+            /* Daha hızlı yeni satır animasyonu */
         }
 
         @keyframes slideDownNewRow {
-            0% {
-                transform: translateY(-30px);
+            from {
+                transform: translateY(-20px);
                 opacity: 0;
             }
 
-            100% {
+            to {
                 transform: translateY(0);
                 opacity: 1;
             }
         }
 
         footer.account-footer {
-            padding: 30px 0;
+            padding: 40px 0;
+            /* Footer padding */
             text-align: center;
-            border-top: 2px solid #E0E0E0;
-            margin-top: 30px;
+            border-top: 1px solid #dee2e6;
+            /* Daha hafif üst çizgi */
+            margin-top: 40px;
+            /* Üst boşluk */
         }
 
         footer.account-footer a.button {
             display: inline-block;
-            padding: 12px 24px;
-            background-color: #9BA4B5;
-            color: #212A3E;
+            padding: 14px 28px;
+            background-color: #6c757d;
+            /* İkincil renk */
+            color: #fff;
             text-decoration: none;
-            border-radius: 8px;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            border-radius: 10px;
+            transition: background-color 0.3s ease, transform 0.2s ease-in-out;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
         footer.account-footer a.button:hover {
-            background-color: #394867;
-            color: #F1F6F9;
-            transform: scale(1.02);
+            background-color: #545b62;
+            /* Hover rengi */
+            transform: scale(1.05);
         }
     </style>
 </head>
+
 <body class="account-body">
     <header class="account-header">
         <h1>My Accounts</h1>
@@ -389,8 +463,53 @@
                 <td>${getBalance(account) !== null ? getBalance(account).toFixed(2) + ' TL' : 'N/A'}</td>
                 <td>${account.accountStartDate ? new Date(account.accountStartDate).toLocaleDateString('en-US') : 'N/A'}</td>
             `;
+            row.classList.add('account-row');
+
+            // Menü gösterme özelliği
+            row.addEventListener('click', () => {
+                showAccountOptions(account);
+            });
+
             return row;
         }
+
+        function showAccountOptions(account) {
+            const userId = prompt(
+                `Hesap: ${formatIban(account.iban)}\n\nSeçenekler:\n1. IBAN'ı kopyala\n2. Bu hesabı paylaşmak için bir kullanıcı ID girin:`
+            );
+
+            if (!userId) return;
+
+            if (!isNaN(userId)) {
+                // Paylaşımlı hesap olarak ayarla
+                setSharedAccount(account.accountId, parseInt(userId));
+            } else {
+                // IBAN'ı panoya kopyala
+                navigator.clipboard.writeText(account.iban)
+                    .then(() => alert("IBAN kopyalandı: " + account.iban))
+                    .catch(() => alert("Kopyalama başarısız."));
+            }
+        }
+
+        async function setSharedAccount(accountId, userId) {
+            try {
+                const response = await fetch(`/api/accounts/${accountId}/users/${userId}`, {
+                    method: 'POST'
+                });
+
+                if (response.ok) {
+                    alert("Kullanıcı başarıyla paylaşımlı hesap olarak eklendi.");
+                } else {
+                    const err = await response.text();
+                    alert("Başarısız: " + err);
+                }
+            } catch (error) {
+                alert("Hata oluştu: " + error);
+            }
+        }
+
+
+
 
         function getEmojiForAccountType(accountType) {
             if (!accountType) return '';
@@ -404,26 +523,26 @@
         }
 
         function getBalance(account) {
-    if (!account) return null;
+            if (!account) return null;
 
-    const tryParse = (val) => {
-        const num = parseFloat(val);
-        return isNaN(num) ? null : num;
-    };
+            const tryParse = (val) => {
+                const num = parseFloat(val);
+                return isNaN(num) ? null : num;
+            };
 
-    return tryParse(account.timeDepositBalance) ??
-           tryParse(account.checkingBalance) ??
-           tryParse(account.creditCardLimit) ??
-           tryParse(account.otherCurrencyBalance) ??
-           null;
-}
+            return tryParse(account.timeDepositBalance) ??
+                tryParse(account.checkingBalance) ??
+                tryParse(account.creditCardLimit) ??
+                tryParse(account.otherCurrencyBalance) ??
+                null;
+        }
 
 
 
-function formatIban(iban) {
-    if (!iban || typeof iban !== 'string') return "N/A";
-    return iban.match(/.{1,4}/g)?.join(' ') || "N/A";
-}
+        function formatIban(iban) {
+            if (!iban || typeof iban !== 'string') return "N/A";
+            return iban.match(/.{1,4}/g)?.join(' ') || "N/A";
+        }
 
 
         async function addNewAccount() {
