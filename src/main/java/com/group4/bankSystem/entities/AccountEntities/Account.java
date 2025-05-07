@@ -1,13 +1,5 @@
 package com.group4.bankSystem.entities.AccountEntities;
 
-<<<<<<< HEAD
-import jakarta.persistence.*;
-import java.time.LocalDate;
-import java.util.List;
-
-import com.group4.bankSystem.entities.CustomerEntities.UserList;
-
-=======
 import java.time.LocalDate;
 import java.util.List;
 
@@ -26,7 +18,6 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
->>>>>>> upstream/master
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "Account")
@@ -55,10 +46,7 @@ public class Account {
     @Column(name = "overdraft_Enabled", nullable = false)
     private Boolean overdraftEnabled;
 
-<<<<<<< HEAD
-=======
     @JsonIgnore
->>>>>>> upstream/master
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
     private List<UserList> userList;
 
