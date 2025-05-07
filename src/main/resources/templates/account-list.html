@@ -728,6 +728,23 @@ async function addNewAccount() {
         document.addEventListener("DOMContentLoaded", () => {
             checkSessionAndFetchAccounts();
         });
+
+        // ✅ Kredi kartı limiti değiştiğinde başlangıç bakiyesi otomatik ayarlanır
+cardLimitInput.addEventListener('input', () => {
+    const selectedType = accountTypeSelect.value;
+    if (selectedType === "CreditCard") {
+        const requestedLimit = parseFloat(cardLimitInput.value) || 0;
+        const maxLimit = currentCustomerIncome * 1.5;
+
+        if (requestedLimit > maxLimit) {
+            limitHint.textContent = `Limit üst sınırı: ${maxLimit.toFixed(2)} TL (gelirinizin %150'si)`;
+            cardLimitInput.value = maxLimit.toFixed(2);
+            initialBalanceInput.value = maxLimit.toFixed(2);
+        } else {
+            initialBalanceInput.value = requestedLimit.toFixed(2);
+        }
+    }
+});
     </script>
 
 
