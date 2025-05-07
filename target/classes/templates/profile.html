@@ -172,17 +172,20 @@
         <form id="profileForm">
             <div class="profile-section">
                 <h3>Personal Information</h3>
-                <div class="info-row">
-                    <strong>Name:</strong> <span id="customerName"></span>
+                <div class="input-group">
+                  <label for="customerNameInput">Name:</label>
+                  <input type="text" id="customerNameInput" required />
                 </div>
-                <div class="info-row">
-                    <strong>Surname:</strong> <span id="customerSurname"></span>
+                <div class="input-group">
+                  <label for="customerSurnameInput">Surname:</label>
+                  <input type="text" id="customerSurnameInput" required />
                 </div>
                 <div class="info-row">
                     <strong>ID Number:</strong> <span id="customerTc"></span>
                 </div>
-                <div class="info-row">
-                    <strong>Email:</strong> <span id="customerEmail"></span>
+                <div class="input-group">
+                  <label for="customerEmailInput">Email:</label>
+                  <input type="email" id="customerEmailInput" required />
                 </div>
                 <div class="info-row">
                     <strong>Registration Date:</strong>
@@ -257,10 +260,10 @@
                 }
 
                 const customer = await response.json();
-                document.getElementById("customerName").innerText = customer.customerName || "";
-                document.getElementById("customerSurname").innerText = customer.customerSurname || "";
+                document.getElementById("customerNameInput").value = customer.customerName || "";
+                document.getElementById("customerSurnameInput").value = customer.customerSurname || "";
+                document.getElementById("customerEmailInput").value = customer.customerEmail || "";
                 document.getElementById("customerTc").innerText = customer.customerTc || "";
-                document.getElementById("customerEmail").innerText = customer.customerEmail || "";
                 document.getElementById("customerRegistrationDate").innerText = customer.customerRegistrationDate || "";
 
                 document.getElementById("customerPhoneNumber").value = customer.customerPhoneNumber || "";
@@ -290,6 +293,9 @@
                 }
 
                 const updatedCustomer = {
+                    customerName: document.getElementById("customerNameInput").value,
+                    customerSurname: document.getElementById("customerSurnameInput").value,
+                    customerEmail: document.getElementById("customerEmailInput").value,
                     customerPhoneNumber: document.getElementById("customerPhoneNumber").value,
                     customerGender: document.getElementById("customerGender").value,
                     customerAddress: document.getElementById("customerAddress").value,
