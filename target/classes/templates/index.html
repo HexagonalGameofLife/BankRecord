@@ -305,7 +305,6 @@
     </footer>
 
     <script>
-        // Oturum kontrolü
         async function checkSession() {
             try {
                 const response = await fetch('/api/session', { credentials: 'include' });
@@ -315,19 +314,24 @@
             }
         }
 
-        // Müşteri bilgilerini getir + kartları ve isimleri yazdır
         async function fetchCustomerInfo() {
             try {
                 const response = await fetch('/api/me', { credentials: 'include' });
 
                 if (response.ok) {
                     const customer = await response.json();
+
+                    // 👤 Hoş geldin mesajı
                     document.getElementById('welcomeMessage').innerText =
                         'Welcome, ' + customer.customerName + ' ' + customer.customerSurname;
 
+                    // 💳 Sadece kart başvurusu yapılmış hesaplar
                     const cards = customer.cards || [];
-                    console.log("Gelen kartlar:", cards);
-                    renderCards(cards);
+                    renderCards(cards, customer.customerName);
+
+                    // 💰 Toplam bakiye
+                    const accounts = customer.accounts || [];
+                    calculateTotalBalance(accounts, customer.customerDebt || 0);
                 } else {
                     window.location.href = '/login';
                 }
@@ -337,9 +341,7 @@
             }
         }
 
-
-
-        function renderCards(cards) {
+        function renderCards(cards, holderName) {
             const accountTypeMap = {
                 1: 'Savings',
                 2: 'Checking',
@@ -349,7 +351,7 @@
             const container = document.getElementById("wallet-container");
             container.innerHTML = '';
 
-            if (!cards || !cards.length) {
+            if (!cards.length) {
                 container.style.display = 'none';
                 return;
             }
@@ -359,15 +361,11 @@
             cards.forEach(card => {
                 const cardNumber = card.cardNumber?.toString().padStart(16, '*');
                 const maskedNumber = '**** **** **** ' + cardNumber.slice(-4);
-                const holder = card.customerName?.toUpperCase() || '';
-                const cvv = card.cvv?.toString().replace(/\d/g, '*') || '***';
+                const cvv = card.cvv?.toString().replace(/\d/g, '') || '';
                 const account = card.accountId;
+                const iban = account?.iban || 'N/A';
+                const accountTypeName = accountTypeMap[account?.accountTypeId] || 'Unknown';
 
-                // Account type label (varsayılan)
-                const accountTypeName = accountTypeMap[card.accountId?.accountTypeId] || 'Unknown';
-
-
-                // Bakiye veya limit/debt bilgilerini hesapla
                 let balanceDisplay = "0.00 TL";
                 if (account?.accountTypeId === 3) {
                     const limit = account.creditCardLimit || 0;
@@ -376,7 +374,7 @@
                     balanceDisplay = `Limit: ${limit} TL<br>Debt: ${debt} TL<br>Available: ${available} TL`;
                 } else {
                     const checking = account?.checkingBalance || 0;
-                    const saving = account?.savingBalance || 0;
+                    const saving = account?.timeDepositBalance || 0;
                     const total = checking + saving;
                     balanceDisplay = `Bakiye: ${total.toFixed(2)} TL`;
                 }
@@ -385,52 +383,52 @@
                 cardDiv.className = "card";
 
                 cardDiv.innerHTML = `
-            <div class="card-inner">
-                <div class="card-front">
-                    <div class="card-number">${maskedNumber}</div>
-                    <div class="card-holder">${holder}</div>
-                </div>
-                <div class="card-back">
-                    <div class="card-iban">IBAN: ${account?.iban || 'N/A'}</div>
-                    <div class="card-balance">${balanceDisplay}</div>
-                    <div class="card-type">Type: ${accountTypeName}</div>
-                    <div class="card-cvv">${cvv}</div>
-                </div>
-            </div>
-        `;
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <div class="card-number">${maskedNumber}</div>
+                            <div class="card-holder">${holderName}</div>
+                        </div>
+                        <div class="card-back">
+                            <div class="card-iban">IBAN: ${iban}</div>
+                            <div class="card-balance">${balanceDisplay}</div>
+                            <div class="card-type">Type: ${accountTypeName}</div>
+                            <div class="card-cvv">${cvv}</div>
+                        </div>
+                    </div>
+                `;
 
                 container.appendChild(cardDiv);
             });
         }
 
+        function calculateTotalBalance(accounts, customerDebt) {
+            const accountTypeMap = {
+                1: 'Savings',
+                2: 'Checking',
+                3: 'Credit Card',
+                4: 'Investment'
+            };
 
+            let total = 0;
 
+            accounts.forEach(account => {
+                const typeName = accountTypeMap[account.accountTypeId];
 
-        // Kart numarasını 4'lü bloklara ayır
-        function formatCardNumber(num) {
-            if (!num) return '';
-            return num.toString().replace(/(.{4})/g, '$1 ').trim();
+                if (typeName === 'Checking') {
+                    total += account.checkingBalance || 0;
+                } else if (typeName === 'Savings' || typeName === 'Investment') {
+                    total += account.timeDepositBalance || 0;
+                }
+                // ❌ Credit Card limit deliberately excluded
+            });
+
+            const netBalance = total - (customerDebt || 0);
+            const display = document.getElementById("totalBalance");
+            display.innerText = "$ " + netBalance.toFixed(2);
+            display.style.color = netBalance >= 0 ? "green" : "red";
         }
 
-        // CVV'yi maskele
-        function maskCVV(cvv) {
-            return '*'.repeat(cvv?.toString().length || 3);
-        }
 
-        // Toplam bakiye hesapla ve göster
-        async function fetchTotalBalance() {
-            try {
-                const response = await fetch('/api/accounts', { credentials: 'include' });
-                const accounts = await response.json();
-
-                let total = accounts.reduce((sum, account) => sum + (account.balance || 0), 0);
-                document.getElementById('totalBalance').innerText = '$ ' + total.toFixed(2);
-            } catch (error) {
-                console.error('Failed to fetch total balance.', error);
-            }
-        }
-
-        // Çıkış işlemi
         document.getElementById('logoutButton').addEventListener('click', async () => {
             try {
                 await fetch('/api/logout', {
@@ -443,13 +441,15 @@
             }
         });
 
-        // Sayfa yüklendiğinde işlemleri başlat
         document.addEventListener("DOMContentLoaded", () => {
             checkSession();
             fetchCustomerInfo();
-            fetchTotalBalance();
         });
     </script>
+
+
+
+
 
 </body>
 
