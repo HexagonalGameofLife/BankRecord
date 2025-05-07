@@ -1,17 +1,21 @@
 package com.group4.bankSystem.services.TransactionServices;
 
 import java.util.List;
+<<<<<<< HEAD
 import java.time.LocalDate;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
 import java.util.stream.Collectors;
+=======
+>>>>>>> upstream/master
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.group4.bankSystem.dto.TransactionDto;
+<<<<<<< HEAD
 import com.group4.bankSystem.dto.CreateTransactionRequest;
 import com.group4.bankSystem.entities.TransactionEntities.Transaction;
 import com.group4.bankSystem.entities.AccountEntities.Account;
@@ -20,6 +24,12 @@ import com.group4.bankSystem.repository.AccountRepository.AccountRepository;
 import com.group4.bankSystem.repository.TransactionRepository.TransactionRepository;
 
 
+=======
+import com.group4.bankSystem.entities.TransactionEntities.Transaction;
+import com.group4.bankSystem.repository.AccountRepository.AccountRepository;
+import com.group4.bankSystem.repository.TransactionRepository.TransactionRepository;
+
+>>>>>>> upstream/master
 @Service
 public class TransactionServices {
 

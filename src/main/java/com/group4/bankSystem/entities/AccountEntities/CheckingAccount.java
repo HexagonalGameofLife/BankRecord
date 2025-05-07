@@ -2,7 +2,9 @@ package com.group4.bankSystem.entities.AccountEntities;
 
 import java.time.LocalDate;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "CheckingAccount")

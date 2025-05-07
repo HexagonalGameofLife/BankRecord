@@ -3,6 +3,7 @@ package com.group4.bankSystem.dto;
 public class CreateAccountRequest {
     private String accountType;
     private double balance;
+    private Long customerId; // 🔥 eklendi: UserList için gerekli
 
     public String getAccountType() {
         return accountType;
@@ -18,5 +19,13 @@ public class CreateAccountRequest {
 
     public void setBalance(double balance) {
         this.balance = balance;
+    }
+
+    public Long getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
     }
 }

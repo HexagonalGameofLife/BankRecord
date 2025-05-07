@@ -49,6 +49,11 @@ public class AccountService {
         return accountRepository.findAll();
     }
 
+    public List<Account> getAccountsForCustomer(Long customerId) {
+        return accountRepository.findAllByCustomerId(customerId);
+    }
+
+
     // Belirli bir müşteriye ait hesapları getir
     public List<Integer> getAccountsByCustomerId(Integer customerId) {
       return accountRepository.findAccountIdsByCustomerId(customerId);
@@ -93,73 +98,89 @@ public class AccountService {
         userListRepository.save(userList);
     }
 
-    // CreateAccountRequest DTO'su için kuruldu.
+
     public Account createAccountFromDto(CreateAccountRequest request) {
-    String type = request.getAccountType();
-    float balance = (float) request.getBalance();
+        Account account;
 
-    Account account;
+        switch (request.getAccountType().toLowerCase()) {
+            case "checking" -> {
+                CheckingAccount ca = new CheckingAccount();
+                ca.setCheckingBalance((float) request.getBalance());
+                fillCommonFields(ca, request);
+                account = accountRepository.save(ca); // Kaydettikten sonra ID oluşur
+            }
+            case "creditcard" -> {
+                CreditCardAccount cc = new CreditCardAccount();
+                cc.setCreditCardLimit((float) request.getBalance());
+                cc.setCurrentDept(0f);
+                cc.setDueDate(LocalDate.now().plusMonths(1));
+                fillCommonFields(cc, request);
+                account = accountRepository.save(cc);
+            }
+            case "savings", "investment", "timedeposit" -> {
+                TimeDepositAccount ta = new TimeDepositAccount();
+                ta.setTimeDepositBalance((float) request.getBalance());
+                ta.setDepositDate(LocalDate.now());
+                ta.setMaturityDate(LocalDate.now().plusMonths(6));
+                ta.setInterestRate(0.15f);
+                fillCommonFields(ta, request);
+                account = accountRepository.save(ta);
+            }
+            case "othercurrency" -> {
+                OtherCurrencyAccount oa = new OtherCurrencyAccount();
+                oa.setOtherCurrencyBalance((float) request.getBalance());
+                oa.setCurrencyType(1);
+                fillCommonFields(oa, request);
+                account = accountRepository.save(oa);
+            }
+            default -> throw new IllegalArgumentException("Unsupported account type: " + request.getAccountType());
+        }
 
-    switch (type) {
-        case "Savings" -> {
-            TimeDepositAccount acc = new TimeDepositAccount();
-            acc.setTimeDepositBalance(balance);
-            acc.setMaturityDate(LocalDate.now().plusYears(1));
-            acc.setDepositDate(LocalDate.now());
-            acc.setInterestRate(0.15f); // örnek faiz oranı
-            account = acc;
-        }
-        case "Checking" -> {
-            CheckingAccount acc = new CheckingAccount();
-            acc.setCheckingBalance(balance);
-            account = acc;
-        }
-        case "CreditCard" -> {
-            CreditCardAccount acc = new CreditCardAccount();
-            acc.setCreditCardLimit(balance);
-            acc.setCurrentDept(0f);
-            acc.setDueDate(LocalDate.now().plusMonths(1));
-            account = acc;
-        }
-        case "Investment" -> {
-            OtherCurrencyAccount acc = new OtherCurrencyAccount();
-            acc.setOtherCurrencyBalance(balance);
-            acc.setCurrencyType(1); // örnek: 1 = TL, 2 = USD, 3 = EUR
-            account = acc;
-        }
-        default -> throw new IllegalArgumentException("Unknown account type: " + type);
+        // 🔁 Account kaydedildikten SONRA UserList oluşturulmalı
+        Customer customer = customerRepository.findById(request.getCustomerId().intValue())
+            .orElseThrow(() -> new RuntimeException("Customer not found"));
+
+        UserList userList = new UserList();
+        UserListId id = new UserListId();
+        id.setCustomerId(customer.getCustomerId());
+        id.setAccountId(account.getAccountId()); // ✅ Artık null değil!
+        userList.setId(id);
+        userList.setAccount(account);
+        userList.setCustomer(customer);
+        userList.setPrimaryUser(true);
+
+        userListRepository.save(userList);
+
+        return account;
     }
 
-    // Ortak alanlar
-    account.setIban(generateIban());
-    account.setAccountStartDate(LocalDate.now());
-    account.setOverdraftEnabled(false);
-    account.setPrimaryUserId(1);
-    account.setStatusId(1);
-    account.setAccountTypeId(mapAccountTypeToId(type));
 
-    return accountRepository.save(account);
-}
-
-      private String generateIban() {
-          String countryCode = "TR";
-          String bankCode = "00061"; // 5 hane
-          String accountNumber = String.format("%017d", Math.abs(new Random().nextLong() % 1_000_000_000_000_000_00L)); // 17 hane
-          String controlDigits = "00"; // geçici
-          return countryCode + controlDigits + bankCode + accountNumber;
-      }
+    private void fillCommonFields(Account account, CreateAccountRequest request) {
+        account.setIban(generateFakeIban());
+        account.setAccountTypeId(convertAccountTypeToId(request.getAccountType()));
+        account.setAccountStartDate(LocalDate.now());
+        account.setOverdraftEnabled(false);
+        account.setPrimaryUserId(request.getCustomerId().intValue());
+        account.setStatusId(1);
+    }
 
 
 
 
-private int mapAccountTypeToId(String type) {
-  return switch (type) {
-      case "Savings" -> 1;
-      case "Checking" -> 2;
-      case "CreditCard" -> 3;
-      case "Investment" -> 4;
-      default -> throw new IllegalArgumentException("Unknown account type: " + type);
-  };
-}
 
+    private String generateFakeIban() {
+        String number = String.format("%016d", (long)(Math.random() * 1_000_000_000_000_000L));
+        return "TR" + number;
+    }
+
+
+    private int convertAccountTypeToId(String accountType) {
+        return switch (accountType.toLowerCase()) {
+            case "savings" -> 1;
+            case "checking" -> 2;
+            case "creditcard" -> 3;
+            case "investment" -> 4;
+            default -> throw new IllegalArgumentException("Unknown account type: " + accountType);
+        };
+    }
 }

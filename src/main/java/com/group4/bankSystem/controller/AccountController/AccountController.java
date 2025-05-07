@@ -47,14 +47,35 @@ public class AccountController {
     public ResponseEntity<Account> getAccountById(@PathVariable Integer id) {
         Optional<Account> account = accountService.getAccountById(id);
         return account.map(ResponseEntity::ok)
-                      .orElseGet(() -> ResponseEntity.notFound().build());
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/{customerId}/accounts")
+    public ResponseEntity<List<Account>> getAccountsByCustomerId(@PathVariable Long customerId) {
+        List<Account> accounts = accountRepository.findAllByCustomerId(customerId);
+        return ResponseEntity.ok(accounts);
+    }
+
+    @PostMapping
+    public ResponseEntity<Account> createAccount(@RequestBody CreateAccountRequest request) {
+        Account account = accountService.createAccountFromDto(request);
+        return ResponseEntity.ok(account); // ✅ frontend .json() çağırabilir
+    }
+
+    // ✅ Eksik endpoint: Frontend'in çağırdığı adres burası!
+    @GetMapping("/customers/{customerId}/accounts")
+    public ResponseEntity<List<Account>> getAccountsForCustomer(@PathVariable Long customerId) {
+        List<Account> accounts = accountService.getAccountsForCustomer(customerId);
+        return ResponseEntity.ok(accounts);
     }
 
     // Hesap oluştur
-    @PostMapping
-    public Account createAccount(@RequestBody CreateAccountRequest request) {
-        return accountService.createAccountFromDto(request);
-    }
+    /*
+     * @PostMapping
+     * public Account createAccount(@RequestBody CreateAccountRequest request) {
+     * return accountService.createAccountFromDto(request);
+     * }
+     */
 
     // Hesap sil
     @DeleteMapping("/{id}")
@@ -77,8 +98,8 @@ public class AccountController {
     // Bir hesaba yeni kullanıcı ekle
     @PostMapping("/{accountId}/users/{customerId}")
     public ResponseEntity<String> addUserToAccount(@PathVariable Integer accountId,
-                                                   @PathVariable Integer customerId,
-                                                   @RequestParam(defaultValue = "false") boolean isPrimaryUser) {
+            @PathVariable Integer customerId,
+            @RequestParam(defaultValue = "false") boolean isPrimaryUser) {
         try {
             accountService.addUserToAccount(accountId, customerId, isPrimaryUser);
             return ResponseEntity.ok("User added to account successfully.");

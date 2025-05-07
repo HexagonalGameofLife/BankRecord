@@ -49,38 +49,59 @@
         }
 
         .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 1; /* Sit on top */
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            /* Stay in place */
+            z-index: 1;
+            /* Sit on top */
             left: 0;
             top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            width: 100%;
+            /* Full width */
+            height: 100%;
+            /* Full height */
+            overflow: auto;
+            /* Enable scroll if needed */
+            background-color: rgba(0, 0, 0, 0.4);
+            /* Black w/ opacity */
             animation: fadeInModal 0.4s ease-out;
         }
 
         @keyframes fadeInModal {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
         }
 
         .modal-content {
             background-color: #fefefe;
-            margin: 15% auto; /* 15% from the top and centered */
+            margin: 15% auto;
+            /* 15% from the top and centered */
             padding: 20px;
             border: 1px solid #888;
-            width: 80%; /* Could be more or less, depending on screen size */
+            width: 80%;
+            /* Could be more or less, depending on screen size */
             border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
             position: relative;
             animation: slideIn 0.4s ease-out;
         }
 
         @keyframes slideIn {
-            0% { transform: translateY(-50px); opacity: 0; }
-            100% { transform: translateY(0); opacity: 1; }
+            0% {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
         .close-button {
@@ -150,18 +171,26 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
             overflow: hidden;
             animation: fadeIn 0.5s ease-out;
         }
 
         @keyframes fadeIn {
-            0% { opacity: 0; transform: translateY(-10px); }
-            100% { opacity: 1; transform: translateY(0); }
+            0% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        table.account-table th, table.account-table td {
+        table.account-table th,
+        table.account-table td {
             border-bottom: 1px solid #E0E0E0;
             padding: 15px;
             text-align: left;
@@ -195,8 +224,15 @@
         }
 
         @keyframes slideDownNewRow {
-            0% { transform: translateY(-30px); opacity: 0; }
-            100% { transform: translateY(0); opacity: 1; }
+            0% {
+                transform: translateY(-30px);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
         footer.account-footer {
@@ -241,7 +277,7 @@
                 <option value="Savings">💰 Savings Account</option>
                 <option value="Checking">🏦 Checking Account</option>
                 <option value="CreditCard">💳 Credit Card</option>
-                <option value="Investment">📈 Investment Account</option>
+                <option value="investment">📈 Investment Account</option>
             </select>
             <label for="initialBalance">Initial Balance (TL):</label>
             <input type="number" id="initialBalance" placeholder="0.00" min="0">
@@ -260,7 +296,7 @@
                 </tr>
             </thead>
             <tbody id="accountTableBody">
-                </tbody>
+            </tbody>
         </table>
     </main>
 
@@ -268,143 +304,180 @@
         <a href="/index" class="button">Home Page</a>
     </footer>
 
-<script>
-    const addAccountButton = document.getElementById('addAccountButton');
-    const addAccountModal = document.getElementById('addAccountModal');
-    const closeModalButton = document.getElementById('closeModalButton');
-    const submitNewAccountButton = document.getElementById('submitNewAccount');
-    const accountTypeSelect = document.getElementById('accountType');
-    const initialBalanceInput = document.getElementById('initialBalance');
-    const accountTableBody = document.getElementById('accountTableBody');
+    <script>
+        const addAccountButton = document.getElementById('addAccountButton');
+        const addAccountModal = document.getElementById('addAccountModal');
+        const closeModalButton = document.getElementById('closeModalButton');
+        const submitNewAccountButton = document.getElementById('submitNewAccount');
+        const accountTypeSelect = document.getElementById('accountType');
+        const initialBalanceInput = document.getElementById('initialBalance');
+        const accountTableBody = document.getElementById('accountTableBody');
 
-    // Modal açma
-    addAccountButton.addEventListener('click', () => {
-        addAccountModal.style.display = "block";
-    });
+        let currentCustomerId = null;
 
-    // Modal kapama (çarpı işareti)
-    closeModalButton.addEventListener('click', () => {
-        addAccountModal.style.display = "none";
-    });
-
-    // Modal dışına tıklayarak kapama
-    window.addEventListener('click', (event) => {
-        if (event.target == addAccountModal) {
-            addAccountModal.style.display = "none";
-        }
-    });
-
-    async function checkSession() {
-        try {
-            const response = await fetch('/api/session');
-            if (!response.ok) {
-                window.location.href = '/login';
-            }
-        } catch (error) {
-            window.location.href = '/login';
-        }
-    }
-    checkSession();
-
-    async function fetchAccounts() {
-        try {
-            const response = await fetch('/api/accounts');
-            const accounts = await response.json();
-            populateAccountTable(accounts);
-        } catch (error) {
-            console.error('Failed to fetch accounts.');
-        }
-    }
-
-    function populateAccountTable(accounts) {
-        accountTableBody.innerHTML = '';
-        accounts.forEach(account => {
-            const row = createAccountRow(account);
-            accountTableBody.appendChild(row);
+        // Modal açma
+        addAccountButton.addEventListener('click', () => {
+            addAccountModal.style.display = "block";
         });
-    }
 
-    function createAccountRow(account) {
-    const row = document.createElement('tr');
-    row.innerHTML = `
-        <td>${formatIban(account.iban)}</td>
-        <td><span class="account-type-emoji">${getEmojiForAccountType(account.accountType)}</span>${account.accountType}</td>
-        <td>${getBalance(account) !== null ? getBalance(account).toFixed(2) + ' TL' : 'N/A'}</td>
-        <td>${account.accountStartDate ? new Date(account.accountStartDate).toLocaleDateString('en-US') : 'N/A'}</td>
-    `;
-    return row;
+        closeModalButton.addEventListener('click', () => {
+            addAccountModal.style.display = "none";
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target == addAccountModal) {
+                addAccountModal.style.display = "none";
+            }
+        });
+
+        async function checkSessionAndFetchAccounts() {
+            try {
+                const response = await fetch("/api/me", { credentials: "include" });
+
+                if (!response.ok) {
+                    window.location.href = "/login";
+                    return;
+                }
+
+                const customer = await response.json();
+                const customerId = customer.customerId || customer.customerID || customer.id;
+                console.log("Resolved customerId:", customerId);
+                if (!customerId) {
+                    console.error("Customer ID is undefined — cannot fetch accounts");
+                    return;
+                }
+                currentCustomerId = customerId;
+
+                fetchAccounts(currentCustomerId);
+            } catch (error) {
+                console.error("Failed to verify session:", error);
+                window.location.href = "/login";
+            }
+        }
+
+        async function fetchAccounts(customerId) {
+            try {
+                const response = await fetch(`/api/accounts/customers/${customerId}/accounts`);
+
+                const result = await response.json();
+
+                console.log("Accounts response:", result);
+
+                if (!Array.isArray(result)) {
+                    throw new Error("Expected array but got: " + JSON.stringify(result));
+                }
+
+                populateAccountTable(result);
+            } catch (error) {
+                console.error('Failed to fetch accounts.', error);
+            }
+        }
+
+        function populateAccountTable(accounts) {
+            accountTableBody.innerHTML = '';
+            accounts.forEach(account => {
+                const row = createAccountRow(account);
+                accountTableBody.appendChild(row);
+            });
+        }
+
+        function createAccountRow(account) {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${formatIban(account.iban)}</td>
+                <td><span class="account-type-emoji">${getEmojiForAccountType(account.accountType)}</span>${account.accountType}</td>
+                <td>${getBalance(account) !== null ? getBalance(account).toFixed(2) + ' TL' : 'N/A'}</td>
+                <td>${account.accountStartDate ? new Date(account.accountStartDate).toLocaleDateString('en-US') : 'N/A'}</td>
+            `;
+            return row;
+        }
+
+        function getEmojiForAccountType(accountType) {
+            if (!accountType) return '';
+            switch (accountType.toLowerCase()) {
+                case 'savings': return '💰';
+                case 'checking': return '🏦';
+                case 'creditcard': return '💳';
+                case 'investment': return '📈';
+                default: return '';
+            }
+        }
+
+        function getBalance(account) {
+    if (!account) return null;
+
+    const tryParse = (val) => {
+        const num = parseFloat(val);
+        return isNaN(num) ? null : num;
+    };
+
+    return tryParse(account.timeDepositBalance) ??
+           tryParse(account.checkingBalance) ??
+           tryParse(account.creditCardLimit) ??
+           tryParse(account.otherCurrencyBalance) ??
+           null;
 }
 
 
-    function getEmojiForAccountType(accountType) {
-        switch (accountType) {
-            case 'Savings':
-                return '💰';
-            case 'Checking':
-                return '🏦';
-            case 'CreditCard':
-                return '💳';
-            case 'Investment':
-                return '📈';
-            default:
-                return '';
-        }
-    }
 
-    async function addNewAccount() {
-        const accountType = accountTypeSelect.value;
-        const initialBalance = parseFloat(initialBalanceInput.value);
+function formatIban(iban) {
+    if (!iban || typeof iban !== 'string') return "N/A";
+    return iban.match(/.{1,4}/g)?.join(' ') || "N/A";
+}
 
-        if (isNaN(initialBalance)) {
-            alert('Please enter a valid initial balance.');
-            return;
-        }
 
-        try {
-            const response = await fetch('/api/accounts', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ accountType, balance: initialBalance }),
-            });
+        async function addNewAccount() {
+            const accountType = accountTypeSelect.value;
+            const initialBalance = parseFloat(initialBalanceInput.value);
 
-            if (response.ok) {
-                const newAccount = await response.json();
-                const newRow = createAccountRow(newAccount);
-                newRow.classList.add('new-row-animation'); // Animasyon sınıfı ekle
-                accountTableBody.prepend(newRow); // Yeni satırı tablonun başına ekle
-                addAccountModal.style.display = "none"; // Modalı kapat
-                // Formu sıfırla
-                accountTypeSelect.value = 'Savings';
-                initialBalanceInput.value = '';
-            } else {
-                const errorData = await response.json();
-                alert('Failed to add account: ' + errorData.message);
+            if (isNaN(initialBalance)) {
+                alert('Please enter a valid initial balance.');
+                return;
             }
-        } catch (error) {
-            console.error('Error adding new account:', error);
-            alert('An error occurred while adding the account.');
+
+            if (!currentCustomerId) {
+                alert('Customer ID not resolved. Please refresh the page.');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/accounts', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ // Ensure correct data structure
+                        accountType: accountType,
+                        balance: initialBalance,
+                        customerId: currentCustomerId
+                    }),
+                });
+
+                if (response.ok) {
+                    const newAccount = await response.json();
+                    const newRow = createAccountRow(newAccount);
+                    newRow.classList.add('new-row-animation');
+                    accountTableBody.prepend(newRow);
+                    addAccountModal.style.display = "none";
+                    accountTypeSelect.value = 'Savings';
+                    initialBalanceInput.value = '';
+                } else {
+                    const errorData = await response.json();
+                    alert('Failed to add account: ' + errorData.message);
+                }
+            } catch (error) {
+                console.error('Error adding new account:', error);
+                alert('An error occurred while adding the account.');
+            }
         }
-    }
 
-    submitNewAccountButton.addEventListener('click', addNewAccount);
+        submitNewAccountButton.addEventListener('click', addNewAccount);
 
-    fetchAccounts();
+        document.addEventListener("DOMContentLoaded", () => {
+            checkSessionAndFetchAccounts();
+        });
+    </script>
 
-    function getBalance(account) {
-    return account.timeDepositBalance ??
-           account.checkingBalance ??
-           account.creditCardLimit ??
-           account.otherCurrencyBalance ??
-           null;
-    }
-
-    function formatIban(iban) {
-    return iban.match(/.{1,4}/g).join(' ');
-  }
-
-
-</script>
 </body>
+
 </html>
