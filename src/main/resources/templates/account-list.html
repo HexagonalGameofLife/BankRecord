@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>BankRecord - My Accounts</title>
+    <style>
+        body.account-body {
+            background-color: #F1F6F9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header.account-header {
+            color: #212A3E;
+            text-align: center;
+            padding: 30px 0;
+            border-bottom: 2px solid #E0E0E0;
+            margin-bottom: 30px;
+        }
+
+        header.account-header h1 {
+            font-weight: 500;
+            font-size: 28px;
+            margin-bottom: 0;
+        }
+
+        .add-account-button {
+            background-color: #394867;
+            color: #F1F6F9;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-bottom: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .add-account-button:hover {
+            background-color: #9BA4B5;
+            transform: scale(1.02);
+        }
+
+        .modal {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            /* Stay in place */
+            z-index: 1;
+            /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%;
+            /* Full width */
+            height: 100%;
+            /* Full height */
+            overflow: auto;
+            /* Enable scroll if needed */
+            background-color: rgba(0, 0, 0, 0.4);
+            /* Black w/ opacity */
+            animation: fadeInModal 0.4s ease-out;
+        }
+
+        @keyframes fadeInModal {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            /* Could be more or less, depending on screen size */
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            position: relative;
+            animation: slideIn 0.4s ease-out;
+        }
+
+        @keyframes slideIn {
+            0% {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-content h2 {
+            color: #212A3E;
+            margin-top: 0;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #E0E0E0;
+            padding-bottom: 10px;
+        }
+
+        .modal-content label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .modal-content select,
+        .modal-content input[type="number"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        .modal-content button.submit-button {
+            background-color: #394867;
+            color: #F1F6F9;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 15px;
+        }
+
+        .modal-content button.submit-button:hover {
+            background-color: #9BA4B5;
+        }
+
+        main.account-main {
+            flex-grow: 1;
+            padding: 0 20px;
+        }
+
+        table.account-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        table.account-table th,
+        table.account-table td {
+            border-bottom: 1px solid #E0E0E0;
+            padding: 15px;
+            text-align: left;
+        }
+
+        table.account-table th {
+            background-color: #394867;
+            color: #F1F6F9;
+            font-weight: bold;
+        }
+
+        table.account-table tbody tr:nth-child(even) {
+            background-color: #F9F9F9;
+        }
+
+        table.account-table tbody tr:hover {
+            background-color: #E8F0FE;
+            transition: background-color 0.3s ease;
+        }
+
+        table.account-table tbody td {
+            color: #333;
+        }
+
+        .account-type-emoji {
+            margin-right: 5px;
+        }
+
+        .new-row-animation {
+            animation: slideDownNewRow 0.4s ease-out;
+        }
+
+        @keyframes slideDownNewRow {
+            0% {
+                transform: translateY(-30px);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        footer.account-footer {
+            padding: 30px 0;
+            text-align: center;
+            border-top: 2px solid #E0E0E0;
+            margin-top: 30px;
+        }
+
+        footer.account-footer a.button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #9BA4B5;
+            color: #212A3E;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        footer.account-footer a.button:hover {
+            background-color: #394867;
+            color: #F1F6F9;
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+
+<body class="account-body">
+    <header class="account-header">
+        <h1>My Accounts</h1>
+    </header>
+
+    <button class="add-account-button" id="addAccountButton">
+        <span>➕</span> Add New Account
+    </button>
+
+    <div id="addAccountModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="closeModalButton">&times;</span>
+            <h2>Add New Account</h2>
+            <label for="accountType">Account Type:</label>
+            <select id="accountType">
+                <option value="Savings">💰 Savings Account</option>
+                <option value="Checking">🏦 Checking Account</option>
+                <option value="CreditCard">💳 Credit Card</option>
+                <option value="investment">📈 Investment Account</option>
+            </select>
+            <label for="initialBalance">Initial Balance (TL):</label>
+            <input type="number" id="initialBalance" placeholder="0.00" min="0">
+            <button class="submit-button" id="submitNewAccount">Add Account</button>
+        </div>
+    </div>
+
+    <main class="account-main">
+        <table class="account-table">
+            <thead>
+                <tr>
+                    <th>IBAN</th>
+                    <th>Account Type</th>
+                    <th>Balance</th>
+                    <th>Start Date</th>
+                </tr>
+            </thead>
+            <tbody id="accountTableBody">
+            </tbody>
+        </table>
+    </main>
+
+    <footer class="account-footer">
+        <a href="/index" class="button">Home Page</a>
+    </footer>
+
+    <script>
+        const addAccountButton = document.getElementById('addAccountButton');
+        const addAccountModal = document.getElementById('addAccountModal');
+        const closeModalButton = document.getElementById('closeModalButton');
+        const submitNewAccountButton = document.getElementById('submitNewAccount');
+        const accountTypeSelect = document.getElementById('accountType');
+        const initialBalanceInput = document.getElementById('initialBalance');
+        const accountTableBody = document.getElementById('accountTableBody');
+
+        let currentCustomerId = null;
+
+        // Modal açma
+        addAccountButton.addEventListener('click', () => {
+            addAccountModal.style.display = "block";
+        });
+
+        closeModalButton.addEventListener('click', () => {
+            addAccountModal.style.display = "none";
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target == addAccountModal) {
+                addAccountModal.style.display = "none";
+            }
+        });
+
+        async function checkSessionAndFetchAccounts() {
+            try {
+                const response = await fetch("/api/me", { credentials: "include" });
+
+                if (!response.ok) {
+                    window.location.href = "/login";
+                    return;
+                }
+
+                const customer = await response.json();
+                const customerId = customer.customerId || customer.customerID || customer.id;
+                console.log("Resolved customerId:", customerId);
+                if (!customerId) {
+                    console.error("Customer ID is undefined — cannot fetch accounts");
+                    return;
+                }
+                currentCustomerId = customerId;
+
+                fetchAccounts(currentCustomerId);
+            } catch (error) {
+                console.error("Failed to verify session:", error);
+                window.location.href = "/login";
+            }
+        }
+
+        async function fetchAccounts(customerId) {
+            try {
+                const response = await fetch(`/api/accounts/customers/${customerId}/accounts`);
+
+                const result = await response.json();
+
+                console.log("Accounts response:", result);
+
+                if (!Array.isArray(result)) {
+                    throw new Error("Expected array but got: " + JSON.stringify(result));
+                }
+
+                populateAccountTable(result);
+            } catch (error) {
+                console.error('Failed to fetch accounts.', error);
+            }
+        }
+
+        function populateAccountTable(accounts) {
+            accountTableBody.innerHTML = '';
+            accounts.forEach(account => {
+                const row = createAccountRow(account);
+                accountTableBody.appendChild(row);
+            });
+        }
+
+        function createAccountRow(account) {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${formatIban(account.iban)}</td>
+                <td><span class="account-type-emoji">${getEmojiForAccountType(account.accountType)}</span>${account.accountType}</td>
+                <td>${getBalance(account) !== null ? getBalance(account).toFixed(2) + ' TL' : 'N/A'}</td>
+                <td>${account.accountStartDate ? new Date(account.accountStartDate).toLocaleDateString('en-US') : 'N/A'}</td>
+            `;
+            return row;
+        }
+
+        function getEmojiForAccountType(accountType) {
+            if (!accountType) return '';
+            switch (accountType.toLowerCase()) {
+                case 'savings': return '💰';
+                case 'checking': return '🏦';
+                case 'creditcard': return '💳';
+                case 'investment': return '📈';
+                default: return '';
+            }
+        }
+
+        function getBalance(account) {
+    if (!account) return null;
+
+    const tryParse = (val) => {
+        const num = parseFloat(val);
+        return isNaN(num) ? null : num;
+    };
+
+    return tryParse(account.timeDepositBalance) ??
+           tryParse(account.checkingBalance) ??
+           tryParse(account.creditCardLimit) ??
+           tryParse(account.otherCurrencyBalance) ??
+           null;
+}
+
+
+
+function formatIban(iban) {
+    if (!iban || typeof iban !== 'string') return "N/A";
+    return iban.match(/.{1,4}/g)?.join(' ') || "N/A";
+}
+
+
+        async function addNewAccount() {
+            const accountType = accountTypeSelect.value;
+            const initialBalance = parseFloat(initialBalanceInput.value);
+
+            if (isNaN(initialBalance)) {
+                alert('Please enter a valid initial balance.');
+                return;
+            }
+
+            if (!currentCustomerId) {
+                alert('Customer ID not resolved. Please refresh the page.');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/accounts', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ // Ensure correct data structure
+                        accountType: accountType,
+                        balance: initialBalance,
+                        customerId: currentCustomerId
+                    }),
+                });
+
+                if (response.ok) {
+                    const newAccount = await response.json();
+                    const newRow = createAccountRow(newAccount);
+                    newRow.classList.add('new-row-animation');
+                    accountTableBody.prepend(newRow);
+                    addAccountModal.style.display = "none";
+                    accountTypeSelect.value = 'Savings';
+                    initialBalanceInput.value = '';
+                } else {
+                    const errorData = await response.json();
+                    alert('Failed to add account: ' + errorData.message);
+                }
+            } catch (error) {
+                console.error('Error adding new account:', error);
+                alert('An error occurred while adding the account.');
+            }
+        }
+
+        submitNewAccountButton.addEventListener('click', addNewAccount);
+
+        document.addEventListener("DOMContentLoaded", () => {
+            checkSessionAndFetchAccounts();
+        });
+    </script>
+
+</body>
+
+</html>

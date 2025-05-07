@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>BankRecord - Dashboard</title>
+    <style>
+        body.index-body {
+            background-color: #F1F6F9;
+            /* Very light gray background */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* Center content horizontally */
+            justify-content: flex-start;
+            /* Align items from the top */
+        }
+
+        header.index-header {
+            color: #212A3E;
+            /* Dark gray header text */
+            text-align: center;
+            padding: 40px 0;
+            border-bottom: 2px solid #E0E0E0;
+            /* Light gray bottom border */
+            margin-bottom: 40px;
+            width: 90%;
+            /* Adjust width for responsiveness */
+            max-width: 960px;
+        }
+
+        header.index-header h1 {
+            font-weight: 500;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        header.index-header h2#welcomeMessage {
+            color: #394867;
+            /* Dark blue-gray welcome message */
+            font-size: 20px;
+            font-weight: 400;
+            margin-top: 0;
+        }
+
+        .wallet-container {
+            background-color: #394867;
+            /* Cüzdan rengi */
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            margin-bottom: 30px;
+            width: 90%;
+            max-width: 400px;
+            perspective: 1000px;
+            /* 3D görünüm için */
+        }
+
+        .card {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #9BA4B5, #212A3E);
+            /* Kart gradyanı */
+            border-radius: 10px;
+            color: #F1F6F9;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s ease-in-out;
+            cursor: pointer;
+        }
+
+        .wallet-container:hover .card {
+            transform: rotateY(180deg);
+        }
+
+        .card-front,
+        .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            /* Arka yüzü gizle */
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        .card-front {
+            transform: rotateY(0deg);
+        }
+
+        .card-back {
+            background-color: #212A3E;
+            transform: rotateY(180deg);
+            align-items: flex-end;
+        }
+
+        .card-number {
+            font-size: 1.5em;
+            letter-spacing: 2px;
+        }
+
+        .card-holder {
+            font-size: 0.9em;
+        }
+
+        .card-cvv {
+            background-color: #F1F6F9;
+            color: #212A3E;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        .balance-display {
+            text-align: center;
+            margin-bottom: 30px;
+            width: 90%;
+            max-width: 400px;
+            background-color: #FFFFFF;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .balance-label {
+            font-size: 1.2em;
+            color: #212A3E;
+            margin-bottom: 5px;
+        }
+
+        .balance-amount {
+            font-size: 2em;
+            color: #394867;
+            font-weight: bold;
+        }
+
+        main.index-main {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            /* Responsive grid layout */
+            gap: 30px;
+            width: 90%;
+            /* Adjust width for responsiveness */
+            max-width: 960px;
+            margin-bottom: 40px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card-link {
+            background-color: #FFFFFF;
+            /* White cards */
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            text-align: center;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            text-decoration: none;
+            color: inherit;
+            /* Inherit text color from body */
+        }
+
+        .card-link:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-link h3 {
+            color: #212A3E;
+            /* Dark gray card heading */
+            font-size: 20px;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .card-link.button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #394867;
+            /* Dark blue-gray button */
+            color: #F1F6F9;
+            /* Light gray text */
+            border-radius: 8px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .card-link.button:hover {
+            background-color: #9BA4B5;
+            /* Medium gray hover */
+            transform: scale(1.02);
+        }
+
+        footer.index-footer {
+            padding: 30px 0;
+            text-align: center;
+            border-top: 2px solid #E0E0E0;
+            /* Light gray top border */
+            width: 90%;
+            /* Adjust width for responsiveness */
+            max-width: 960px;
+        }
+
+        footer.index-footer button.logout-button {
+            padding: 12px 24px;
+            background-color: #FF6B6B;
+            /* Red logout button */
+            color: #FFFFFF;
+            /* White text */
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        footer.index-footer button.logout-button:hover {
+            background-color: #E64A4A;
+            /* Darker red hover */
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+
+<body class="index-body">
+    <header class="index-header">
+        <h1>Welcome to BankRecord!</h1>
+        <h2 id="welcomeMessage"></h2>
+    </header>
+
+    <!--zayim-->
+    <!-- Modal -->
+    <div id="incomeModal"
+        style="display:none; position:fixed; bottom:20px; right:20px; background:white; padding:20px; border:1px solid #ccc; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.2);">
+        <p>Please share your income information. Required for credit card application.</p>
+        <input type="number" id="incomeInput" placeholder="Enter income (₺)" style="margin-top:10px; padding:5px;">
+        <div style="margin-top:10px;">
+            <button onclick="submitIncome()">Share Info</button>
+            <button onclick="document.getElementById('incomeModal').style.display='none'">Not Now</button>
+        </div>
+    </div>
+
+
+    <div class="wallet-container">
+        <div class="card">
+            <div class="card-front">
+                <div class="card-number" id="cardNumberDisplay">**** **** **** 1234</div>
+                <div class="card-holder" id="cardHolderDisplay">JOHN DOE</div>
+            </div>
+            <div class="card-back">
+                <div class="card-cvv">***</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="balance-display">
+        <div class="balance-label">Your Total Balance</div>
+        <div class="balance-amount" id="totalBalance">$ 0.00</div>
+    </div>
+
+    <main class="index-main">
+        <a href="/accounts" class="card-link">
+            <h3>My Accounts</h3>
+            <div class="button">View All Accounts</div>
+        </a>
+        <a href="/transactions" class="card-link">
+            <h3>My Transactions</h3>
+            <div class="button">View Transactions</div>
+        </a>
+        <a href="/customers" class="card-link">
+            <h3>My Customer Info</h3>
+            <div class="button">View My Info</div>
+        </a>
+        <a href="/profile" class="card-link">
+            <h3>My Profile</h3>
+            <div class="button">Go to Profile</div>
+        </a>
+        <a href="/transaction" class="card-link">
+            <h3>Make a Transaction</h3>
+            <div class="button">Perform Transaction</div>
+        </a>
+    </main>
+
+    <footer class="index-footer">
+        <button id="logoutButton" class="logout-button">Logout</button>
+    </footer>
+
+    <script>
+        // Session Check
+        async function checkSession() {
+            try {
+                const response = await fetch('/api/session', {
+                    credentials: 'include'
+                });
+                if (!response.ok) {
+                    window.location.href = '/login';
+                }
+            } catch (error) {
+                window.location.href = '/login';
+            }
+        }
+
+        // Fetch logged-in customer info
+        async function fetchCustomerInfo() {
+            try {
+                const response = await fetch('/api/me', {
+                    credentials: 'include'
+                });
+
+                if (response.ok) {
+                    const customer = await response.json();
+                    document.getElementById('welcomeMessage').innerText = 'Welcome, ' + customer.customerName + ' ' + customer.customerSurname;
+                    // Burada kart bilgileri de gelinebilir ve güncellenebilir (gerçek uygulamada dikkatli olunmalı)
+                    // Örneğin:
+                    // document.getElementById('cardHolderDisplay').innerText = customer.customerName.toUpperCase() + ' ' + customer.customerSurname.toUpperCase();
+                } else {
+                    window.location.href = '/login';
+                }
+            } catch (error) {
+                console.error('Failed to fetch user info.');
+                window.location.href = '/login';
+            }
+        }
+
+        // Total Balance Info
+        async function fetchTotalBalance() {
+            try {
+                const response = await fetch('/api/accounts', {
+                    credentials: 'include'
+                });
+
+                const accounts = await response.json();
+
+                let total = accounts.reduce((sum, account) => sum + (account.balance || 0), 0);
+                document.getElementById('totalBalance').innerText = '$ ' + total.toFixed(2);
+            } catch (error) {
+                console.error('Failed to fetch total balance.');
+            }
+        }
+        //zayim
+        async function checkIncomeStatus() {
+            const userId = localStorage.getItem('userId');
+            if (!userId) return;
+
+            try {
+                const res = await fetch(`/api/customers/${userId}`);
+                if (res.ok) {
+                    const customer = await res.json();
+                    if (!customer.income || customer.income === 0) {
+                        document.getElementById('incomeModal').style.display = 'block';
+                    }
+                }
+            } catch (e) {
+                console.error('Error checking income status:', e);
+            }
+        }
+
+        async function submitIncome() {
+            const userId = localStorage.getItem('userId');
+            const incomeValue = parseFloat(document.getElementById('incomeInput').value);
+            if (isNaN(incomeValue) || incomeValue <= 0) {
+                alert('Please enter a valid income.');
+                return;
+            }
+
+            try {
+                const res = await fetch(`/api/customers/${userId}/income`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ income: incomeValue })
+                });
+                if (res.ok) {
+                    alert("Income updated successfully!");
+                    document.getElementById('incomeModal').style.display = 'none';
+                } else {
+                    alert("Failed to update income.");
+                }
+            } catch (e) {
+                console.error('Error submitting income:', e);
+            }
+        }
+
+        // Sayfa yüklendiğinde kontrol et
+        window.onload = checkIncomeStatus;
+
+        // Logout action
+        document.getElementById('logoutButton').addEventListener('click', async () => {
+            try {
+                await fetch('/api/logout', {
+                    method: 'POST',
+                    credentials: 'include'
+                });
+                window.location.href = '/login';
+            } catch (error) {
+                console.error('Error during logout.');
+            }
+        });
+
+        // Perform checks and data fetching on page load
+        checkSession();
+        fetchCustomerInfo();
+        fetchTotalBalance();
+    </script>
+</body>
+
+</html>
