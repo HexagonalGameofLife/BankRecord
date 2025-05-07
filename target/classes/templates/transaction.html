@@ -221,6 +221,9 @@
 
     const payload = { fromIban, toIban, amount, description };
 
+    console.log("Gönderilen payload:", JSON.stringify(payload, null, 2));
+
+
     fetch("/api/transactions/process", {
       method: "POST",
       credentials: "include",
@@ -246,8 +249,8 @@
     })
     .catch(err => {
       console.error("Transfer hatası:", err);
-      alert(`Transfer başarısız: ${err}`);
-    });
+      alert(`Transfer başarısız:\n${err}`);
+      });
   }
 </script>
 

@@ -78,11 +78,11 @@ public class AccountService {
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
 
-        int currentUserCount = account.getUserList() != null ? account.getUserList().size() : 0;
+      int currentUserCount = account.getUserList() != null ? account.getUserList().size() : 0;
 
-        if (currentUserCount >= 3) {
-            throw new RuntimeException("This account already has 3 users. Cannot add more.");
-        }
+      if (currentUserCount >= 3) {
+          throw new RuntimeException("This account already has 3 users. Cannot add more.");
+      }
 
         UserList userList = new UserList();
         UserListId id = new UserListId();
