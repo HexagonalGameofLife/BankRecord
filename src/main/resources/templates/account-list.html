@@ -163,6 +163,31 @@
             /* Alt padding */
             font-size: 24px;
             /* Daha büyük font */
+            font-weight: 500;
+        }
+
+        .modal-content label {
+            display: block;
+            margin-bottom: 10px;
+            /* Etiket altı boşluk */
+            color: #495057;
+            /* Etiket rengi */
+            font-weight: 600;
+            /* Daha belirgin etiket */
+        }
+
+        .modal-content select,
+        .modal-content input[type="number"] {
+            width: calc(100% - 24px);
+            /* Kenar boşlukları hesaba katıldı */
+            padding: 12px;
+            /* Daha iyi iç boşluk */
+            margin-bottom: 20px;
+            /* Daha fazla alt boşluk */
+            border: 1px solid #ced4da;
+            /* Kenarlık */
+            border-radius: 6px;
+            /* Yuvarlak köşeler */
             box-sizing: border-box;
             font-size: 16px;
         }
@@ -212,7 +237,7 @@
         @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(-20px);
+                transform: translateY(-10px);
             }
 
             to {
@@ -318,44 +343,23 @@
     </button>
 
     <div id="addAccountModal" class="modal">
-      <div class="modal-content">
-          <span class="close-button" id="closeModalButton">&times;</span>
-          <h2>Add New Account</h2>
-
-          <label for="accountType">Account Type:</label>
-          <select id="accountType">
-              <option value="Savings">💰 Savings Account</option>
-              <option value="Checking">🏦 Checking Account</option>
-              <option value="CreditCard">💳 Credit Card</option>
-              <option value="investment">📈 Investment Account</option>
-          </select>
-
-          <label for="initialBalance">Initial Balance (TL):</label>
-          <input type="number" id="initialBalance" placeholder="0.00" min="0">
-          <div id="creditCardLimitInfo" style="font-size: 0.9em; color: #555; margin-top: 5px;"></div>
-
-          <!-- ✅ Kredi Kartı Seçildiğinde Görünecek Ek Alan -->
-          <div id="creditCardApplicationDiv" style="display: none; margin-top: 15px;">
-              <strong>Credit Card Application</strong>
-              <div>
-                  <label for="cardLimitInput">Requested Limit:</label>
-                  <input type="number" id="cardLimitInput" placeholder="Enter limit (max calculated)" min="0">
-                  <div id="limitHint" style="font-size: 0.9em; color: #555;"></div>
-              </div>
-          </div>
-
-          <button class="submit-button" id="submitNewAccount">Add Account</button>
-      </div>
-  </div>
-
-    <div id="shareAccountModal" class="modal">
-        <div class="share-modal-content">
-            <span class="share-close-button" id="closeShareModal">&times;</span>
-            <h3>Share Account</h3>
-            <label for="shareUserId">Enter User ID to Share With:</label>
-            <input type="number" id="shareUserId" placeholder="User ID">
-            <button class="share-submit-button" id="submitShareAccount">Share Account</button>
-            <p id="shareStatus" class="share-status-message"></p>
+        <div class="modal-content">
+            <span class="close-button" id="closeModalButton">&times;</span>
+            <h2>Add New Account</h2>
+            <label for="accountType">Account Type:</label>
+            <select id="accountType">
+                <option value="Savings">💰 Savings Account</option>
+                <option value="Checking">🏦 Checking Account</option>
+                <option value="CreditCard">💳 Credit Card</option>
+                <option value="investment">📈 Investment Account</option>
+            </select>
+            <label for="initialBalance">Initial Balance (TL):</label>
+            <input type="number" id="initialBalance" placeholder="0.00" min="0">
+            <div id="limitInputGroup" style="display: none; margin-top: 10px;">
+                <label for="limitInput">Requested Limit (Max: %50 of income):</label>
+                <input type="number" id="limitInput" placeholder="Enter limit" min="0" />
+            </div>
+            <button class="submit-button" id="submitNewAccount">Add Account</button>
         </div>
     </div>
 
@@ -367,13 +371,51 @@
                     <th>Account Type</th>
                     <th>Balance</th>
                     <th>Start Date</th>
-                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody id="accountTableBody">
             </tbody>
         </table>
     </main>
+
+    <div id="incomeWarningBox" onclick="openIncomeModal()" style="
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+    padding: 10px 15px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    font-size: 14px;
+    display: none;
+    z-index: 9999;
+    cursor: pointer;
+">
+        ⚠️ Please share income information.
+        <span onclick="closeIncomeWarning(event)" style="
+        float: right;
+        margin-left: 15px;
+        font-weight: bold;
+        cursor: pointer;
+    ">&times;</span>
+
+        <div id="incomeModal" class="modal">
+            <div class="modal-content">
+                <span class="close-button" onclick="closeIncomeModal()">&times;</span>
+                <h2>Enter Your Monthly Income</h2>
+                <input type="number" id="incomeInput" placeholder="e.g. 50000 TL" min="0"
+                    style="width: 100%; padding: 12px; margin-top: 20px;">
+                <button onclick="submitIncome()" class="submit-button" style="margin-top: 20px;">Save</button>
+            </div>
+        </div>
+
+
+    </div>
+
+
+
 
     <footer class="account-footer">
         <a href="/index" class="button">Home Page</a>
@@ -387,76 +429,22 @@
         const accountTypeSelect = document.getElementById('accountType');
         const initialBalanceInput = document.getElementById('initialBalance');
         const accountTableBody = document.getElementById('accountTableBody');
-        const shareAccountModal = document.getElementById('shareAccountModal');
-        const closeShareModalButton = document.getElementById('closeShareModal');
-        const submitShareAccountButton = document.getElementById('submitShareAccount');
-        const shareUserIdInput = document.getElementById('shareUserId');
-        const shareStatusParagraph = document.getElementById('shareStatus');
-        const creditCardLimitInfoDiv = document.getElementById('creditCardLimitInfo'); // ✅ Yeni div'i al
-        const creditCardApplicationDiv = document.getElementById('creditCardApplicationDiv');
-        const cardLimitInput = document.getElementById('cardLimitInput');
-        const limitHint = document.getElementById('limitHint');
-
-        let currentAccountId = null;
+        const balanceLabel = document.querySelector('label[for="initialBalance"]'); // ✅ buraya ekle
         let currentCustomerId = null;
-        let currentCustomerIncome = null; // ✅ Geliri burada saklayacağız
-
-        // Modal açma (Yeni Hesap Ekle)
+        let currentCustomerIncome = null; // ✅ Gelir bilgisi için değişken
+        // Modal açma
         addAccountButton.addEventListener('click', () => {
             addAccountModal.style.display = "block";
-            handleCreditCardLimit();
         });
 
-        // Hesap türü değişince max limit kontrolü
-        accountTypeSelect.addEventListener('change', handleCreditCardLimit);
-
-        // ✅ AccountType seçilince CreditCard alanı açılır
-function handleCreditCardLimit() {
-    const selectedType = accountTypeSelect.value;
-    creditCardLimitInfoDiv.textContent = '';
-    if (selectedType === "CreditCard" && currentCustomerIncome) {
-        const maxLimit = currentCustomerIncome * 1.5;
-        initialBalanceInput.max = maxLimit;
-        initialBalanceInput.placeholder = `Max: ${maxLimit.toFixed(2)} TL`;
-        creditCardLimitInfoDiv.textContent = `Geliriniz: ${currentCustomerIncome.toFixed(2)} TL, Olası Maksimum Limit: ${maxLimit.toFixed(2)} TL`;
-
-        // ✅ Ek form alanlarını göster
-        if (creditCardApplicationDiv) {
-            creditCardApplicationDiv.style.display = 'block';
-            cardLimitInput.max = maxLimit;
-            cardLimitInput.placeholder = `Max: ${maxLimit.toFixed(2)} TL`;
-            limitHint.textContent = `Limit üst sınırı: ${maxLimit.toFixed(2)} TL (gelirinizin %150'si)`;
-        }
-    } else {
-        initialBalanceInput.removeAttribute("max");
-        initialBalanceInput.placeholder = "0.00";
-        if (creditCardApplicationDiv) {
-            creditCardApplicationDiv.style.display = 'none';
-            cardLimitInput.value = '';
-            limitHint.textContent = '';
-        }
-    }
-}
-
-        // Modal kapatma (Yeni Hesap Ekle)
         closeModalButton.addEventListener('click', () => {
             addAccountModal.style.display = "none";
-            creditCardLimitInfoDiv.textContent = ''; // Modal kapanınca bilgiyi temizle
         });
 
         window.addEventListener('click', (event) => {
             if (event.target == addAccountModal) {
                 addAccountModal.style.display = "none";
-                creditCardLimitInfoDiv.textContent = ''; // Modal kapanınca bilgiyi temizle
             }
-            if (event.target == shareAccountModal) {
-                shareAccountModal.style.display = "none";
-            }
-        });
-
-        // Modal kapatma (Hesap Paylaş)
-        closeShareModalButton.addEventListener('click', () => {
-            shareAccountModal.style.display = "none";
         });
 
         async function checkSessionAndFetchAccounts() {
@@ -470,7 +458,11 @@ function handleCreditCardLimit() {
 
                 const customer = await response.json();
                 const customerId = customer.customerId || customer.customerID || customer.id;
-                currentCustomerIncome = customer.customerIncome; // ✅ Geliri sakla
+                console.log("Resolved customerId:", customerId);
+                if (!customerId) {
+                    console.error("Customer ID is undefined — cannot fetch accounts");
+                    return;
+                }
                 currentCustomerId = customerId;
 
                 fetchAccounts(currentCustomerId);
@@ -483,7 +475,10 @@ function handleCreditCardLimit() {
         async function fetchAccounts(customerId) {
             try {
                 const response = await fetch(`/api/accounts/customers/${customerId}/accounts`);
+
                 const result = await response.json();
+
+                console.log("Accounts response:", result);
 
                 if (!Array.isArray(result)) {
                     throw new Error("Expected array but got: " + JSON.stringify(result));
@@ -503,6 +498,10 @@ function handleCreditCardLimit() {
             });
         }
 
+
+
+
+
         function createAccountRow(account) {
             const row = document.createElement('tr');
             row.innerHTML = `
@@ -510,12 +509,6 @@ function handleCreditCardLimit() {
                 <td><span class="account-type-emoji">${getEmojiForAccountType(account.accountType)}</span>${account.accountType}</td>
                 <td>${getBalance(account) !== null ? getBalance(account).toFixed(2) + ' TL' : 'N/A'}</td>
                 <td>${account.accountStartDate ? new Date(account.accountStartDate).toLocaleDateString('en-US') : 'N/A'}</td>
-                <td>
-                    <div class="account-actions">
-                        <button class="copy-iban-button" data-iban="${account.iban}">Kopyala</button>
-                        <button class="share-account-button" data-account-id="${account.accountId}">Paylaş</button>
-                    </div>
-                </td>
             `;
             row.classList.add('account-row');
 
@@ -544,6 +537,45 @@ function handleCreditCardLimit() {
                     .catch(() => alert("Kopyalama başarısız."));
             }
         }
+
+        accountTypeSelect.addEventListener('change', handleAccountTypeChange);
+
+        function handleAccountTypeChange() {
+    const selectedType = accountTypeSelect.value;
+    const limitGroup = document.getElementById('limitInputGroup');
+    const limitInput = document.getElementById('limitInput');
+    const balanceInput = document.getElementById('initialBalance');
+
+    if (selectedType === 'CreditCard') {
+        if (!currentCustomerIncome) {
+            alert("Please enter your income before creating a credit card account.");
+            accountTypeSelect.value = "Savings";
+            limitGroup.style.display = "none";
+            balanceInput.style.display = "block"; // geri getir
+            balanceLabel.style.display = "block"; // ✅ geri aç
+            return;
+        }
+
+        const maxLimit = currentCustomerIncome * 0.5;
+        limitGroup.style.display = "block";
+        limitInput.placeholder = `Max: ${maxLimit.toFixed(2)} TL`;
+        limitInput.max = maxLimit;
+
+        // ✅ Balance input gizlensin (CreditCard için)
+        balanceInput.style.display = "none";
+        balanceLabel.style.display = "none"; // ✅ geri aç
+    } else {
+        // ✅ Diğer türlerde balance input görünür, limit input gizlenir
+        limitGroup.style.display = "none";
+        limitInput.value = '';
+        balanceInput.style.display = "block";
+        balanceLabel.style.display = "block"; // ✅ geri aç
+    }
+}
+
+
+
+
 
         async function setSharedAccount(accountId, userId) {
             try {
@@ -600,153 +632,214 @@ function handleCreditCardLimit() {
 
 
         async function addNewAccount() {
-            const accountType = accountTypeSelect.value;
-            const initialBalance = parseFloat(initialBalanceInput.value);
+    const accountType = accountTypeSelect.value;
+    const initialBalance = parseFloat(initialBalanceInput.value);
+    const limitInput = document.getElementById("limitInput");
+    const requestedLimit = limitInput ? parseFloat(limitInput.value) : null;
 
-            if (isNaN(initialBalance)) {
-                alert('Please enter a valid initial balance.');
+    if (!currentCustomerId) {
+        alert('Customer ID not resolved. Please refresh the page.');
+        return;
+    }
+
+    if (accountType === "CreditCard") {
+        if (!currentCustomerIncome) {
+            alert("You must enter your income before creating a credit card account.");
+            return;
+        }
+
+        const maxLimit = currentCustomerIncome * 0.5; // %50'si kadar limit
+
+        if (isNaN(requestedLimit) || requestedLimit <= 0) {
+            alert("Please enter a valid limit.");
+            return;
+        }
+
+        if (requestedLimit > maxLimit) {
+            alert(`Requested limit cannot exceed ${maxLimit.toFixed(2)} TL.`);
+            return;
+        }
+
+        // ✅ Credit Card için limit, balance yerine gönderilir
+        try {
+            const response = await fetch('/api/accounts', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    accountType: accountType,
+                    balance: requestedLimit, // backend hala "balance" bekliyor
+                    customerId: currentCustomerId
+                }),
+            });
+
+            if (response.ok) {
+                const newAccount = await response.json();
+                const newRow = createAccountRow(newAccount);
+                newRow.classList.add('new-row-animation');
+                accountTableBody.prepend(newRow);
+                addAccountModal.style.display = "none";
+                accountTypeSelect.value = 'Savings';
+                initialBalanceInput.value = '';
+                limitInput.value = '';
+            } else {
+                const errorData = await response.json();
+                alert('Failed to add account: ' + errorData.message);
+            }
+        } catch (error) {
+            console.error('Error adding credit card account:', error);
+            alert('An error occurred while adding the credit card.');
+        }
+    } else {
+        // Diğer hesap türleri: Savings, Checking, Investment
+        if (isNaN(initialBalance) || initialBalance <= 0) {
+            alert('Please enter a valid initial balance.');
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/accounts', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    accountType: accountType,
+                    balance: initialBalance,
+                    customerId: currentCustomerId
+                }),
+            });
+
+            if (response.ok) {
+                const newAccount = await response.json();
+                const newRow = createAccountRow(newAccount);
+                newRow.classList.add('new-row-animation');
+                accountTableBody.prepend(newRow);
+                addAccountModal.style.display = "none";
+                accountTypeSelect.value = 'Savings';
+                initialBalanceInput.value = '';
+            } else {
+                const errorData = await response.json();
+                alert('Failed to add account: ' + errorData.message);
+            }
+        } catch (error) {
+            console.error('Error adding new account:', error);
+            alert('An error occurred while adding the account.');
+        }
+    }
+}
+
+
+
+
+        async function checkSessionAndFetchAccounts() {
+            try {
+                const response = await fetch("/api/me", { credentials: "include" });
+
+                if (!response.ok) {
+                    window.location.href = "/login";
+                    return;
+                }
+
+                const customer = await response.json();
+                const customerId = customer.customerId || customer.customerID || customer.id;
+                const customerIncome = customer.customerIncome || customer.income || null; // ✅ farklı adlar da destekleniyor
+
+                console.log("Resolved customerId:", customerId);
+                console.log("Resolved customerIncome:", customerIncome);
+
+                if (!customerId) {
+                    console.error("Customer ID is undefined — cannot fetch accounts");
+                    return;
+                }
+
+                currentCustomerId = customerId;
+                currentCustomerIncome = customerIncome;
+
+                fetchAccounts(currentCustomerId);
+
+                // ✅ Eğer gelir bilgisi yoksa uyarı göster
+                if (!currentCustomerIncome) {
+                    showIncomeWarning();
+                }
+            } catch (error) {
+                console.error("Failed to verify session:", error);
+                window.location.href = "/login";
+            }
+        }
+
+        function showIncomeWarning() {
+            const warningBox = document.getElementById("incomeWarningBox");
+            if (warningBox) {
+                warningBox.style.display = "block";
+            }
+        }
+
+
+        function openIncomeModal() {
+            const modal = document.getElementById("incomeModal");
+            if (modal) modal.style.display = "block";
+        }
+
+        function closeIncomeModal() {
+            const modal = document.getElementById("incomeModal");
+            if (modal) modal.style.display = "none";
+        }
+
+        function closeIncomeWarning(event) {
+            event.stopPropagation(); // modal açılmasın
+            const warningBox = document.getElementById("incomeWarningBox");
+            if (warningBox) warningBox.style.display = "none";
+        }
+
+        async function submitIncome() {
+            const incomeValue = parseInt(document.getElementById("incomeInput").value);
+
+            if (isNaN(incomeValue) || incomeValue <= 0) {
+                alert("Please enter a valid income.");
                 return;
             }
 
             if (!currentCustomerId) {
-                alert('Customer ID not resolved. Please refresh the page.');
+                alert("Customer ID not found. Please refresh the page.");
                 return;
             }
 
             try {
-                const response = await fetch('/api/accounts', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ // Ensure correct data structure
-                        accountType: accountType,
-                        balance: initialBalance,
-                        customerId: currentCustomerId
-                    }),
+                const response = await fetch("/api/income", {  // ✅ DÜZELTİLDİ: /api/me/income → /api/income
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        income: incomeValue,
+                        customerId: currentCustomerId  // ✅ GEREKLİ: backend customerId ile çalışıyor
+                    })
                 });
 
                 if (response.ok) {
-                    const newAccount = await response.json();
-                    const newRow = createAccountRow(newAccount);
-                    newRow.classList.add('new-row-animation');
-                    accountTableBody.prepend(newRow);
-                    addAccountModal.style.display = "none";
-                    accountTypeSelect.value = 'Savings';
-                    initialBalanceInput.value = '';
+                    alert("Income information saved successfully.");
+                    currentCustomerIncome = incomeValue;
+                    closeIncomeModal();
+                    document.getElementById("incomeWarningBox").style.display = "none";
                 } else {
-                    const errorData = await response.json();
-                    alert('Failed to add account: ' + errorData.message);
+                    const err = await response.text();
+                    alert("Failed to save income: " + err);
                 }
             } catch (error) {
-                console.error('Error adding new account:', error);
-                alert('An error occurred while adding the account.');
+                console.error("Error saving income:", error);
+                alert("Something went wrong.");
             }
         }
 
-        function formatIban(iban) {
-            if (!iban || typeof iban !== 'string') return "N/A";
-            return iban.match(/.{1,4}/g)?.join(' ') || "N/A";
-        }
 
-        // ✅ CreditCard seçildiyse limiti kontrol et ve o inputtan al
-async function addNewAccount() {
-    const accountType = accountTypeSelect.value;
-    const initialBalance = parseFloat(initialBalanceInput.value);
 
-    if (isNaN(initialBalance)) {
-        alert('Lütfen geçerli bir başlangıç bakiyesi girin.');
-        return;
-    }
-
-    if (accountType === "CreditCard" && currentCustomerIncome) {
-        const maxLimit = currentCustomerIncome * 1.5;
-        const requestedLimit = parseFloat(cardLimitInput?.value) || 0;
-
-        if (requestedLimit > maxLimit) {
-            alert(`Kredi kartı limiti gelirinizin %150'sinden fazla olamaz.\nMaksimum: ${maxLimit.toFixed(2)} TL`);
-            return;
-        }
-
-        if (requestedLimit !== initialBalance) {
-            alert(`Limit ve bakiye eşleşmeli. Lütfen aynı değeri girin.`);
-            return;
-        }
-    }
-
-    if (!currentCustomerId) {
-        alert('Müşteri ID’si çözümlenemedi. Lütfen sayfayı yenileyin.');
-        return;
-    }
-
-    try {
-        const response = await fetch('/api/accounts', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                accountType: accountType,
-                balance: initialBalance,
-                customerId: currentCustomerId
-            }),
-        });
-
-        if (response.ok) {
-            const newAccount = await response.json();
-            const newRow = createAccountRow(newAccount);
-            newRow.classList.add('new-row-animation');
-            accountTableBody.prepend(newRow);
-            addAccountModal.style.display = "none";
-            accountTypeSelect.value = 'Savings';
-            initialBalanceInput.value = '';
-            creditCardLimitInfoDiv.textContent = '';
-            if (cardLimitInput) cardLimitInput.value = '';
-            if (creditCardApplicationDiv) creditCardApplicationDiv.style.display = 'none';
-        } else {
-            const errorData = await response.json();
-            alert('Hesap eklenirken bir hata oluştu: ' + errorData.message);
-        }
-    } catch (error) {
-        console.error('Yeni hesap eklenirken hata:', error);
-        alert('Hesap eklenirken bir hata oluştu.');
-    }
-}
 
         submitNewAccountButton.addEventListener('click', addNewAccount);
-
-        submitShareAccountButton.addEventListener('click', async () => {
-            const userIdToShare = shareUserIdInput.value;
-            if (currentAccountId && userIdToShare) {
-                await setSharedAccount(currentAccountId, parseInt(userIdToShare));
-            } else {
-                shareStatusParagraph.textContent = "Lütfen geçerli bir kullanıcı ID’si girin.";
-                shareStatusParagraph.className = 'error';
-            }
-        });
 
         document.addEventListener("DOMContentLoaded", () => {
             checkSessionAndFetchAccounts();
         });
-
-        // ✅ Kredi kartı limiti değiştiğinde başlangıç bakiyesi otomatik ayarlanır
-cardLimitInput.addEventListener('input', () => {
-    const selectedType = accountTypeSelect.value;
-    if (selectedType === "CreditCard") {
-        const requestedLimit = parseFloat(cardLimitInput.value) || 0;
-        const maxLimit = currentCustomerIncome * 1.5;
-
-        if (requestedLimit > maxLimit) {
-            limitHint.textContent = `Limit üst sınırı: ${maxLimit.toFixed(2)} TL (gelirinizin %150'si)`;
-            cardLimitInput.value = maxLimit.toFixed(2);
-            initialBalanceInput.value = maxLimit.toFixed(2);
-        } else {
-            initialBalanceInput.value = requestedLimit.toFixed(2);
-        }
-    }
-});
     </script>
-
 
 </body>
 
