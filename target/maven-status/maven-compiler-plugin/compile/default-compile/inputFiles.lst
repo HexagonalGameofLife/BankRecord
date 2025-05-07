@@ -12,6 +12,7 @@ C:\Users\tanri\Desktop\onlar\BankRecord\src\main\java\com\group4\bankSystem\cont
 C:\Users\tanri\Desktop\onlar\BankRecord\src\main\java\com\group4\bankSystem\dto\AdminLoginRequest.java
 C:\Users\tanri\Desktop\onlar\BankRecord\src\main\java\com\group4\bankSystem\dto\AdminRegisterRequest.java
 C:\Users\tanri\Desktop\onlar\BankRecord\src\main\java\com\group4\bankSystem\dto\CreateAccountRequest.java
+C:\Users\tanri\Desktop\onlar\BankRecord\src\main\java\com\group4\bankSystem\dto\CreateTransactionRequest.java
 C:\Users\tanri\Desktop\onlar\BankRecord\src\main\java\com\group4\bankSystem\dto\TransactionDto.java
 C:\Users\tanri\Desktop\onlar\BankRecord\src\main\java\com\group4\bankSystem\entities\AccountEntities\Account.java
 C:\Users\tanri\Desktop\onlar\BankRecord\src\main\java\com\group4\bankSystem\entities\AccountEntities\Card.java

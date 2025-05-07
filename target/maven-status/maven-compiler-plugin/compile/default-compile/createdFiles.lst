@@ -42,6 +42,7 @@ com\group4\bankSystem\repository\AccountRepository\CheckingAccountRepository.cla
 com\group4\bankSystem\entities\TransactionEntities\ExchangeRate.class
 com\group4\bankSystem\BankSystemApplication.class
 com\group4\bankSystem\controller\CustomerController\AdminController.class
+com\group4\bankSystem\dto\CreateTransactionRequest.class
 com\group4\bankSystem\config\SecurityConfig.class
 com\group4\bankSystem\controller\SessionController.class
 com\group4\bankSystem\controller\CustomerController\CustomerController.class

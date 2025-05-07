@@ -14,6 +14,9 @@ import com.group4.bankSystem.dto.TransactionDto;
 import com.group4.bankSystem.entities.TransactionEntities.Transaction;
 import com.group4.bankSystem.services.TransactionServices.TransactionServices;
 
+import com.group4.bankSystem.dto.CreateTransactionRequest;
+
+
 @RestController
 @RequestMapping("/api/transactions")
 public class TransactionController {
@@ -39,6 +42,9 @@ public class TransactionController {
         return transactionServices.addTransaction(transaction);
     }
 
-
+    @PostMapping("/process")
+    public Transaction processTransaction(@RequestBody CreateTransactionRequest request) {
+      return transactionServices.processTransaction(request);
+  }
 
 }

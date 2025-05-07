@@ -5,10 +5,17 @@ import com.group4.bankSystem.entities.CustomerEntities.Customer;
 import com.group4.bankSystem.repository.AccountRepository.AccountRepository;
 import com.group4.bankSystem.repository.CustomerRepository.UserListRepository;
 import com.group4.bankSystem.services.AccountServices.AccountService;
+
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -100,16 +107,38 @@ public class AccountController {
   }
 
   @GetMapping("/my-ibans")
-  public List<Map<String, Object>> getMyIbans(@AuthenticationPrincipal Customer customer) {
-      List<Account> accounts = userListRepository.findAccountsByCustomerId(customer.getCustomerId());
-
-      return accounts.stream()
-          .map(account -> {
-              Map<String, Object> map = new HashMap<>();
-              map.put("accountId", account.getAccountId());
-              map.put("iban", account.getIban());
-              return map;
-          })
-          .collect(Collectors.toList());
+    public List<Map<String, Object>> getMyIbans(@AuthenticationPrincipal Customer customer) {
+        // 1) customer principal null mı, kontrol et
+        Integer customerId;
+        if (customer != null) {
+            customerId = customer.getCustomerId();
+        } else {
+            // Spring Security principal null ise kendi session’ımızdan çek
+            ServletRequestAttributes attrs =
+                (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+            if (attrs == null) {
+                throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED, "Oturum bulunamadı. Lütfen giriş yapın.");
+            }
+            HttpSession session = attrs.getRequest().getSession(false);
+            if (session == null || session.getAttribute("customerId") == null) {
+                throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED, "Oturum bulunamadı. Lütfen giriş yapın.");
+            }
+            customerId = (Integer) session.getAttribute("customerId");
         }
+
+        // 2) Artık customerId kesin; hesapları getir
+        List<Account> accounts = userListRepository.findAccountsByCustomerId(customerId);
+
+        // 3) JSON’a uygun map’ler oluşturup döndür
+        return accounts.stream()
+            .map(account -> {
+                Map<String, Object> map = new HashMap<>();
+                map.put("accountId", account.getAccountId());
+                map.put("iban", account.getIban());
+                return map;
+            })
+            .collect(Collectors.toList());
+    }
 }

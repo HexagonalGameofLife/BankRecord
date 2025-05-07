@@ -171,84 +171,86 @@
 </footer>
 
 <script>
-    const typeSelector = document.getElementById("transactionType");
-    const sections = {
-        transfer: document.getElementById("transferForm")
-    };
+  // Transaction türü seçimine göre formu göster/gizle
+  const typeSelector = document.getElementById("transactionType");
+  const sections = { transfer: document.getElementById("transferForm") };
 
-    typeSelector.addEventListener("change", () => {
-        Object.values(sections).forEach(sec => sec.style.display = "none");
-        const selected = typeSelector.value;
-        if (sections[selected]) {
-            sections[selected].style.display = "block";
+  typeSelector.addEventListener("change", () => {
+    Object.values(sections).forEach(sec => sec.style.display = "none");
+    const sel = typeSelector.value;
+    if (sections[sel]) sections[sel].style.display = "block";
+  });
+
+  // Sayfa yüklendiğinde IBAN listesini çek ve açılır kutuya yerleştir
+  window.addEventListener("DOMContentLoaded", () => {
+    fetch("/api/accounts/my-ibans", { credentials: "include" })
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+        return res.json();
+      })
+      .then(accounts => {
+        if (!Array.isArray(accounts)) {
+          console.error("IBAN verisi dizi değil:", accounts);
+          return alert("IBAN listesi alınamadı.");
         }
-    });
-
-    // IBAN listesi yükle
-    window.addEventListener("DOMContentLoaded", () => {
-    fetch('/api/accounts/my-ibans')
-        .then(res => res.json())
-        .then(accounts => {
-            if (!Array.isArray(accounts)) {
-                console.error("Gelen veri dizi değil:", accounts);
-                alert("IBAN verisi alınamadı.");
-                return;
-            }
-
-            const select = document.getElementById("fromAccountTransfer");
-            select.innerHTML = "";
-            accounts.forEach(acc => {
-                const option = new Option(acc.iban, acc.accountId);
-                select.appendChild(option);
-            });
-        })
-        .catch(err => {
-            console.error("IBAN listesi alınamadı:", err);
-            alert("IBAN listesi alınamadı.");
+        const sel = document.getElementById("fromAccountTransfer");
+        sel.innerHTML = ""; // Önce temizle
+        accounts.forEach(acc => {
+          // Hem metin, hem değer olarak IBAN
+          sel.appendChild(new Option(acc.iban, acc.iban));
         });
+      })
+      .catch(err => {
+        console.error("IBAN yükleme hatası:", err);
+        alert("IBAN listesi alınırken hata oluştu.");
       });
+  });
 
+  // Transfer gönderme fonksiyonu
+  function submitTransfer() {
+    const fromIban    = document.getElementById("fromAccountTransfer").value;
+    const toIban      = document.getElementById("toAccountTransfer").value.trim();
+    const amountVal   = document.getElementById("amountTransfer").value;
+    const amount      = parseFloat(amountVal);
+    const description = document.getElementById("descriptionTransfer").value.trim();
 
-
-    function submitTransfer() {
-        const fromAccountId = parseInt(document.getElementById("fromAccountTransfer").value);
-        const toIban = document.getElementById("toAccountTransfer").value.trim();
-        const amount = parseFloat(document.getElementById("amountTransfer").value);
-        const description = document.getElementById("descriptionTransfer").value;
-
-        if (!toIban || isNaN(amount) || amount <= 0) {
-            alert("Lütfen tüm alanları geçerli şekilde doldurun.");
-            return;
-        }
-
-        fetch(`/api/accounts/find-by-iban/${encodeURIComponent(toIban)}`)
-            .then(res => res.ok ? res.json() : Promise.reject("Receiver account not found"))
-            .then(toAccount => {
-                const transaction = {
-                    fromAccount: { accountId: fromAccountId },
-                    toAccount: { accountId: toAccount.accountId },
-                    transactionAmount: amount,
-                    transactionDate: new Date().toISOString().split('T')[0],
-                    transactionType: 1,
-                    description: description
-                };
-
-                return fetch("/api/transactions", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(transaction)
-                });
-            })
-            .then(res => res.ok ? res.json() : Promise.reject("Transfer failed"))
-            .then(() => {
-                alert("Transaction başarılı!");
-                window.location.reload();
-            })
-            .catch(err => {
-                alert("Hata: " + err);
-            });
+    // Basit doğrulamalar
+    if (!fromIban || !toIban || isNaN(amount) || amount <= 0) {
+      return alert("Lütfen tüm alanları eksiksiz ve geçerli şekilde doldurun.");
     }
+
+    const payload = { fromIban, toIban, amount, description };
+
+    fetch("/api/transactions/process", {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    })
+    .then(async res => {
+      const txt = await res.text();
+      if (!res.ok) {
+        // Eğer JSON formatındaysa message veya error alanını çekelim
+        let errMsg = txt;
+        try {
+          const obj = JSON.parse(txt);
+          errMsg = obj.message || obj.error || JSON.stringify(obj);
+        } catch {}
+        throw errMsg;
+      }
+      return JSON.parse(txt);
+    })
+    .then(data => {
+      alert(`İşlem başarılı! İşlem ID: ${data.transactionId}`);
+      window.location.reload();
+    })
+    .catch(err => {
+      console.error("Transfer hatası:", err);
+      alert(`Transfer başarısız: ${err}`);
+    });
+  }
 </script>
+
 
 </body>
 </html>
