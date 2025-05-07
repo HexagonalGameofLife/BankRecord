@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BankRecord - Profile</title>
+    <style>
+        body.profile-body {
+            background-color: #F1F6F9; /* Very light gray background */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .profile-container {
+            background-color: #212A3E; /* Dark gray container */
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 600px;
+            color: #F1F6F9; /* Light gray text */
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: #F1F6F9; /* Light gray heading */
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 500;
+            font-size: 24px;
+        }
+
+        .profile-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #394867; /* Dark blue-gray section background */
+            border-radius: 8px;
+        }
+
+        .profile-section h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #9BA4B5; /* Medium gray section heading */
+            font-size: 1.1rem;
+            border-bottom: 1px solid #9BA4B5; /* Medium gray border */
+            padding-bottom: 5px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #4A597A; /* Slightly lighter blue-gray border */
+            font-size: 0.95rem;
+        }
+
+        .info-row strong {
+            color: #F1F6F9; /* Light gray bold text */
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            color: #9BA4B5; /* Medium gray label */
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        .input-group input[type="text"],
+        .input-group input[type="password"],
+        .input-group select,
+        .input-group textarea {
+            width: calc(100% - 20px);
+            padding: 12px;
+            border: 1px solid #4A597A; /* Slightly lighter blue-gray border */
+            border-radius: 6px;
+            font-size: 1rem;
+            color: #F1F6F9; /* Light gray input text */
+            background-color: transparent;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .input-group input[type="text"]:focus,
+        .input-group input[type="password"]:focus,
+        .input-group select:focus,
+        .input-group textarea:focus {
+            outline: none;
+            border-color: #9BA4B5; /* Medium gray focus border */
+            box-shadow: 0 0 8px rgba(155, 164, 181, 0.5);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        button[type="submit"],
+        a.back-button {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1rem;
+            text-align: center;
+            text-decoration: none;
+            box-sizing: border-box;
+            transition: background-color 0.3s, transform 0.2s ease;
+            margin-top: 15px;
+        }
+
+        button[type="submit"] {
+            background-color: #394867; /* Dark blue-gray button */
+            color: #F1F6F9; /* Light gray text */
+        }
+
+        button[type="submit"]:hover {
+            background-color: #9BA4B5; /* Medium gray hover */
+            transform: scale(1.02);
+        }
+
+        a.back-button {
+            background-color: #9BA4B5; /* Medium gray button */
+            color: #212A3E; /* Dark gray text */
+        }
+
+        a.back-button:hover {
+            background-color: #394867; /* Dark blue-gray hover */
+            color: #F1F6F9; /* Light gray hover text */
+            transform: scale(1.02);
+        }
+
+        #error-message,
+        #success-message {
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            margin-top: 20px;
+            display: none;
+            font-size: 0.9rem;
+        }
+
+        #error-message {
+            background-color: #FFDDDD;
+            color: #C62828;
+        }
+
+        #success-message {
+            background-color: #81C784;
+            color: #FFFFFF;
+        }
+    </style>
+</head>
+<body class="profile-body">
+    <div class="profile-container">
+        <h2>My Profile</h2>
+        <form id="profileForm">
+            <div class="profile-section">
+                <h3>Personal Information</h3>
+                <div class="input-group">
+                  <label for="customerNameInput">Name:</label>
+                  <input type="text" id="customerNameInput" required />
+                </div>
+                <div class="input-group">
+                  <label for="customerSurnameInput">Surname:</label>
+                  <input type="text" id="customerSurnameInput" required />
+                </div>
+                <div class="info-row">
+                    <strong>ID Number:</strong> <span id="customerTc"></span>
+                </div>
+                <div class="input-group">
+                  <label for="customerEmailInput">Email:</label>
+                  <input type="email" id="customerEmailInput" required />
+                </div>
+                <div class="info-row">
+                    <strong>Registration Date:</strong>
+                    <span id="customerRegistrationDate"></span>
+                </div>
+            </div>
+
+            <div class="profile-section">
+                <h3>Contact and Other Information</h3>
+                <div class="input-group">
+                    <label for="customerPhoneNumber">Phone:</label>
+                    <input type="text" id="customerPhoneNumber" required />
+                </div>
+                <div class="input-group">
+                    <label for="customerGender">Gender:</label>
+                    <select id="customerGender" required>
+                        <option value="">Select</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="customerAddress">Address:</label>
+                    <textarea
+                        id="customerAddress"
+                        placeholder="Enter your address"
+                        required
+                    ></textarea>
+                </div>
+            </div>
+
+            <div class="profile-section password-section">
+                <h3>Update Password</h3>
+                <div class="input-group">
+                    <label for="newPassword">New Password:</label>
+                    <input
+                        type="password"
+                        id="newPassword"
+                        placeholder="New Password"
+                        maxlength="6"
+                        inputmode="numeric"
+                    />
+                </div>
+                <div class="input-group">
+                    <label for="confirmPassword">Confirm New Password:</label>
+                    <input
+                        type="password"
+                        id="confirmPassword"
+                        placeholder="Re-enter new password"
+                        maxlength="6"
+                        inputmode="numeric"
+                    />
+                </div>
+            </div>
+
+            <button type="submit">Update Information</button>
+            <a href="/index" class="back-button">Back to Homepage</a>
+        </form>
+
+        <p id="error-message"></p>
+        <p id="success-message">Information updated successfully!</p>
+    </div>
+
+    <script>
+        async function fetchCustomerProfile() {
+            try {
+                const response = await fetch("/api/me", { credentials: "include" });
+                if (!response.ok) {
+                    window.location.href = "/login";
+                    return;
+                }
+
+                const customer = await response.json();
+                document.getElementById("customerNameInput").value = customer.customerName || "";
+                document.getElementById("customerSurnameInput").value = customer.customerSurname || "";
+                document.getElementById("customerEmailInput").value = customer.customerEmail || "";
+                document.getElementById("customerTc").innerText = customer.customerTc || "";
+                document.getElementById("customerRegistrationDate").innerText = customer.customerRegistrationDate || "";
+
+                document.getElementById("customerPhoneNumber").value = customer.customerPhoneNumber || "";
+                document.getElementById("customerGender").value = customer.customerGender || "";
+                document.getElementById("customerAddress").value = customer.customerAddress || "";
+            } catch (error) {
+                console.error("Failed to fetch profile information:", error);
+                window.location.href = "/login";
+            }
+        }
+
+        document
+            .getElementById("profileForm")
+            .addEventListener("submit", async (e) => {
+                e.preventDefault();
+
+                const newPassword = document.getElementById("newPassword").value;
+                const confirmPassword = document.getElementById("confirmPassword").value;
+
+                if (newPassword || confirmPassword) {
+                    if (newPassword !== confirmPassword) {
+                        document.getElementById("error-message").innerText =
+                            "Passwords do not match!";
+                        document.getElementById("error-message").style.display = "block";
+                        return;
+                    }
+                }
+
+                const updatedCustomer = {
+                    customerName: document.getElementById("customerNameInput").value,
+                    customerSurname: document.getElementById("customerSurnameInput").value,
+                    customerEmail: document.getElementById("customerEmailInput").value,
+                    customerPhoneNumber: document.getElementById("customerPhoneNumber").value,
+                    customerGender: document.getElementById("customerGender").value,
+                    customerAddress: document.getElementById("customerAddress").value,
+                };
+
+                if (newPassword) {
+                    updatedCustomer.loginPasswordHash = newPassword;
+                }
+
+                try {
+                    const response = await fetch("/api/me", {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        credentials: "include",
+                        body: JSON.stringify(updatedCustomer),
+                    });
+
+                    if (response.ok) {
+                        document.getElementById("success-message").style.display =
+                            "block";
+                        document.getElementById("error-message").style.display = "none";
+                        setTimeout(() => window.location.reload(), 1500);
+                    } else {
+                        const errorText = await response.text();
+                        document.getElementById("error-message").innerText = errorText;
+                        document.getElementById("error-message").style.display = "block";
+                    }
+                } catch (error) {
+                    document.getElementById("error-message").innerText =
+                        "Error updating information.";
+                    document.getElementById("error-message").style.display = "block";
+                }
+            });
+
+        fetchCustomerProfile();
+
+        function allowOnlyNumbers(inputElement, maxLength) {
+            inputElement.addEventListener("input", function () {
+                this.value = this.value.replace(/\D/g, "").slice(0, maxLength);
+            });
+        }
+
+        // Apply to password fields
+        allowOnlyNumbers(document.getElementById("newPassword"), 6);
+        allowOnlyNumbers(document.getElementById("confirmPassword"), 6);
+    </script>
+</body>
+</html>

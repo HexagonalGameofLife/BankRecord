@@ -48,5 +48,12 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
     List<Account> findAllByCustomerId(@Param("customerId") Long customerId);
 
     Optional<Account> findByIban(String iban);
+
+    // --------------- Yeni ekleme ---------------
+    /**
+     * userList koleksiyonu boş olan (yani üyesi kalmamış) tüm accountId’leri döner.
+     */
+    @Query("SELECT a.accountId FROM Account a WHERE a.userList IS EMPTY")
+    List<Integer> findAccountIdsWithNoMembers();
 }
 
