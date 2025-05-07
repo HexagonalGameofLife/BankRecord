@@ -6,88 +6,62 @@
     <title>BankRecord - My Accounts</title>
     <style>
         body.account-body {
-            background-color: #e9ecef;
-            /* Daha açık, modern bir arka plan */
+            background-color: #F1F6F9; /* Açık gri arka plan */
             font-family: 'Nunito', sans-serif;
-            /* Modern bir font */
             margin: 0;
             padding: 30px;
-            /* Genel padding artırıldı */
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            color: #495057;
-            /* Daha okunabilir metin rengi */
+            color: #212A3E; /* Koyu ana metin rengi */
         }
 
         header.account-header {
-            color: #343a40;
-            /* Başlık rengi */
+            color: #212A3E;
             text-align: center;
             padding: 40px 0;
-            /* Başlık padding artırıldı */
-            border-bottom: 1px solid #dee2e6;
-            /* Daha hafif bir ayırıcı çizgi */
+            border-bottom: 2px solid #394867; /* Daha belirgin ayırıcı */
             margin-bottom: 40px;
-            /* Başlık altı boşluk artırıldı */
         }
 
         header.account-header h1 {
             font-weight: 700;
-            /* Daha belirgin başlık */
             font-size: 36px;
-            /* Daha büyük başlık */
             margin-bottom: 10px;
-            /* Başlık altı boşluk */
         }
 
         .add-account-button {
-            background-color: #007bff;
-            /* Canlı birincil renk */
-            color: #fff;
-            /* Beyaz metin */
+            background-color: #394867; /* Birincil buton rengi */
+            color: #F1F6F9;
             padding: 14px 28px;
-            /* Daha iyi dolgu */
             border: none;
             border-radius: 10px;
-            /* Daha yuvarlak köşeler */
             cursor: pointer;
             font-size: 18px;
-            /* Daha büyük font */
             transition: background-color 0.3s ease, transform 0.2s ease-in-out;
-            /* Daha yumuşak geçişler */
             margin-bottom: 30px;
-            /* Buton altı boşluk */
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            /* İkon ve yazı arası boşluk */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            /* Hafif gölge */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Daha belirgin gölge */
         }
 
         .add-account-button:hover {
-            background-color: #0056b3;
-            /* Hover rengi */
+            background-color: #212A3E; /* Hover rengi */
             transform: scale(1.05);
-            /* Hafif büyütme efekti */
         }
 
         .modal {
             display: none;
-            /* Başlangıçta gizli */
             position: fixed;
             z-index: 1000;
-            /* Diğer her şeyin üzerinde */
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(0, 0, 0, 0.5);
-            /* Daha belirgin arka plan opaklığı */
+            background-color: rgba(0, 0, 0, 0.7); /* Daha koyu arka plan opaklığı */
             animation: fadeInModal 0.3s ease-out;
-            /* Daha hızlı animasyon */
         }
 
         @keyframes fadeInModal {
@@ -101,26 +75,20 @@
         }
 
         .modal-content {
-            background-color: #fff;
+            background-color: #F1F6F9;
             margin: 10% auto;
-            /* Üstten daha az boşluk */
             padding: 30px;
-            /* Daha fazla iç boşluk */
-            border: 1px solid #ced4da;
-            /* Daha hafif kenarlık */
+            border: 1px solid #9BA4B5; /* Kenarlık rengi */
             width: 80%;
             border-radius: 10px;
-            /* Yuvarlak köşeler */
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            /* Daha belirgin gölge */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Daha belirgin gölge */
             position: relative;
             animation: slideIn 0.3s ease-out;
-            /* Daha hızlı animasyon */
         }
 
         @keyframes slideIn {
             from {
-                transform: translateY(-30px);
+                transform: translateY(-50px); /* Daha belirgin kayma */
                 opacity: 0;
             }
 
@@ -131,45 +99,51 @@
         }
 
         .close-button {
-            color: #6c757d;
-            /* Daha hafif kapat butonu rengi */
+            color: #9BA4B5;
             float: right;
             font-size: 30px;
-            /* Daha büyük kapat butonu */
             font-weight: bold;
             transition: color 0.2s ease;
-            /* Renk geçişi */
             cursor: pointer;
             line-height: 1;
-            /* Dikey hizalama */
         }
 
         .close-button:hover,
         .close-button:focus {
-            color: #343a40;
-            /* Hover/focus rengi */
+            color: #212A3E;
             text-decoration: none;
         }
 
         .modal-content h2 {
-            color: #343a40;
-            /* Modal başlık rengi */
+            color: #212A3E;
             margin-top: 0;
             margin-bottom: 20px;
-            /* Daha fazla alt boşluk */
-            border-bottom: 1px solid #dee2e6;
-            /* Ayırıcı çizgi */
+            border-bottom: 2px solid #9BA4B5; /* Daha belirgin ayırıcı */
             padding-bottom: 15px;
-            /* Alt padding */
             font-size: 24px;
-            /* Daha büyük font */
+            font-weight: 500;
+        }
+
+        .modal-content label {
+            display: block;
+            margin-bottom: 10px;
+            color: #394867; /* Etiket rengi */
+            font-weight: 600;
+        }
+
+        .modal-content select,
+        .modal-content input[type="number"] {
+            width: calc(100% - 24px);
+            padding: 12px;
+            margin-bottom: 10px; /* Azaltılmış margin */
+            border: 1px solid #9BA4B5;
+            border-radius: 6px;
             box-sizing: border-box;
             font-size: 16px;
         }
 
         .modal-content button.submit-button {
             background-color: #28a745;
-            /* Onay rengi */
             color: #fff;
             padding: 14px 28px;
             border: none;
@@ -179,33 +153,26 @@
             transition: background-color 0.3s ease;
             width: 100%;
             box-sizing: border-box;
-            margin-top: 20px;
-            /* Üst boşluk */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-top: 15px; /* Azaltılmış margin */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
         .modal-content button.submit-button:hover {
             background-color: #1e7e34;
-            /* Hover rengi */
         }
 
         main.account-main {
             flex-grow: 1;
             padding: 0 30px;
-            /* Ana içerik padding */
         }
 
         table.account-table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 30px;
-            /* Tablo üstü boşluk */
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            /* Daha belirgin tablo gölgesi */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             border-radius: 10px;
-            /* Tablo köşe yuvarlaklığı */
             overflow: hidden;
-            /* Köşe yuvarlaklığı için gerekli */
             animation: fadeIn 0.5s ease-out;
         }
 
@@ -223,47 +190,37 @@
 
         table.account-table th,
         table.account-table td {
-            border-bottom: 1px solid #dee2e6;
-            /* Daha hafif ayırıcılar */
+            border-bottom: 1px solid #9BA4B5;
             padding: 18px 15px;
-            /* Daha iyi dolgu */
             text-align: left;
         }
 
         table.account-table th {
-            background-color: #343a40;
-            /* Başlık arka plan rengi */
-            color: #fff;
+            background-color: #394867;
+            color: #F1F6F9;
             font-weight: 600;
-            /* Kalın başlık metni */
         }
 
         table.account-table tbody tr:nth-child(even) {
-            background-color: #f8f9fa;
-            /* Çift satır arka plan */
+            background-color: #e9ecef;
         }
 
         table.account-table tbody tr:hover {
-            background-color: #e9ecef;
-            /* Hover arka plan */
+            background-color: #d3dbe6; /* Daha açık hover rengi */
             transition: background-color 0.3s ease;
         }
 
         table.account-table tbody td {
-            color: #495057;
-            /* Hücre metin rengi */
+            color: #212A3E;
         }
 
         .account-type-emoji {
             margin-right: 8px;
-            /* Emoji boşluğu */
             font-size: 1.2em;
-            /* Emoji boyutu */
         }
 
         .new-row-animation {
             animation: slideDownNewRow 0.3s ease-out;
-            /* Daha hızlı yeni satır animasyonu */
         }
 
         @keyframes slideDownNewRow {
@@ -280,30 +237,158 @@
 
         footer.account-footer {
             padding: 40px 0;
-            /* Footer padding */
             text-align: center;
-            border-top: 1px solid #dee2e6;
-            /* Daha hafif üst çizgi */
+            border-top: 2px solid #394867; /* Daha belirgin ayırıcı */
             margin-top: 40px;
-            /* Üst boşluk */
         }
 
         footer.account-footer a.button {
             display: inline-block;
             padding: 14px 28px;
-            background-color: #6c757d;
-            /* İkincil renk */
-            color: #fff;
+            background-color: #9BA4B5; /* İkincil buton rengi */
+            color: #212A3E;
             text-decoration: none;
             border-radius: 10px;
             transition: background-color 0.3s ease, transform 0.2s ease-in-out;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
 
         footer.account-footer a.button:hover {
-            background-color: #545b62;
-            /* Hover rengi */
+            background-color: #6c757d; /* Hover rengi */
+            color: #F1F6F9;
             transform: scale(1.05);
+        }
+
+        /* Hesap İşlemleri Stilleri */
+        .account-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-start;
+        }
+
+        .copy-iban-button,
+        .share-account-button {
+            background-color: #9BA4B5;
+            color: #212A3E;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        .copy-iban-button:hover,
+        .share-account-button:hover {
+            background-color: #6c757d;
+            color: #F1F6F9;
+        }
+
+        /* Hesap Paylaşım Modalı */
+        #shareAccountModal {
+            display: none;
+            position: fixed;
+            z-index: 1001; /* Diğer modalın üzerinde */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.7);
+            animation: fadeInModal 0.3s ease-out;
+        }
+
+        .share-modal-content {
+            background-color: #F1F6F9;
+            margin: 15% auto; /* Biraz daha aşağıda konumlandırıldı */
+            padding: 30px;
+            border: 1px solid #9BA4B5;
+            width: 60%; /* Daha dar modal */
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .share-close-button {
+            color: #9BA4B5;
+            float: right;
+            font-size: 30px;
+            font-weight: bold;
+            transition: color 0.2s ease;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .share-close-button:hover,
+        .share-close-button:focus {
+            color: #212A3E;
+            text-decoration: none;
+        }
+
+        .share-modal-content h3 {
+            color: #212A3E;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #9BA4B5;
+            padding-bottom: 15px;
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .share-modal-content label {
+            display: block;
+            margin-bottom: 10px;
+            color: #394867;
+            font-weight: 600;
+        }
+
+        .share-modal-content input[type="number"] {
+            width: calc(100% - 24px);
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #9BA4B5;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        .share-modal-content button.share-submit-button {
+            background-color: #007bff; /* Paylaşım butonu rengi */
+            color: #fff;
+            padding: 14px 28px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .share-modal-content button.share-submit-button:hover {
+            background-color: #0056b3;
+        }
+
+        .share-status-message {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .share-status-message.success {
+            color: green;
+        }
+
+        .share-status-message.error {
+            color: red;
+        }
+
+        #creditCardLimitInfo {
+            font-size: 0.9em;
+            color: #555;
+            margin-top: 5px;
         }
     </style>
 </head>
@@ -519,30 +604,21 @@ function handleCreditCardLimit() {
             `;
             row.classList.add('account-row');
 
-            // Menü gösterme özelliği
-            row.addEventListener('click', () => {
-                showAccountOptions(account);
+            row.querySelector('.copy-iban-button').addEventListener('click', (event) => {
+                const ibanToCopy = event.target.dataset.iban;
+                navigator.clipboard.writeText(ibanToCopy)
+                    .then(() => alert("IBAN kopyalandı: " + ibanToCopy))
+                    .catch(() => alert("Kopyalama başarısız."));
+            });
+
+            row.querySelector('.share-account-button').addEventListener('click', (event) => {
+                currentAccountId = event.target.dataset.accountId;
+                shareAccountModal.style.display = "block";
+                shareStatusParagraph.textContent = '';
+                shareUserIdInput.value = '';
             });
 
             return row;
-        }
-
-        function showAccountOptions(account) {
-            const userId = prompt(
-                `Hesap: ${formatIban(account.iban)}\n\nSeçenekler:\n1. IBAN'ı kopyala\n2. Bu hesabı paylaşmak için bir kullanıcı ID girin:`
-            );
-
-            if (!userId) return;
-
-            if (!isNaN(userId)) {
-                // Paylaşımlı hesap olarak ayarla
-                setSharedAccount(account.accountId, parseInt(userId));
-            } else {
-                // IBAN'ı panoya kopyala
-                navigator.clipboard.writeText(account.iban)
-                    .then(() => alert("IBAN kopyalandı: " + account.iban))
-                    .catch(() => alert("Kopyalama başarısız."));
-            }
         }
 
         async function setSharedAccount(accountId, userId) {
@@ -552,18 +628,18 @@ function handleCreditCardLimit() {
                 });
 
                 if (response.ok) {
-                    alert("Kullanıcı başarıyla paylaşımlı hesap olarak eklendi.");
+                    shareStatusParagraph.textContent = "Kullanıcı başarıyla paylaşımlı hesap olarak eklendi.";
+                    shareStatusParagraph.className = 'success';
                 } else {
                     const err = await response.text();
-                    alert("Başarısız: " + err);
+                    shareStatusParagraph.textContent = "Başarısız: " + err;
+                    shareStatusParagraph.className = 'error';
                 }
             } catch (error) {
-                alert("Hata oluştu: " + error);
+                shareStatusParagraph.textContent = "Hata oluştu: " + error;
+                shareStatusParagraph.className = 'error';
             }
         }
-
-
-
 
         function getEmojiForAccountType(accountType) {
             if (!accountType) return '';
@@ -589,59 +665,6 @@ function handleCreditCardLimit() {
                 tryParse(account.creditCardLimit) ??
                 tryParse(account.otherCurrencyBalance) ??
                 null;
-        }
-
-
-
-        function formatIban(iban) {
-            if (!iban || typeof iban !== 'string') return "N/A";
-            return iban.match(/.{1,4}/g)?.join(' ') || "N/A";
-        }
-
-
-        async function addNewAccount() {
-            const accountType = accountTypeSelect.value;
-            const initialBalance = parseFloat(initialBalanceInput.value);
-
-            if (isNaN(initialBalance)) {
-                alert('Please enter a valid initial balance.');
-                return;
-            }
-
-            if (!currentCustomerId) {
-                alert('Customer ID not resolved. Please refresh the page.');
-                return;
-            }
-
-            try {
-                const response = await fetch('/api/accounts', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ // Ensure correct data structure
-                        accountType: accountType,
-                        balance: initialBalance,
-                        customerId: currentCustomerId
-                    }),
-                });
-
-                if (response.ok) {
-                    const newAccount = await response.json();
-                    const newRow = createAccountRow(newAccount);
-                    newRow.classList.add('new-row-animation');
-                    accountTableBody.prepend(newRow);
-                    addAccountModal.style.display = "none";
-                    accountTypeSelect.value = 'Savings';
-                    initialBalanceInput.value = '';
-                } else {
-                    const errorData = await response.json();
-                    alert('Failed to add account: ' + errorData.message);
-                }
-            } catch (error) {
-                console.error('Error adding new account:', error);
-                alert('An error occurred while adding the account.');
-            }
         }
 
         function formatIban(iban) {
@@ -729,22 +752,7 @@ async function addNewAccount() {
             checkSessionAndFetchAccounts();
         });
 
-        // ✅ Kredi kartı limiti değiştiğinde başlangıç bakiyesi otomatik ayarlanır
-cardLimitInput.addEventListener('input', () => {
-    const selectedType = accountTypeSelect.value;
-    if (selectedType === "CreditCard") {
-        const requestedLimit = parseFloat(cardLimitInput.value) || 0;
-        const maxLimit = currentCustomerIncome * 1.5;
 
-        if (requestedLimit > maxLimit) {
-            limitHint.textContent = `Limit üst sınırı: ${maxLimit.toFixed(2)} TL (gelirinizin %150'si)`;
-            cardLimitInput.value = maxLimit.toFixed(2);
-            initialBalanceInput.value = maxLimit.toFixed(2);
-        } else {
-            initialBalanceInput.value = requestedLimit.toFixed(2);
-        }
-    }
-});
     </script>
 
 

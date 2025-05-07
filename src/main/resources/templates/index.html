@@ -46,15 +46,18 @@
             overflow-x: auto;
             padding: 20px;
             width: 90%;
+            height: 300px;
             max-width: 960px;
             /* Başlangıçta gizli, kartlar yüklendiğinde 'flex' yapılacak */
             display: none;
+            margin-bottom: 30px;
         }
 
         .card {
             min-width: 300px;
             height: 200px;
             perspective: 1000px;
+            margin-left: 80px;
         }
 
         .card>div {
@@ -296,11 +299,6 @@
         <p><strong>Balance:</strong> <span id="modalBalance"></span> TL</p>
         <button onclick="document.getElementById('card-info-modal').style.display='none'">Close</button>
     </div>
-
-    <footer class="index-footer">
-        <button id="logoutButton" class="logout-button">Logout</button>
-    </footer>
-
 
     <footer class="index-footer">
         <button id="logoutButton" class="logout-button">Logout</button>
