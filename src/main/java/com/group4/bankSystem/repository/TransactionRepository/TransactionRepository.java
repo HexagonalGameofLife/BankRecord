@@ -13,7 +13,10 @@ public interface TransactionRepository extends JpaRepository<Transaction, Intege
     @Query("SELECT t FROM Transaction t WHERE t.fromAccount.accountId IN :accountIds OR t.toAccount.accountId IN :accountIds")
     List<Transaction> findByAccountIdsInBothFromAndTo(@Param("accountIds") List<Integer> accountIds);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 }*/
 
 package com.group4.bankSystem.repository.TransactionRepository;
@@ -30,6 +33,9 @@ import com.group4.bankSystem.entities.TransactionEntities.Transaction;
 public interface TransactionRepository extends JpaRepository<Transaction, Integer>{
     @Query("SELECT t FROM Transaction t WHERE t.fromAccount.accountId IN :accountIds OR t.toAccount.accountId IN :accountIds")
     List<Transaction> findByAccountIdsInBothFromAndTo(@Param("accountIds") List<Integer> accountIds);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
     /**
