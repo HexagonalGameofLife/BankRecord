@@ -426,7 +426,7 @@
 
             const netBalance = total - (customerDebt || 0);
             const display = document.getElementById("totalBalance");
-            display.innerText = "$ " + netBalance.toFixed(2);
+            display.innerText = netBalance.toFixed(2) + " TL";
             display.style.color = netBalance >= 0 ? "green" : "red";
         }
 
