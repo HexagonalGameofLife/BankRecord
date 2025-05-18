@@ -14,7 +14,10 @@ public interface TransactionRepository extends JpaRepository<Transaction, Intege
     List<Transaction> findByAccountIdsInBothFromAndTo(@Param("accountIds") List<Integer> accountIds);
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 }*/
@@ -34,6 +37,9 @@ public interface TransactionRepository extends JpaRepository<Transaction, Intege
     @Query("SELECT t FROM Transaction t WHERE t.fromAccount.accountId IN :accountIds OR t.toAccount.accountId IN :accountIds")
     List<Transaction> findByAccountIdsInBothFromAndTo(@Param("accountIds") List<Integer> accountIds);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

@@ -50,7 +50,10 @@ public interface UserListRepository extends JpaRepository<UserList, UserListId>{
     List<Account> findAccountsByCustomerId(@Param("customerId") Integer customerId);
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 }*/
 
 package com.group4.bankSystem.repository.CustomerRepository;
@@ -78,6 +81,9 @@ public interface UserListRepository extends JpaRepository<UserList, UserListId>{
     @Query("SELECT a FROM UserList u JOIN u.account a WHERE u.customer.customerId = :customerId")
     List<Account> findAccountsByCustomerId(@Param("customerId") Integer customerId);
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
     
@@ -87,6 +93,9 @@ public interface UserListRepository extends JpaRepository<UserList, UserListId>{
     
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
@@ -150,6 +159,7 @@ public interface UserListRepository extends JpaRepository<UserList, UserListId>{
 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     /**
      * Sadece belirli bir account–customer ilişkisini siler.
      */
@@ -158,6 +168,8 @@ public interface UserListRepository extends JpaRepository<UserList, UserListId>{
 
 }
 =======
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
     
@@ -260,6 +272,9 @@ public interface UserListRepository extends JpaRepository<UserList, UserListId>{
   
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
