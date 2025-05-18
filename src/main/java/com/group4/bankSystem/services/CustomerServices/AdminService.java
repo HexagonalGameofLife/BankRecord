@@ -1,5 +1,11 @@
 package com.group4.bankSystem.services.CustomerServices;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
 import com.group4.bankSystem.entities.CustomerEntities.Admin;
 import com.group4.bankSystem.entities.CustomerEntities.Customer;
 import com.group4.bankSystem.entities.TransactionEntities.Transaction;
@@ -8,12 +14,8 @@ import com.group4.bankSystem.repository.CustomerRepository.AdminRepository;
 import com.group4.bankSystem.repository.CustomerRepository.CustomerRepository;
 import com.group4.bankSystem.repository.CustomerRepository.UserListRepository;
 import com.group4.bankSystem.repository.TransactionRepository.TransactionRepository;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
-import jakarta.transaction.Transactional;
 
-import java.util.List;
-import java.util.Optional;
+import jakarta.transaction.Transactional;
 
 @Service
 public class AdminService {
